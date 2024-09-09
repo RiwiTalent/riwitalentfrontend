@@ -1044,3 +1044,4 @@ C:\Users\fjgt2\OneDrive\Escritorio\Riwi_Talent\riwi\obj\Debug\net8.0\riwi.dll
 C:\Users\fjgt2\OneDrive\Escritorio\Riwi_Talent\riwi\obj\Debug\net8.0\refint\riwi.dll
 C:\Users\fjgt2\OneDrive\Escritorio\Riwi_Talent\riwi\obj\Debug\net8.0\riwi.pdb
 C:\Users\fjgt2\OneDrive\Escritorio\Riwi_Talent\riwi\obj\Debug\net8.0\ref\riwi.dll
+C:\Users\fjgt2\OneDrive\Escritorio\Riwi_Talent\riwi\obj\Debug\net8.0\riwi.sourcelink.json
