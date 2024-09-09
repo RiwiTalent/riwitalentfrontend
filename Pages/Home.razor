@@ -1,0 +1,78 @@
+﻿@page "/"
+@using riwi.Services
+@using riwi.Models
+@inject CoderService coderService
+
+<head>
+    <link rel="stylesheet" href="css/home.css">
+</head>
+
+
+<PageTitle>Coders</PageTitle>
+
+<MudText class="title">
+    Listado de Coders
+</MudText>
+
+@if(coders != null)
+{
+    <div class="container-cards">
+    
+        @foreach(var coder in coders)
+        {
+            <MudCard class="card">
+                    <MudImage Src="@coder.Photo" Alt="profile"></MudImage>
+                <MudCardContent>
+                    <div class="profle-header">
+                        <div class="profile-info">
+                            <h3>@coder.FirstName</h3>
+                            <p>@coder.Email</p>
+                        </div>
+                        <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default"/>
+                    </div>
+                </MudCardContent>
+
+                <MudCardActions>
+                    <MudButton style="background-color: white;" Variant="Variant.Outlined" Color="Color.Dark">@ButtonMessage</MudButton>
+                    <MudButton style="background-color: blue;" Variant="Variant.Filled" Color="Color.Transparent">@ButtonHire</MudButton>
+                </MudCardActions>
+            </MudCard>
+        }
+    </div>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+<MudButton @onclick="VerifyCoder">Verificar Api</MudButton>
+
+@code
+{
+    public string ButtonMessage = "Message";
+    public string ButtonHire = "Hire";
+    private List<Coder>? coders;
+    protected override async Task OnInitializedAsync()
+    {
+        //realizamos el llamado a la api
+        try
+        {
+            coders = await coderService.GetCodersAsync();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error al obtener coders: {ex.Message}");
+        }
+    }
+    public void VerifyCoder()
+    {
+        if(coderService is null)
+        {
+            Console.WriteLine("No hay nada");
+        }
+        else{
+            Console.WriteLine($"Existe un usuario {coders?.Count ?? 0}");
+        }
+    }
+}
+
+
