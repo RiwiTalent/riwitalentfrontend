@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using frontend.Models;
+using riwi.Models;
 
 namespace riwi.Models
 {
