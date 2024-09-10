@@ -1,6 +1,7 @@
 @using riwi.Services
 @using riwi.Models
 @inject CoderService coderService
+@inject IModalService model
 
 @if(coders != null)
 {
@@ -37,8 +38,8 @@
                             }
                             @*Buttons*@
                             <div class="buttons">
-                                <MudButton style="background: #fff;" Variant="Variant.Filled">@ButtonProcess</MudButton>
-                                <MudButton Color="Color.Primary" Variant="Variant.Filled">@ButtonDetails</MudButton>      
+                                <MudButton style="background: #fff;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>
+                                <MudButton Color="Color.Primary" Variant="Variant.Filled">@ButtonHire</MudButton>      
                             </div>
                         </div>
 
@@ -55,8 +56,8 @@ else
 
 @code
 {
-    public string ButtonProcess = "Procesos";
-    public string ButtonDetails = "Detalles";
+    public string ButtonDetails = "Detalle";
+    public string ButtonHire = "Contratar";
     private List<Coder>? coders;
     protected override async Task OnInitializedAsync()
     {
@@ -70,6 +71,21 @@ else
             Console.WriteLine($"Error al obtener coders: {ex.Message}");
         }
     }
+
+    //Funcionalidad ver detalles
+    private async Task ShowDetails(string id)
+    {
+        var coder = coders.FirstOrDefault(c => c.Id == id);
+        if (coder != null)
+        {
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(ModalCoderDetails.Coder), coder);
+
+            var modal = model.Show<ModalCoderDetails>("Detalles del Coder", parameters);
+            await modal.Result;
+        }
+    }
+
     public void VerifyCoder()
     {
         if(coderService is null)
