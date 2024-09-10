@@ -50,19 +50,7 @@
     justify-content: space-between;
     position: relative;
 }
-.circle{
-    border-radius: 50%;
-    width: 50px;
-    height: 30px;
-    position: absolute;
-    top: -30%;
-    left: 44%;
 
-    fill: rgba(255, 237, 237, 0.37);
-    stroke-width: 0.5px;
-    stroke: #FFF;
-    backdrop-filter: blur(27.5px);
-}
 /* .container::before{
     background: pink;
     contain: '';
@@ -103,7 +91,7 @@
     padding: 10px;
     z-index: 2;
     transition: all 0.3s ease;
-    height: 170px;
+    height: 210px;
 
     
 
@@ -112,6 +100,7 @@
     stroke: #FFF;
     backdrop-filter: blur(27.5px);
 }
+
 .coder{
     display: flex;
     flex-direction: column;
@@ -127,7 +116,7 @@
 .coder p{
     color: var(--Colors-Base-White, #FFF);
     font-family: 'Roboto', sans-serif;
-    font-size: 11px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -135,12 +124,12 @@
 
 /*Badges*/
 .badges{
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     justify-content: left;
-    flex-wrap: wrap;
     padding: 4px;
     width: 100%;
-    gap: 10px;
+    gap: 7px;
 }
 .badge{
     background: #E9DBAA;
@@ -160,9 +149,10 @@
     display: flex;
     justify-content: left;
     gap: 10px;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 .mud-button{
+    border-radius: 10px;
     width: 128px;
-    height: 40px;
+    height: 30px;
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("riwi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8cd4c5a78124cd7ea5e31dfeee03b860429a5aed")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e5030452dfe75e02c92850063acbd0757ea82bff")]
 [assembly: System.Reflection.AssemblyProductAttribute("riwi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("riwi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
