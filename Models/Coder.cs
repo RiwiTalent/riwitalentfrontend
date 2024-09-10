@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using frontend.Models;
 
 namespace riwi.Models
 {
@@ -15,5 +16,7 @@ namespace riwi.Models
         public string? Email { get; set; }
         public string? Photo { get; set; }
         public int Age { get; set; }
+        public string? Stack { get; set; }
+        public List<Skill>? Skills { get; set; }
     }
 }

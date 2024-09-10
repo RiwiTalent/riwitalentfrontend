@@ -1,47 +1,47 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\fjgt2\\OneDrive\\Escritorio\\Riwi_Talent\\riwi\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
+      "Id": "C:\\Users\\jhoan\\OneDrive\\Escritorio\\ProyectoRiwi\\frontend\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
       "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js"
     },
     {
-      "Id": "C:\\Users\\fjgt2\\OneDrive\\Escritorio\\Riwi_Talent\\riwi\\obj\\Debug\\net8.0\\compressed\\drlcwof2xm.gz",
+      "Id": "C:\\Users\\jhoan\\OneDrive\\Escritorio\\ProyectoRiwi\\frontend\\obj\\Debug\\net8.0\\compressed\\y0xstsjeo7.gz",
       "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js.gz"
     },
     {
-      "Id": "C:\\Users\\fjgt2\\OneDrive\\Escritorio\\Riwi_Talent\\riwi\\obj\\Debug\\net8.0\\scopedcss\\bundle\\riwi.styles.css",
+      "Id": "C:\\Users\\jhoan\\OneDrive\\Escritorio\\ProyectoRiwi\\frontend\\obj\\Debug\\net8.0\\scopedcss\\bundle\\riwi.styles.css",
       "PackagePath": "staticwebassets\\riwi.styles.css"
     },
     {
-      "Id": "C:\\Users\\fjgt2\\OneDrive\\Escritorio\\Riwi_Talent\\riwi\\wwwroot\\css\\app.css",
+      "Id": "C:\\Users\\jhoan\\OneDrive\\Escritorio\\ProyectoRiwi\\frontend\\wwwroot\\css\\app.css",
       "PackagePath": "staticwebassets\\css\\app.css"
     },
     {
-      "Id": "C:\\Users\\fjgt2\\OneDrive\\Escritorio\\Riwi_Talent\\riwi\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "Id": "C:\\Users\\jhoan\\OneDrive\\Escritorio\\ProyectoRiwi\\frontend\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Id": "C:\\Users\\fjgt2\\OneDrive\\Escritorio\\Riwi_Talent\\riwi\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "Id": "C:\\Users\\jhoan\\OneDrive\\Escritorio\\ProyectoRiwi\\frontend\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "C:\\Users\\fjgt2\\OneDrive\\Escritorio\\Riwi_Talent\\riwi\\wwwroot\\css\\home.css",
+      "Id": "C:\\Users\\jhoan\\OneDrive\\Escritorio\\ProyectoRiwi\\frontend\\wwwroot\\css\\home.css",
       "PackagePath": "staticwebassets\\css\\home.css"
     },
     {
-      "Id": "C:\\Users\\fjgt2\\OneDrive\\Escritorio\\Riwi_Talent\\riwi\\wwwroot\\favicon.png",
+      "Id": "C:\\Users\\jhoan\\OneDrive\\Escritorio\\ProyectoRiwi\\frontend\\wwwroot\\favicon.png",
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
-      "Id": "C:\\Users\\fjgt2\\OneDrive\\Escritorio\\Riwi_Talent\\riwi\\wwwroot\\icon-192.png",
+      "Id": "C:\\Users\\jhoan\\OneDrive\\Escritorio\\ProyectoRiwi\\frontend\\wwwroot\\icon-192.png",
       "PackagePath": "staticwebassets\\icon-192.png"
     },
     {
-      "Id": "C:\\Users\\fjgt2\\OneDrive\\Escritorio\\Riwi_Talent\\riwi\\wwwroot\\index.html",
+      "Id": "C:\\Users\\jhoan\\OneDrive\\Escritorio\\ProyectoRiwi\\frontend\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },
     {
-      "Id": "C:\\Users\\fjgt2\\OneDrive\\Escritorio\\Riwi_Talent\\riwi\\wwwroot\\sample-data\\weather.json",
+      "Id": "C:\\Users\\jhoan\\OneDrive\\Escritorio\\ProyectoRiwi\\frontend\\wwwroot\\sample-data\\weather.json",
       "PackagePath": "staticwebassets\\sample-data\\weather.json"
     },
     {

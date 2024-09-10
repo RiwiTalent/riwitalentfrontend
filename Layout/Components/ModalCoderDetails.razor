@@ -1,0 +1,26 @@
+@using riwi.Models
+@inherits Blazored.Modal.BlazoredModal
+
+
+@if (Coder != null)
+{
+  <BlazoredModalTitle>Detalles de @Coder.FirstName</BlazoredModalTitle>
+    <BlazoredModalContent>
+        <MudImage class="mud-photo" Src="@Coder.Photo"></MudImage>
+
+        <p><strong>Nombre:</strong> @Coder.FirstName</p>
+        <p><strong>Apellido:</strong> @Coder.FirstLastName</p>
+        <p><strong>Email:</strong> @Coder.Email</p>
+        <p><strong>Edad:</strong> @Coder.Age</p>
+    </BlazoredModalContent> 
+}
+else
+{
+    <p>Loading...</p>
+}
+
+
+@code {
+    [Parameter] public Coder Coder { get; set; }
+}
+

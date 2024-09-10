@@ -16,35 +16,39 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = browser
 build_property.RootNamespace = riwi
 build_property.RootNamespace = riwi
-build_property.ProjectDir = c:\Users\fjgt2\OneDrive\Escritorio\Riwi_Talent\riwi\
+build_property.ProjectDir = c:\Users\jhoan\OneDrive\Escritorio\ProyectoRiwi\frontend\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = false
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = c:\Users\fjgt2\OneDrive\Escritorio\Riwi_Talent\riwi
+build_property.MSBuildProjectDirectory = c:\Users\jhoan\OneDrive\Escritorio\ProyectoRiwi\frontend
 build_property._RazorSourceGeneratorDebug = 
 
-[c:/Users/fjgt2/OneDrive/Escritorio/Riwi_Talent/riwi/App.razor]
+[c:/Users/jhoan/OneDrive/Escritorio/ProyectoRiwi/frontend/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/fjgt2/OneDrive/Escritorio/Riwi_Talent/riwi/Layout/Components/CardComponent.razor]
+[c:/Users/jhoan/OneDrive/Escritorio/ProyectoRiwi/frontend/Layout/Components/CardComponent.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XENvbXBvbmVudHNcQ2FyZENvbXBvbmVudC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/fjgt2/OneDrive/Escritorio/Riwi_Talent/riwi/Pages/Home.razor]
+[c:/Users/jhoan/OneDrive/Escritorio/ProyectoRiwi/frontend/Layout/Components/ModalCoderDetails.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XENvbXBvbmVudHNcTW9kYWxDb2RlckRldGFpbHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[c:/Users/jhoan/OneDrive/Escritorio/ProyectoRiwi/frontend/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/fjgt2/OneDrive/Escritorio/Riwi_Talent/riwi/_Imports.razor]
+[c:/Users/jhoan/OneDrive/Escritorio/ProyectoRiwi/frontend/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/fjgt2/OneDrive/Escritorio/Riwi_Talent/riwi/Layout/MainLayout.razor]
+[c:/Users/jhoan/OneDrive/Escritorio/ProyectoRiwi/frontend/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-tkfyyhgme6
 
-[c:/Users/fjgt2/OneDrive/Escritorio/Riwi_Talent/riwi/Layout/NavMenu.razor]
+[c:/Users/jhoan/OneDrive/Escritorio/ProyectoRiwi/frontend/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-u9eg6o1aks
