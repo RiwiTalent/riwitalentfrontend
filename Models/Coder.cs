@@ -15,5 +15,7 @@ namespace riwi.Models
         public string? Email { get; set; }
         public string? Photo { get; set; }
         public int Age { get; set; }
+        public string? Stack { get; set; }
+        public List<Skill>? Skills { get; set; }
     }
 }

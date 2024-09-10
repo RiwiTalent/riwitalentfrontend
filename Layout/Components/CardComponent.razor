@@ -1,0 +1,83 @@
+@using riwi.Services
+@using riwi.Models
+@inject CoderService coderService
+
+@if(coders != null)
+{
+    <div class="container-cards">
+    
+        @foreach(var coder in coders)
+        {
+            <MudCard>
+                    <MudImage Src="@coder.Photo" Alt="profile"></MudImage>
+                <MudCardContent>
+                        <div class="profile-info">
+                            <div class="container">
+                                <div class="coder">
+                                    <h3>@coder.FirstName @coder.FirstLastName</h3>
+                                    <p>@coder.Stack</p>
+                                </div>
+                                <a><i class="fa-regular fa-heart"></i></a>
+                            </div>
+                            @*badges*@
+                            @if(coder.Skills != null)
+                            {
+                                <div class="badges">
+                                    @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
+                                    {
+                                        <div class="badge">@coder.Skills[i].Language_Programming</div>
+                                        @* <div class="badge">Js</div>
+                                        <div class="badge">C#</div> *@
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p>Contenido no disponible...</p>
+                            }
+                            @*Buttons*@
+                            <div class="buttons">
+                                <MudButton style="background: #fff;" Variant="Variant.Filled">@ButtonDetails</MudButton>
+                                <MudButton Color="Color.Primary" Variant="Variant.Filled">@ButtonHire</MudButton>      
+                            </div>
+                        </div>
+
+                </MudCardContent>
+            </MudCard>
+        }
+    </div>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+@* <MudButton @onclick="VerifyCoder">Verificar Api</MudButton> *@
+
+@code
+{
+    public string ButtonDetails = "Detalle";
+    public string ButtonHire = "Contratar";
+    private List<Coder>? coders;
+    protected override async Task OnInitializedAsync()
+    {
+        //realizamos el llamado a la api
+        try
+        {
+            coders = await coderService.GetCodersAsync();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error al obtener coders: {ex.Message}");
+        }
+    }
+    public void VerifyCoder()
+    {
+        if(coderService is null)
+        {
+            Console.WriteLine("No hay nada");
+        }
+        else{
+            Console.WriteLine($"Existe un usuario {coders?.Count ?? 0}");
+        }
+    }
+}
