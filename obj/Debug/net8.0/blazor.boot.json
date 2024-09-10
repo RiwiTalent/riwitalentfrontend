@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "riwi",
   "resources": {
-    "hash": "sha256-6SsPlo8L4DAUcU6z51MaQMjUNj+QazBWoEsjqSySGmU=",
+    "hash": "sha256-UQAb6Drn7oRCAn3jr8pq5LDODw620iPxo6QIyy5Es/Q=",
     "jsModuleNative": {
       "dotnet.native.8.0.2.az3x7q047n.js": "sha256-gPMK16QWoJSTxorlZJqcVtbBRTniIQWlLsJN2O4cJHg="
     },
@@ -211,10 +211,10 @@
       "mscorlib.wasm": "sha256-OH3kXneWqQMz6CUSo6POZqIeMqn9+5RR+IgHn5TnIwA=",
       "netstandard.wasm": "sha256-ZOswxXEbR2TmqjpbaBEdgr85Bv1NC4GwOwoJ+oxXM3M=",
       "System.Private.CoreLib.wasm": "sha256-I2w0iHf5nvSQyF1YE1VbgdTzmmz6a4OE6J7vo5wFa/4=",
-      "riwi.wasm": "sha256-K1S1RezDC5jsdvCm3oWOri/fwV/4Z/8IDEmb1JfvWC0="
+      "riwi.wasm": "sha256-xFYy1PuyJ9bcloJiilSz4/fK/BdDCs/dpAnHkqvbWUw="
     },
     "pdb": {
-      "riwi.pdb": "sha256-c9WlikPr1uUJ1uAc0vFVfKWKMhP1nneRwzrEzoCv5/0="
+      "riwi.pdb": "sha256-yhPYBPlER7DSeuWInolmJZa2I3THyxrAzYkeNolZijc="
     }
   },
   "cacheBootResources": true,

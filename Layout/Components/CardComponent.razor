@@ -37,8 +37,8 @@
                             }
                             @*Buttons*@
                             <div class="buttons">
-                                <MudButton style="background: #fff;" Variant="Variant.Filled">@ButtonDetails</MudButton>
-                                <MudButton Color="Color.Primary" Variant="Variant.Filled">@ButtonHire</MudButton>      
+                                <MudButton style="background: #fff;" Variant="Variant.Filled">@ButtonProcess</MudButton>
+                                <MudButton Color="Color.Primary" Variant="Variant.Filled">@ButtonDetails</MudButton>      
                             </div>
                         </div>
 
@@ -55,8 +55,8 @@ else
 
 @code
 {
-    public string ButtonDetails = "Detalle";
-    public string ButtonHire = "Contratar";
+    public string ButtonProcess = "Procesos";
+    public string ButtonDetails = "Detalles";
     private List<Coder>? coders;
     protected override async Task OnInitializedAsync()
     {
