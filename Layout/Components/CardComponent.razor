@@ -49,7 +49,7 @@
 
     <div class="container-pagination">
         <div class="container-box">
-            <MudPagination class="container-number" Variant="Variant.Filled" Color="Color.Primary" ShowPreviousButton="false" ShowNextButton="false" PageSize="8"  TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true"></MudPagination>
+            <MudPagination class="container-number" Variant="Variant.Filled" Color="Color.Primary" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize"  TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true"></MudPagination>
         </div>
     </div>
 }
@@ -70,6 +70,7 @@ else
     private int totalCoders;
     private int currentPage = 1;
     private int pageSize = 8;
+    private int pag;
 
     protected override async Task OnInitializedAsync()
     {
@@ -78,6 +79,7 @@ else
         {
             coders = await coderService.GetCodersAsync();
             totalCoders = coders.Count;
+            pag = (int)Math.Ceiling((double) totalCoders / pageSize);
             LoadCoders(currentPage);
         }
         catch(Exception ex)
