@@ -12,13 +12,13 @@
     </button>
 
     <!-- Campo para filtrar por FirstName -->
-    <MudTextField @bind-Value="firstName" Label="FirstName" Variant="Variant.Filled" Class="mud-input" />
+    <MudTextField @bind-Value="firstName" Label="FirstName" Class="mud-input" />
 
     <!-- Campo para filtrar por SecondName -->
-    <MudTextField @bind-Value="fristLastName" Label="FirstLastName" Variant="Variant.Filled" Class="mud-input" />
+    <MudTextField @bind-Value="firstLastName" Label="FirstLastName" Class="mud-input" />
 
     <!-- Campo para filtrar por Stack -->
-    <MudTextField @bind-Value="stack" Label="Stack" Variant="Variant.Filled" Class="mud-input" />
+    
 
     <!-- Campo para filtrar por Skills -->
     <InputSelect @bind-Value="skills" Class="search-container">
@@ -50,7 +50,7 @@
 
     <!-- Botón para limpiar filtros -->
     <MudButton OnClick="ClearFilters" Variant="Variant.Filled" Color="Color.Secondary" Class="filter-button">
-        NUEVO FILTRO
+        LIMPIAR
     </MudButton>
 </MudPaper>
 
@@ -129,7 +129,7 @@ else
 
     // Variables para los filtros
     private string? firstName;
-    private string? fristLastName;
+    private string? firstLastName;
     private string? skills;
     private string? languageLevel;
     private string? stack;
@@ -138,14 +138,24 @@ else
     private async Task ClearFilters()
     {
         // Limpia los valores de los filtros
+        Console.WriteLine("Limpiaste");
+            // Limpia los valores de los filtros
         firstName = "";
-        fristLastName = "";
+        firstLastName = "";
         skills = "";
         languageLevel = "";
-        stack ="";
+        stack = "";
 
-        // Carga de nuevo la lista completa sin filtros de manera asíncrona
+        // Recarga la lista completa de coders sin filtros de manera asíncrona
         coders = await coderService.GetCodersAsync();
+
+        // Actualiza el total de coders y las páginas
+        totalCoders = coders.Count;
+        pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+
+        // Carga la primera página después de limpiar los filtros
+        currentPage = 1;
+        LoadCoders(currentPage);
 
         // Actualiza la UI
         StateHasChanged();
@@ -182,18 +192,21 @@ else
     private async Task FilterCoders()
     {
         // Primero, cargamos la lista completa desde el servicio
+        Console.WriteLine("HOLA");
         coders = await coderService.GetCodersAsync();
 
         // Aplicar filtro de FirstName
         if (!string.IsNullOrEmpty(firstName))
         {
+            Console.WriteLine("Hola --- first name: " + firstName);
             coders = coders.Where(c => c.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         // Aplicar filtro de LastName
-        if (!string.IsNullOrEmpty(fristLastName))
-        {
-            coders = coders.Where(c => c.FirstLastName.Contains(fristLastName, StringComparison.OrdinalIgnoreCase)).ToList();
+        if (!string.IsNullOrEmpty(firstLastName))
+        {   
+            Console.WriteLine("LastName: " + firstLastName);
+            coders = coders.Where(c => c.FirstLastName.Contains(firstLastName, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         // Aplicar filtro de Skills
@@ -214,6 +227,10 @@ else
             coders = coders.Where(c => c.Stack != null && c.Stack.Contains(stack, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
+            totalCoders = coders.Count;
+            pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+            LoadCoders(currentPage);
+
         // Actualizar la UI para reflejar los cambios
 
         StateHasChanged();
@@ -233,7 +250,7 @@ else
         currentPage = pageNumber;
         LoadCoders(currentPage);
     }
- 
+
 
     //Funcionalidad ver detalles
     private async Task ShowDetails(string id)
