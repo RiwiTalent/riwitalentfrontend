@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using riwi.Models;
 
 namespace riwi.Models
 {
@@ -17,5 +18,8 @@ namespace riwi.Models
         public int Age { get; set; }
         public string? Stack { get; set; }
         public List<Skill>? Skills { get; set; }
+
+        public LanguageSkill? LanguageSkills { get; set; }
+
     }
 }
