@@ -7,7 +7,7 @@
 {
     <div class="container-cards">
     
-        @foreach(var coder in coders)
+        @foreach(var coder in paginatedCoders)
         {
             <MudCard>
                     <MudImage Src="@coder.Photo" Alt="profile"></MudImage>
@@ -42,10 +42,15 @@
                                 <MudButton Color="Color.Primary" Variant="Variant.Filled">@ButtonHire</MudButton>      
                             </div>
                         </div>
-
                 </MudCardContent>
             </MudCard>
         }
+    </div>
+
+    <div class="container-pagination">
+        <div class="container-box">
+            <MudPagination class="container-number" Variant="Variant.Filled" Color="Color.Primary" ShowPreviousButton="false" ShowNextButton="false" PageSize="8"  TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true"></MudPagination>
+        </div>
     </div>
 }
 else
@@ -59,17 +64,40 @@ else
     public string ButtonDetails = "Detalle";
     public string ButtonHire = "Contratar";
     private List<Coder>? coders;
+
+    //paginación
+    private List<Coder>? paginatedCoders;
+    private int totalCoders;
+    private int currentPage = 1;
+    private int pageSize = 8;
+
     protected override async Task OnInitializedAsync()
     {
         //realizamos el llamado a la api
         try
         {
             coders = await coderService.GetCodersAsync();
+            totalCoders = coders.Count;
+            LoadCoders(currentPage);
         }
         catch(Exception ex)
         {
             Console.WriteLine($"Error al obtener coders: {ex.Message}");
         }
+    }
+
+    private void LoadCoders(int pageNumber)
+    {
+        paginatedCoders = coders
+                            .Skip((pageNumber - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToList();
+    }
+
+    private void OnPageChanged(int pageNumber)
+    {
+        currentPage = pageNumber;
+        LoadCoders(currentPage);
     }
  
 
