@@ -1,57 +1,381 @@
-.title{
+.title {
     font-family: 'Roboto', sans-serif;
     font-weight: bold;
     font-size: 30px;
     text-align: center;
 }
 
-.container-cards{
+.container-cards {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
     margin-left: 20px;
 }
-.card{
+
+.mud-card {
     border-radius: 16px;
-    background-color: rgba(255, 255, 255, 0.1);
-    transition: 0px 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    width: 300px;
-    backdrop-filter: blur(0px);
+    width: 250px;
+    height: 238px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 40px;
 }
-.card:hover{
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.2);
+
+.mud-card:hover .profile-info {
+    bottom: 0;
+    z-index: 2;
 }
-.mud-image{
+
+.mud-image {
     border-radius: 16px;
     width: 300px;
     height: 310.11px;
     object-fit: cover;
-    display: block;
+    z-index: 1;
+}
+
+.mud-card-content {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    height: 100%;
     margin: 0 auto;
     object-fit: cover;
 }
 
-.profile-header{
+.container {
     display: flex;
     justify-content: space-between;
-    align-items: 16px;
+    position: relative;
 }
 
-.profile-info h3{
-    margin: 0;
-    font-size: 1.25rem;
-} 
-
-.profile-info p{
-    margin: 0;
-    font-size: 0.875rem;
-    color: gray;
+/* .container::before{
+    background: pink;
+    contain: '';
+    width: 30px;
+    height: 30px;
+} */
+.container i {
+    font-size: 20px;
+    color: #000;
 }
 
-.mud-card-actions{
+.container a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    transition: 0.5s ease-in-out;
+}
+
+.container a:hover {
+    background: #6B5CFF;
+    transition: 0.5s ease-in-out;
+}
+
+.container i:hover {
+    color: #fff;
+    transition: 0.5s ease-in-out;
+}
+
+.profile-info {
+    position: absolute;
+    bottom: -100px;
+    /* Inicialmente oculto */
+    border-radius: 10px;
+    left: 0;
+    right: 0;
+    text-align: left;
+    padding: 10px;
+    z-index: 2;
+    transition: all 0.3s ease;
+    height: 210px;
+
+
+
+    fill: rgba(255, 237, 237, 0.37);
+    stroke-width: 0.5px;
+    stroke: #FFF;
+    backdrop-filter: blur(27.5px);
+}
+
+.coder {
+    display: flex;
+    flex-direction: column;
+}
+
+.coder h3 {
+    color: var(--Colors-Base-White, #FFF);
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.coder p {
+    color: var(--Colors-Base-White, #FFF);
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+/*Badges*/
+.badges {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: left;
+    padding: 4px;
+    width: 100%;
+    gap: 7px;
+}
+
+.badge {
+    background: #E9DBAA;
+    color: #000;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/*Buttons*/
+.buttons {
+    display: flex;
+    justify-content: left;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.mud-button {
+    border-radius: 10px;
+    width: 128px;
+    height: 30px;
+}
+
+/*Modal -- Maocol - Detalles*/
+.blazored-modal-focus-trap {
+    width: 70vw;
+    height: 70vh;
+    border-radius: 30px; 
+    border-top-left-radius: 17%;
+    border-bottom-left-radius: 6%;
+    position: relative; 
+    clip-path: polygon(9% 0%, 100% 0%, 100% 100%, 0% 100%, 2% 64%);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);    
+}
+
+.custom-modal-container {
+    margin: 150px 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    height: 600px;
+    border-top-left-radius: 20%;
+    border-top-right-radius: 10%;
+    border-bottom-left-radius: 10%;
+    border-bottom-right-radius: 10%;
+}
+
+.bm-content {
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: 20%;
+    border-top-right-radius: 10%;
+    border-bottom-left-radius: 10%;
+    border-bottom-right-radius: 10%;
+}
+
+.content-modal {
+    width: 100%; 
+    height: 100%; 
+    background-color: white; 
+    border-radius: 30px; 
+    border-top-left-radius: 17%;
+    border-bottom-left-radius: 6%;
+    position: relative; 
+    clip-path: polygon(9% 0%, 100% 0%, 100% 100%, 0% 100%, 2% 76%);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); 
+}
+
+.content-model-top{
+    width: 100%; 
+    display: flex;
+    justify-content: space-around;
+    height: 95%;
+    padding-left: 50px;
+}
+
+.bottom-buttom{
+    display: flex;
+    width: 100%;
+    height: 5%;
+    justify-content: center;
+    gap: 20px;
+}
+
+.left-content-details {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 20px;
+}
+
+.left-top-coder {
+    width: 100%;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.photo-modal {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid #6B5CFF;
+    position: absolute;
+}
+
+.name-coder {
+    width: 80%;
+    height: auto;
+    padding: 5px 5px 5px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    border-radius: 10px;
+    background-color: #6B5CFF;
+    justify-items: end;
+    position: absolute;
+    transform: translate(27%, -70%)
+}   
+
+.stacks-container {
+    width:60%;
+    margin: 20%;
+    height: 35%;
+    position: relative;
+    transform: translate(15%, 40%)
+}
+
+.stack-role {
+    font-style: italic;
+    font-size: 14px;
+    position: relative;
+}
+
+.stack-age {
+    font-size: 14px;
+    position: relative;
+}
+
+.left-mid-details {
+    width: 100%;
+    height: 40px;
+    justify-content: center;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.containers-buttons-mid {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    justify-content: end;
+}
+
+.left-bottom-details {
+    width: 100%;
+    padding: 10px;
+    height: auto;
+
+}
+
+.description-text {
+    width: 100%;
+    height: 80%;
+}
+
+.select-coder-icon {
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    padding: 10px;
+    border-radius: 20%;
+    background-color: #6B5CFF;
+    color: white;
+    cursor: pointer;
+    position: absolute;
+}
+
+.right-skills-details{
+    width: 50%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    row-gap: 34px;
+    padding: 30px;
+}
+
+.container-skills-top{
+    display: grid;
+    grid-template-columns: repeat(4, 2fr)!;
+    justify-content: left;
+    padding: 4px;
+    width: 100%;
+    gap: 7px;
+}
+
+.container-skills-bottom{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    justify-content: left;
+    padding: 4px;
+    width: 100%;
+    gap: 7px;
+}
+
+a{
+    background-color: #6B5CFF;
+    justify-content: center;
+    text-align: center;
+    height: 25px;
+    border-radius: 5px;
+}
+
+.anchors-buttom{
+    width: 25%;
+}
+
+#buton1{
+    background-color: #E6CA52;
+    color: white;
+}
+
+#buton2{
+    background-color: #7AE3CB;
+    color: white;
+}
+
+.title-skill{
+    margin-top: 14%;
 }
