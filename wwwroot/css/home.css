@@ -184,10 +184,10 @@
     align-items: center;
     width: 70%;
     height: 600px;
-    /* border-top-left-radius: 20%;
+    border-top-left-radius: 20%;
     border-top-right-radius: 10%;
     border-bottom-left-radius: 10%;
-    border-bottom-right-radius: 10%; */
+    border-bottom-right-radius: 10%;
 }
 
 .bm-content {
@@ -203,17 +203,8 @@
 }
 
 .content-modal {
-    /* width: 100%;
-    height: 100%;
-    background-color: white;
-    border-top-left-radius: 20%;
-    border-top-right-radius: 10%;
-    border-bottom-left-radius: 10%;
-    border-bottom-right-radius: 10%; */
     width: 100%; 
     height: 100%; 
-    display: flex;
-    justify-content: space-around;
     background-color: white; 
     border-radius: 30px; 
     border-top-left-radius: 17%;
@@ -221,7 +212,22 @@
     position: relative; 
     clip-path: polygon(9% 0%, 100% 0%, 100% 100%, 0% 100%, 2% 76%);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); 
-    
+}
+
+.content-model-top{
+    width: 100%; 
+    display: flex;
+    justify-content: space-around;
+    height: 95%;
+    padding-left: 50px;
+}
+
+.bottom-buttom{
+    display: flex;
+    width: 100%;
+    height: 5%;
+    justify-content: center;
+    gap: 20px;
 }
 
 .left-content-details {
@@ -263,7 +269,6 @@
     transform: translate(27%, -70%)
 }   
 
-
 .stacks-container {
     width:60%;
     margin: 20%;
@@ -285,7 +290,7 @@
 
 .left-mid-details {
     width: 100%;
-    height: 30px;
+    height: 40px;
     justify-content: center;
     display: flex;
     justify-content: flex-end;
@@ -306,7 +311,7 @@
 }
 
 .description-text {
-    width: 80%;
+    width: 100%;
     height: 80%;
 }
 
@@ -327,7 +332,8 @@
     height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: start;
+    row-gap: 34px;
     padding: 30px;
 }
 
@@ -349,8 +355,28 @@
     gap: 7px;
 }
 
-.buton-portfolio{
+a{
     background-color: #6B5CFF;
+    justify-content: center;
+    text-align: center;
+    height: 25px;
+    border-radius: 5px;
+}
+
+.anchors-buttom{
+    width: 25%;
+}
+
+#buton1{
+    background-color: #E6CA52;
     color: white;
-    border-radius: 20%;
+}
+
+#buton2{
+    background-color: #7AE3CB;
+    color: white;
+}
+
+.title-skill{
+    margin-top: 14%;
 }
