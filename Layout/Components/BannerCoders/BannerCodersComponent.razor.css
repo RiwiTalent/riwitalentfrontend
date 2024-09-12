@@ -79,12 +79,20 @@
 
 .pee1{
     width: 70%;
-    background-color: hotpink;
-    border-radius: 10px;
+    background-color: #2DB588;
+    border-radius: 50px;
+    color: #FFFFFF;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
 }
 
 .pee2{
     width: 70%;
-    background-color: hotpink;
-    border-radius: 10px;
+    background-color: #EAA2FC;
+    border-radius: 50px;
+    color: #0D0D10;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
 }
