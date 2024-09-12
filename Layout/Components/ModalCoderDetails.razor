@@ -1,18 +1,96 @@
 @using riwi.Models
 @inherits Blazored.Modal.BlazoredModal
+@using riwi.Services
+@inject CoderService coderService
+@inject IModalService model
 
 
 @if (Coder != null)
 {
-  <BlazoredModalTitle>Detalles de @Coder.FirstName</BlazoredModalTitle>
-    <BlazoredModalContent>
-        <MudImage class="mud-photo" Src="@Coder.Photo"></MudImage>
+    <BlazoredModalTitle>
+        @* <MudImage class="photo-modal" Src="@Coder.Photo" /> *@
+    </BlazoredModalTitle>
 
-        <p><strong>Nombre:</strong> @Coder.FirstName</p>
-        <p><strong>Apellido:</strong> @Coder.FirstLastName</p>
-        <p><strong>Email:</strong> @Coder.Email</p>
-        <p><strong>Edad:</strong> @Coder.Age</p>
-    </BlazoredModalContent> 
+    <BlazoredModalContent class="content-modal">
+        <div class="left-content-details">
+            <div class="left-top-coder">
+                <MudImage class="photo-modal" Src="@Coder.Photo" />
+                <p class="name-coder">
+                    @Coder.FirstName @Coder.FirstLastName @Coder.SecondLastName
+                    <img class="select-coder-icon" src="assets/corazon.png" width="20px" alt="Select">
+                </p>
+
+                <div class="stacks-container">
+
+                    <p class="stack-role">Desarrollador @Coder.Stack</p>
+                    <p class="stack-age"><strong>Edad:</strong> @Coder.Age</p>
+                    <p class="description"><strong>Email:</strong> @Coder.Email</p>
+
+
+                </div>
+            </div>
+
+            <div class="left-mid-details">
+                <div class="containers-buttons-mid">
+                    <a href="#">
+                        <img class="butons" src="assets/portafolio.png" width="20px" alt="Profile">Portafolio
+                    </a>
+
+                    <a href="#">
+                        <img class="butons" src="assets/download.png" width="20px" alt="Download">Resumen(HV)
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="left-bottom-details">
+
+                <h3 class="description">Descripción</h3>
+                <p class="description-text"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni, inventore
+                    blanditiis quaerat ipsa
+                    aspernatur velit id quia accusamus dolorem iusto perferendis nobis assumenda officia commodi? Nobis!</p>
+
+
+            </div>
+
+        </div>
+
+        <div class="right-skills-details">
+            <div class="right-skills-top">
+                <h3>Habilidades Ténicas</h3>
+
+                <div class="container-skills-top">
+                    <span>papapa</span>
+                    <span>papapa</span>
+                    <span>papapa</span>
+                    <span>papapa</span>
+                    <span>papapa</span>
+                    <span>papapa</span>
+
+                </div>
+            </div>
+            <div class="right-skills-mid">
+                <h3>Habilidades Ténicas</h3>
+
+                <div class="container-skills-mid">
+                    <span>papapa bottom</span>
+                    <span>papapa</span>
+                    <span>papapa</span>
+                    <span>papapa</span>
+                    <span>papapa</span>
+                    <span>papapa</span>
+                </div>
+            </div>
+            <div class="right-skills-bottom">
+                <h3>Inglés</h3>
+
+                <div class="container-skills-bottom">
+                    <span>C2</span>
+                </div>
+            </div>
+        </div>
+    </BlazoredModalContent>
 }
 else
 {
@@ -23,4 +101,3 @@ else
 @code {
     [Parameter] public Coder Coder { get; set; }
 }
-

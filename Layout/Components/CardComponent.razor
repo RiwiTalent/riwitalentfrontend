@@ -75,13 +75,20 @@ else
     //Funcionalidad ver detalles
     private async Task ShowDetails(string id)
     {
+        var options = new ModalOptions
+        {
+            Class = "custom-modal-container",
+            HideCloseButton = true,
+            HideHeader = true 
+        };
+        
         var coder = coders.FirstOrDefault(c => c.Id == id);
         if (coder != null)
         {
             var parameters = new ModalParameters();
             parameters.Add(nameof(ModalCoderDetails.Coder), coder);
 
-            var modal = model.Show<ModalCoderDetails>("Detalles del Coder", parameters);
+            var modal = model.Show<ModalCoderDetails>("Detalles del Coder", parameters, options);
             await modal.Result;
         }
     }
