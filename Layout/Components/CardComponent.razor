@@ -4,7 +4,7 @@
 @inject IModalService model
 
 
-@*Filtrado*@
+@*Filtrado - Coder*@
 <MudPaper Class="filter-container" Elevation="1">
     <!-- Botón "Filtrar por" -->
     <button>
@@ -12,13 +12,13 @@
     </button>
 
     <!-- Campo para filtrar por FirstName -->
-    <MudTextField @bind-Value="firstName" Label="FirstName" Variant="Variant.Filled" Class="mud-input" />
+    <MudTextField @bind-Value="firstName" Label="FirstName" Class="mud-input" />
 
     <!-- Campo para filtrar por SecondName -->
-    <MudTextField @bind-Value="fristLastName" Label="FirstLastName" Variant="Variant.Filled" Class="mud-input" />
+    <MudTextField @bind-Value="firstLastName" Label="FirstLastName" Class="mud-input" />
 
     <!-- Campo para filtrar por Stack -->
-    <MudTextField @bind-Value="stack" Label="Stack" Variant="Variant.Filled" Class="mud-input" />
+    
 
     <!-- Campo para filtrar por Skills -->
     <InputSelect @bind-Value="skills" Class="search-container">
@@ -43,14 +43,14 @@
         <option value="C2">C2</option>
     </InputSelect>
 
-    <!-- Botón para aplicar el filtro -->
+    <!-- Botón para aplicar el filtro. -->
     <MudButton OnClick="FilterCoders" Variant="Variant.Filled" Color="Color.Primary" Class="filter-button">
-        FILTRAR
+        Filtrar
     </MudButton>
 
     <!-- Botón para limpiar filtros -->
     <MudButton OnClick="ClearFilters" Variant="Variant.Filled" Color="Color.Secondary" Class="filter-button">
-        NUEVO FILTRO
+        Limpiar
     </MudButton>
 </MudPaper>
 
@@ -61,7 +61,17 @@
         @foreach(var coder in paginatedCoders)
         {
             <MudCard>
-                    <MudImage Src="@coder.Photo" Alt="profile"></MudImage>
+                @if(coder.Photo != null)
+                {
+                    <MudImage 
+                            Src="@ImageNullOrEmpty(coder.Photo)" 
+                            Alt="profile" 
+                            />
+                }
+                else
+                {
+                    <p>Cargando...</p>
+                }
                 <MudCardContent>
                         <div class="profile-info">
                             <div class="container">
@@ -69,7 +79,7 @@
                                     <h3>@coder.FirstName @coder.FirstLastName</h3>
                                     <p>@coder.Stack</p>
                                 </div>
-                                <a><i class="fa-regular fa-heart"></i></a>
+                                    <a><img src="images/group-add.svg" alt="icon"></a>
                             </div>
                             @*badges*@
                             @if(coder.Skills != null)
@@ -78,8 +88,6 @@
                                     @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
                                     {
                                         <div class="badge">@coder.Skills[i].Language_Programming</div>
-                                        @* <div class="badge">Js</div>
-                                        <div class="badge">C#</div> *@
                                     }
                                 </div>
                             }
@@ -89,8 +97,7 @@
                             }
                             @*Buttons*@
                             <div class="buttons">
-                                <MudButton style="background: #fff;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>
-                                <MudButton Color="Color.Primary" Variant="Variant.Filled">@ButtonHire</MudButton>      
+                                <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
                             </div>
                         </div>
                 </MudCardContent>
@@ -100,20 +107,19 @@
 
     <div class="container-pagination">
         <div class="container-box">
-            <MudPagination class="container-number" Variant="Variant.Filled" Color="Color.Primary" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize"  TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true"></MudPagination>
+            <MudPagination Variant="Variant.Filled"  ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize"  TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
         </div>
     </div>
 }
 else
 {
     <p><em>Loading...</em></p>
+
 }
-@* <MudButton @onclick="VerifyCoder">Verificar Api</MudButton> *@
 
 @code
 {
     public string ButtonDetails = "Detalle";
-    public string ButtonHire = "Contratar";
     private List<Coder>? coders;
 
     //paginación
@@ -129,27 +135,13 @@ else
 
     // Variables para los filtros
     private string? firstName;
-    private string? fristLastName;
+    private string? firstLastName;
     private string? skills;
     private string? languageLevel;
     private string? stack;
 
+    
 
-    private async Task ClearFilters()
-    {
-        // Limpia los valores de los filtros
-        firstName = "";
-        fristLastName = "";
-        skills = "";
-        languageLevel = "";
-        stack ="";
-
-        // Carga de nuevo la lista completa sin filtros de manera asíncrona
-        coders = await coderService.GetCodersAsync();
-
-        // Actualiza la UI
-        StateHasChanged();
-    }
     protected override async Task OnInitializedAsync()
     {
         //realizamos el llamado a la api
@@ -157,9 +149,9 @@ else
         {
             coders = await coderService.GetCodersAsync();
             totalCoders = coders.Count;
-            pag = (int)Math.Ceiling((double) totalCoders / pageSize);
+            pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+            Console.WriteLine(pag);
             LoadCoders(currentPage);
-            LoadCodersAsync();
         }
         catch(Exception ex)
         {
@@ -179,21 +171,31 @@ else
         }
     }
 
+
+    private void OnPageChanged(int pageNumber)
+    {
+        currentPage = pageNumber;
+        LoadCoders(currentPage);
+    }
+
     private async Task FilterCoders()
     {
         // Primero, cargamos la lista completa desde el servicio
+        Console.WriteLine("HOLA");
         coders = await coderService.GetCodersAsync();
 
         // Aplicar filtro de FirstName
         if (!string.IsNullOrEmpty(firstName))
         {
+            Console.WriteLine("Hola --- first name: " + firstName);
             coders = coders.Where(c => c.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         // Aplicar filtro de LastName
-        if (!string.IsNullOrEmpty(fristLastName))
-        {
-            coders = coders.Where(c => c.FirstLastName.Contains(fristLastName, StringComparison.OrdinalIgnoreCase)).ToList();
+        if (!string.IsNullOrEmpty(firstLastName))
+        {   
+            Console.WriteLine("LastName: " + firstLastName);
+            coders = coders.Where(c => c.FirstLastName.Contains(firstLastName, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         // Aplicar filtro de Skills
@@ -214,8 +216,38 @@ else
             coders = coders.Where(c => c.Stack != null && c.Stack.Contains(stack, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
+            totalCoders = coders.Count;
+            pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+            LoadCoders(currentPage);
+
         // Actualizar la UI para reflejar los cambios
 
+        StateHasChanged();
+    }
+
+    private async Task ClearFilters()
+    {
+        // Limpia los valores de los filtros
+        Console.WriteLine("Limpiaste");
+            // Limpia los valores de los filtros
+        firstName = "";
+        firstLastName = "";
+        skills = "";
+        languageLevel = "";
+        stack = "";
+
+        // Recarga la lista completa de coders sin filtros de manera asíncrona
+        coders = await coderService.GetCodersAsync();
+
+        // Actualiza el total de coders y las páginas
+        totalCoders = coders.Count;
+        pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+
+        // Carga la primera página después de limpiar los filtros
+        currentPage = 1;
+        LoadCoders(currentPage);
+
+        // Actualiza la UI
         StateHasChanged();
     }
 
@@ -228,12 +260,8 @@ else
                             .ToList();
     }
 
-    private void OnPageChanged(int pageNumber)
-    {
-        currentPage = pageNumber;
-        LoadCoders(currentPage);
-    }
- 
+
+
 
     //Funcionalidad ver detalles
     private async Task ShowDetails(string id)
@@ -249,14 +277,15 @@ else
         }
     }
 
-    public void VerifyCoder()
+
+    //Lógica para renderizar imagen por defecto
+    private string ImageNullOrEmpty(string? photo)
     {
-        if(coderService is null)
+        if(string.IsNullOrEmpty(photo))
         {
-            Console.WriteLine("No hay nada");
+            return "images/Avatar1.png";
         }
-        else{
-            Console.WriteLine($"Existe un usuario {coders?.Count ?? 0}");
-        }
+
+        return photo;
     }
 }
