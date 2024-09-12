@@ -1,9 +1,9 @@
-﻿@page "/"
+﻿@page "/Coders"
 @using riwi.Layout.Components
-@using riwi.Layout.Components.BannerCoders
 
-
-<PageTitle>Coders</PageTitle>
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.Authorization;
+@attribute [Authorize]
 
 <head>
     <link rel="stylesheet" href="css/home.css">
@@ -11,10 +11,14 @@
     <link rel="stylesheet" href="css/CoderFilterComponent.css">
 </head>
 
-<BannerCodersComponent />
 
-<MudText class="title">
-    Listado de Coders
-</MudText>
+<AuthorizeView>
+    <Authorized>
 
-<CardComponent />
+        <MudText class="title">
+            Listado de Coders
+        </MudText>
+
+        <CardComponent />
+    </Authorized>
+</AuthorizeView>

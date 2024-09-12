@@ -1,4 +1,8 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+@using riwi.Extensiones
+@inject AuthenticationStateProvider autenticacionProvider
+@inject NavigationManager navManager
 @* <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -20,7 +24,7 @@
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        My Application
+        Riwi Talent
     </MudAppBar>
     <MudDrawer style="300px" @bind-Open="@_drawerOpen">
         <NavMenu/>
@@ -28,6 +32,9 @@
     <MudMainContent>
         @Body
     </MudMainContent>
+    <MudAppBar>
+        <a @onclick="CerrarSesion" href="javascript:void(0)">Salir</a>
+    </MudAppBar>
 </MudLayout>
 
 <CascadingBlazoredModal></CascadingBlazoredModal>
@@ -38,5 +45,12 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    private async Task CerrarSesion()
+    {
+        var autenticacionExt = (AuthenticacionExtension)autenticacionProvider;
+        await autenticacionExt.ActualizarEstadoAutenticacion(null);
+        navManager.NavigateTo("/",true);
     }
 }
