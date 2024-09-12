@@ -1,18 +1,89 @@
-@using riwi.Models
 @inherits Blazored.Modal.BlazoredModal
+@using riwi.Models
+@using riwi.Services
+@inject CoderService coderService
+@inject IModalService model
 
 
 @if (Coder != null)
 {
-  <BlazoredModalTitle>Detalles de @Coder.FirstName</BlazoredModalTitle>
-    <BlazoredModalContent>
-        <MudImage class="mud-photo" Src="@Coder.Photo"></MudImage>
+    <BlazoredModalTitle>
+        @* <MudImage class="photo-modal" Src="@Coder.Photo" /> *@
+    </BlazoredModalTitle>
 
-        <p><strong>Nombre:</strong> @Coder.FirstName</p>
-        <p><strong>Apellido:</strong> @Coder.FirstLastName</p>
-        <p><strong>Email:</strong> @Coder.Email</p>
-        <p><strong>Edad:</strong> @Coder.Age</p>
-    </BlazoredModalContent> 
+    <BlazoredModalContent class="content-modal">
+        <div class="content-model-top">
+            <div class="left-content-details">
+                <div class="left-top-coder">
+                    <MudImage class="photo-modal" Src="@Coder.Photo" />
+                    <p class="name-coder">
+                        @Coder.FirstName @Coder.FirstLastName @Coder.SecondLastName
+                        <img class="select-coder-icon" src="assets/corazon.png" alt="Select">
+                    </p>
+                    <div class="stacks-container">
+                        <p class="stack-role">Desarrollador @Coder.Stack</p>
+                        <p class="stack-age"><strong>Edad:</strong> @Coder.Age</p>
+                        <p class="description"><strong>Email:</strong> @Coder.Email</p>
+                    </div>
+                </div>
+                <div class="left-mid-details">
+                    <div class="containers-buttons-mid">
+                        <a class="buton-portfolio" href="#">
+                            <img class="butons" src="assets/download.png" width="20px" alt="Download">Resumen(HV)
+                        </a>
+                    </div>
+                </div>
+                <div class="left-bottom-details">
+                    <h3 class="description">Descripción</h3>
+                    <p class="description-text">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni, inventore
+                        blanditiis quaerat ipsa
+                        aspernatur velit id quia accusamus dolorem iusto perferendis nobis assumenda officia commodi? Nobis!
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, alias? Eaque perspiciatis molestias est enim laudantium ratione? Ipsam, voluptatum maiores facere optio, obcaecati dolor alias sunt deserunt eos vel voluptatem?
+                    </p>
+                </div>
+            </div>
+            <div class="right-skills-details">
+                <div class="right-skills-bottom">
+                    <h3 class="title-skill">Habilidades Idiomáticas</h3>
+                    <div class="container-skills-bottom">
+                        @if(Coder.LanguageSkills != null)
+                        {
+                            <div class="badge">@Coder.LanguageSkills.Language</div>
+                            <div class="badge">@Coder.LanguageSkills.Language_Level</div>
+                        }
+                        else
+                        {
+                            <p>Contenido no disponible...</p>
+                        }
+                    </div>
+                </div>
+                <div class="right-skills-top">
+                    <h3>Habilidades Técnicas</h3>
+                    <div class="container-skills-top">
+                        @*badges*@
+                        @if(Coder.Skills != null)
+                        {
+                            <div class="badges">
+                                @for(int i = 0; i < Coder.Skills.Count && i < 6; i++)
+                                {
+                                    <div class="badge">@Coder.Skills[i].Language_Programming</div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p>Contenido no disponible...</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-buttom">
+            <a class="anchors-buttom" id="buton1">Ver en el Dashboard</a>
+            <a class="anchors-buttom" id="buton2">Editar</a>
+        </div>
+    </BlazoredModalContent>
 }
 else
 {
@@ -21,6 +92,6 @@ else
 
 
 @code {
+    private List<Coder>? coders;
     [Parameter] public Coder Coder { get; set; }
 }
-
