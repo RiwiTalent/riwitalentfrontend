@@ -18,5 +18,7 @@ namespace riwi.Models
         public int Age { get; set; }
         public string? Stack { get; set; }
         public List<Skill>? Skills { get; set; }
+        public LanguageSkill? LanguageSkills { get; set; }
     }
+
 }
