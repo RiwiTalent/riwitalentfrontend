@@ -10,7 +10,17 @@
         @foreach(var coder in paginatedCoders)
         {
             <MudCard>
-                    <MudImage Src="@coder.Photo" Alt="profile"></MudImage>
+                @if(coder.Photo != null)
+                {
+                    <MudImage 
+                            Src="@ImageNullOrEmpty(coder.Photo)" 
+                            Alt="profile" 
+                            />
+                }
+                else
+                {
+                    <p>Cargando...</p>
+                }
                 <MudCardContent>
                         <div class="profile-info">
                             <div class="container">
@@ -18,7 +28,7 @@
                                     <h3>@coder.FirstName @coder.FirstLastName</h3>
                                     <p>@coder.Stack</p>
                                 </div>
-                                <a><i class="fa-regular fa-heart"></i></a>
+                                    <a><img src="images/group-add.svg" alt="icon"></a>
                             </div>
                             @*badges*@
                             @if(coder.Skills != null)
@@ -36,8 +46,7 @@
                             }
                             @*Buttons*@
                             <div class="buttons">
-                                <MudButton style="background: #fff;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>
-                                <MudButton Color="Color.Primary" Variant="Variant.Filled">@ButtonHire</MudButton>      
+                                <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
                             </div>
                         </div>
                 </MudCardContent>
@@ -47,7 +56,7 @@
 
     <div class="container-pagination">
         <div class="container-box">
-            <MudPagination class="container-number" Variant="Variant.Filled" Color="Color.Primary" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize"  TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true"></MudPagination>
+            <MudPagination Variant="Variant.Filled"  ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize"  TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
         </div>
     </div>
 }
@@ -60,7 +69,6 @@ else
 @code
 {
     public string ButtonDetails = "Detalle";
-    public string ButtonHire = "Contratar";
     private List<Coder>? coders;
 
     //paginación
@@ -70,6 +78,8 @@ else
     private int pageSize = 8;
 
     private int pag;
+
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -126,5 +136,16 @@ else
         else{
             Console.WriteLine($"Existe un usuario {coders?.Count ?? 0}");
         }
+    }
+
+    //Lógica para renderizar imagen por defecto
+    private string ImageNullOrEmpty(string? photo)
+    {
+        if(string.IsNullOrEmpty(photo))
+        {
+            return "images/Avatar1.png";
+        }
+
+        return photo;
     }
 }

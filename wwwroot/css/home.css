@@ -72,6 +72,7 @@
     background: #fff;
     transition: 0.5s ease-in-out;
 }
+
 .container a:hover{
     background: #6B5CFF;
     transition: 0.5s ease-in-out;
