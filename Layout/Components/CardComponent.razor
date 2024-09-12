@@ -107,15 +107,15 @@
 
     <div class="container-pagination">
         <div class="container-box">
-            <MudPagination class="container-number" Variant="Variant.Filled" Color="Color.Primary" ShowPreviousButton="false" ShowNextButton="false" PageSize="8"  TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true"></MudPagination>
+            <MudPagination Variant="Variant.Filled"  ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize"  TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
         </div>
     </div>
 }
 else
 {
     <p><em>Loading...</em></p>
+
 }
-@* <MudButton @onclick="VerifyCoder">Verificar Api</MudButton> *@
 
 @code
 {
@@ -127,6 +127,20 @@ else
     private int totalCoders;
     private int currentPage = 1;
     private int pageSize = 8;
+    private int pag;
+
+    //filtrado
+    //Lista para guardar los coder filtrados
+    private List<Coder>? filterCoder;
+
+    // Variables para los filtros
+    private string? firstName;
+    private string? firstLastName;
+    private string? skills;
+    private string? languageLevel;
+    private string? stack;
+
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -135,8 +149,9 @@ else
         {
             coders = await coderService.GetCodersAsync();
             totalCoders = coders.Count;
+            pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+            Console.WriteLine(pag);
             LoadCoders(currentPage);
-            LoadCodersAsync();
         }
         catch(Exception ex)
         {
@@ -154,6 +169,13 @@ else
         {
             Console.WriteLine($"Error al obtener coders: {ex.Message}");
         }
+    }
+
+
+    private void OnPageChanged(int pageNumber)
+    {
+        currentPage = pageNumber;
+        LoadCoders(currentPage);
     }
 
     private async Task FilterCoders()
@@ -203,6 +225,32 @@ else
         StateHasChanged();
     }
 
+    private async Task ClearFilters()
+    {
+        // Limpia los valores de los filtros
+        Console.WriteLine("Limpiaste");
+            // Limpia los valores de los filtros
+        firstName = "";
+        firstLastName = "";
+        skills = "";
+        languageLevel = "";
+        stack = "";
+
+        // Recarga la lista completa de coders sin filtros de manera asíncrona
+        coders = await coderService.GetCodersAsync();
+
+        // Actualiza el total de coders y las páginas
+        totalCoders = coders.Count;
+        pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+
+        // Carga la primera página después de limpiar los filtros
+        currentPage = 1;
+        LoadCoders(currentPage);
+
+        // Actualiza la UI
+        StateHasChanged();
+    }
+
 
     private void LoadCoders(int pageNumber)
     {
@@ -212,11 +260,7 @@ else
                             .ToList();
     }
 
-    private void OnPageChanged(int pageNumber)
-    {
-        currentPage = pageNumber;
-        LoadCoders(currentPage);
-    }
+
 
 
     //Funcionalidad ver detalles
@@ -233,16 +277,6 @@ else
         }
     }
 
-    public void VerifyCoder()
-    {
-        if(coderService is null)
-        {
-            Console.WriteLine("No hay nada");
-        }
-        else{
-            Console.WriteLine($"Existe un usuario {coders?.Count ?? 0}");
-        }
-    }
 
     //Lógica para renderizar imagen por defecto
     private string ImageNullOrEmpty(string? photo)
