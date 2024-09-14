@@ -1,4 +1,4 @@
-.container-cards {
+.cards {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,7 +16,16 @@
     margin-top: 40px;
 }
 
-.mud-card:hover .profile-info {
+.mud-card-content {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.mud-card:hover .cards__container {
     bottom: 0;
     z-index: 2;
 }
@@ -29,55 +38,8 @@
     z-index: 1;
 }
 
-.mud-card-content {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-}
 
-.container {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-}
-
-/* .container::before{
-    background: pink;
-    contain: '';
-    width: 30px;
-    height: 30px;
-} */
-.container i {
-    font-size: 20px;
-    color: #000;
-}
-
-.container a {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-    background: #fff;
-    transition: 0.5s ease-in-out;
-}
-
-.container a:hover {
-    background: #6B5CFF;
-    transition: 0.5s ease-in-out;
-}
-
-.container i:hover {
-    color: #fff;
-    transition: 0.5s ease-in-out;
-}
-
-.profile-info {
+.cards__container {
     position: absolute;
     bottom: -100px;
     /* Inicialmente oculto */
@@ -98,12 +60,48 @@
     backdrop-filter: blur(27.5px);
 }
 
-.coder {
+.cards__profile {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+
+.cards__profile i {
+    font-size: 20px;
+    color: #000;
+}
+
+.cards__profile a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    transition: 0.5s ease-in-out;
+}
+
+.cards__profile a:hover {
+    background: #6B5CFF;
+    transition: 0.5s ease-in-out;
+}
+
+.cards__profile i:hover {
+    color: #fff;
+    transition: 0.5s ease-in-out;
+}
+
+
+
+.cards__coder {
     display: flex;
     flex-direction: column;
 }
 
-.coder h3 {
+.cards__coder h3 {
     color: var(--Colors-Base-White, #FFF);
     font-family: 'Roboto', sans-serif;
     font-size: 20px;
@@ -112,7 +110,7 @@
     line-height: normal;
 }
 
-.coder p {
+.cards__coder p {
     color: var(--Colors-Base-White, #FFF);
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
@@ -122,7 +120,7 @@
 }
 
 /*Badges*/
-.badges {
+.cards__badges {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-content: left;
@@ -131,7 +129,7 @@
     gap: 7px;
 }
 
-.badge {
+.cards__badge {
     background: #E9DBAA;
     color: #000;
     border-radius: 8px;
@@ -145,7 +143,7 @@
 }
 
 /*Buttons*/
-.buttons {
+.cards__buttons {
     display: flex;
     justify-content: left;
     gap: 10px;
@@ -157,6 +155,7 @@
     width: 128px;
     height: 30px;
 }
+
 
 /*Modal -- Maocol - Detalles*/
 .blazored-modal-focus-trap {
