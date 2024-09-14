@@ -4,6 +4,8 @@ using riwi;
 using MudBlazor.Services;
 using riwi.Services;
 using Blazored.Modal;
+using Blazored.SessionStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -17,5 +19,10 @@ builder.Services.AddBlazoredModal();
 
 //Service to MudBlazor
 builder.Services.AddMudServices();
+
+builder.Services.AddAuthorizationCore();
+builder.Services.AddBlazoredSessionStorage();
+builder.Services.AddScoped<AuthenticationStateProvider,AuthenticacionExtension>();
+builder.Services.AddAuthorizationCore();
 
 await builder.Build().RunAsync();

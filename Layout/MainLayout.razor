@@ -1,20 +1,9 @@
 ﻿@inherits LayoutComponentBase
-@* <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+@using Microsoft.AspNetCore.Components.Authorization
+@using riwi.Services
+@inject AuthenticationStateProvider autenticacionProvider
+@inject NavigationManager navManager
 
-    <main>
-        
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div> *@
 
 <MudThemeProvider />
 <MudLayout>
@@ -28,6 +17,9 @@
     <MudMainContent>
         @Body
     </MudMainContent>
+    <MudAppBar>
+        <a @onclick="CerrarSesion" href="javascript:void(0)">Salir</a>
+    </MudAppBar>
 </MudLayout>
 
 <CascadingBlazoredModal></CascadingBlazoredModal>
@@ -38,5 +30,13 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    //Login
+    private async Task CerrarSesion()
+    {
+        var autenticacionExt = (AuthenticacionExtension)autenticacionProvider;
+        await autenticacionExt.ActualizarEstadoAutenticacion(null);
+        navManager.NavigateTo("/",true);
     }
 }
