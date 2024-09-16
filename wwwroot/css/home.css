@@ -143,7 +143,7 @@
 }
 
 /*Buttons*/
-.cards__buttons {
+.cards__button--primary {
     display: flex;
     justify-content: left;
     gap: 10px;
