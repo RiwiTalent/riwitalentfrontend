@@ -55,7 +55,7 @@
 
 
 @*Filtrado - Coder*@
-<MudPaper Class="filter-container" Elevation="1">
+<MudPaper Class="filter-container" style="width: 85%; margin-top: 50px;" Elevation="1">
     <!-- Botón "Filtrar por" -->
     <button>
         <i class="fa fa-filter"></i> Filtrar por:
@@ -106,7 +106,7 @@
 
 @if(coders != null)
 {
-    <div class="container-cards">
+    <div class="cards">
     
         @foreach(var coder in paginatedCoders)
         {
@@ -123,9 +123,9 @@
                     <p>Cargando...</p>
                 }
                 <MudCardContent>
-                        <div class="profile-info">
-                            <div class="container">
-                                <div class="coder">
+                        <div class="cards__container">
+                            <div class="cards__profile">
+                                <div class="cards__coder">
                                     <h3>@coder.FirstName @coder.FirstLastName</h3>
                                     <p>@coder.Stack</p>
                                 </div>
@@ -134,10 +134,10 @@
                             @*badges*@
                             @if(coder.Skills != null)
                             {
-                                <div class="badges">
+                                <div class="cards__badges">
                                     @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
                                     {
-                                        <div class="badge">@coder.Skills[i].Language_Programming</div>
+                                        <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
                                     }
                                 </div>
                             }
@@ -146,7 +146,7 @@
                                 <p>Contenido no disponible...</p>
                             }
                             @*Buttons*@
-                            <div class="buttons">
+                            <div class="cards__button--primary">
                                 <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
                             </div>
                         </div>
@@ -177,7 +177,7 @@ else
     public string ButtonDetails = "Detalle";
     private List<Coder>? coders;
 
-    //paginación
+    //pagination
     private List<Coder>? paginatedCoders;
     private int totalCoders;
     private int currentPage = 1;
@@ -327,7 +327,7 @@ else
             var parameters = new ModalParameters();
             parameters.Add(nameof(ModalCoderDetails.Coder), coder);
 
-            var modal = model.Show<ModalCoderDetails>("Detalles del Coder", parameters);
+            var modal = model.Show<ModalCoderDetails>("", parameters);
             await modal.Result;
         }
     }

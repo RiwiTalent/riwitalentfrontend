@@ -1,26 +1,20 @@
-﻿@inherits LayoutComponentBase
-@* <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+﻿@page "/mypage"
+@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+@using riwi.Services
+@inject AuthenticationStateProvider autenticacionProvider
+@inject NavigationManager navManager
+@inject NavigationManager NavigationManager
 
-    <main>
-        
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div> *@
+
 
 <MudThemeProvider />
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         My Application
+        <a @onclick="CerrarSesion" href="javascript:void(0)">Salir</a>
     </MudAppBar>
     <MudDrawer style="300px" @bind-Open="@_drawerOpen">
         <NavMenu/>
@@ -38,5 +32,13 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    //Login
+    private async Task CerrarSesion()
+    {
+        var autenticacionExt = (AuthenticacionExtension)autenticacionProvider;
+        await autenticacionExt.ActualizarEstadoAutenticacion(null);
+        navManager.NavigateTo("/",true);
     }
 }
