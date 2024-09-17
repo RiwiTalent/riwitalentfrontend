@@ -18,7 +18,7 @@ namespace riwi.Services
         //we realize the petition
         public async Task<List<Coder>> GetCodersAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<Coder>>("http://localhost:5113/RiwiTalent/CoderList");
+            return await _httpClient.GetFromJsonAsync<List<Coder>>("http://localhost:5113/riwitalent/coders");
         }
     }
 }
