@@ -4,6 +4,56 @@
 @inject IModalService model
 
 
+
+
+<div class="container">
+    <div class="container__filter">
+        <div class="container__filter__to">
+            <div class="container__filter__to__icon">
+                <MudIcon Icon="@Icons.Material.Filled.CompareArrows"></MudIcon>
+            </div>
+            <p>Filtrar por:</p>
+        </div>
+        
+        <div class="container__filter__check-contain">
+            <MudCheckBox @bind-Value="CheckBox1" Color="Color.Primary"></MudCheckBox>
+            <p>Nombre</p>
+        </div>
+
+        <div class="container__filter__check-contain">
+            <MudCheckBox @bind-Value="CheckBox2" Color="Color.Primary"></MudCheckBox>
+            <InputSelect @bind-Value="skills" Class="search-container">
+                <option value="">Tecnología</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="C#">C#</option>
+                <option value="Python">Python</option>
+                <option value="Java">Java</option>
+                <option value="Ruby">Ruby</option>
+                <option value="PHP">PHP</option>
+                <option value="React">React</option>
+            </InputSelect>
+        </div>
+
+        <div class="container__filter__check-contain">
+            <MudCheckBox @bind-Value="CheckBox3" Color="Color.Primary"></MudCheckBox>
+            <InputSelect @bind-Value="languageLevel" Class="search-container">
+                <option value="">Inglés</option>
+                <option value="A1">A1</option>
+                <option value="A2">A2</option>
+                <option value="B1">B1</option>
+                <option value="B2">B2</option>
+                <option value="C1">C1</option>
+                <option value="C2">C2</option>
+            </InputSelect>
+        </div>
+    </div>
+    
+    <div class="container__search">
+        
+    </div>
+</div>
+
+
 @*Filtrado - Coder*@
 <MudPaper Class="filter-container" Elevation="1">
     <!-- Botón "Filtrar por" -->
@@ -119,6 +169,11 @@ else
 
 @code
 {
+    public bool CheckBox1 { get; set; } = false;
+    public bool CheckBox2 { get; set; } = false;
+    public bool CheckBox3 { get; set; } = false;
+    
+    
     public string ButtonDetails = "Detalle";
     private List<Coder>? coders;
 
