@@ -1,6 +1,6 @@
 @inherits Blazored.Modal.BlazoredModal
-@using riwi.Models
-@using riwi.Services
+@using riwi.Models;
+@using riwi.Services;
 @inject CoderService coderService
 @inject IModalService model
 
@@ -16,14 +16,16 @@
             <div class="left-content-details">
                 <div class="left-top-coder">
                     <MudImage class="photo-modal" Src="@Coder.Photo" />
-                    <p class="name-coder">
-                        @Coder.FirstName @Coder.FirstLastName @Coder.SecondLastName
-                        <img class="select-coder-icon" src="assets/corazon.png" alt="Select">
-                    </p>
-                    <div class="stacks-container">
-                        <p class="stack-role">Desarrollador @Coder.Stack</p>
-                        <p class="stack-age"><strong>Edad:</strong> @Coder.Age</p>
-                        <p class="description"><strong>Email:</strong> @Coder.Email</p>
+                    <div class="left-right-coder">
+                        <p class="name-coder">
+                            @Coder.FirstName @Coder.FirstLastName @Coder.SecondLastName
+                            <img class="select-coder-icon" src="assets/corazon.png" alt="Select">
+                        </p>
+                        <div class="stacks-container">
+                            <p class="stack-role">Desarrollador @Coder.Stack</p>
+                            <p class="stack-age"><strong>Edad:</strong> @Coder.Age</p>
+                            <p class="description"><strong>Email:</strong> @Coder.Email</p>
+                        </div>
                     </div>
                 </div>
                 <div class="left-mid-details">
