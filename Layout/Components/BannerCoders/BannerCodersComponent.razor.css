@@ -62,36 +62,24 @@
     font-weight: 700;
 }
 
-.prueba{
+.container-banner__item__info-section{
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.prueba__e{
+.container-banner__item__info-section__item{
     height: 5vh;
     width: 100%;
     display: flex;
     gap: 15px;
 }
 
-
-.pee1{
+.container-banner__item__info-section__item div {
     width: 70%;
-    background-color: #2DB588;
     border-radius: 50px;
     color: #FFFFFF;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: 400;
-    font-size: 20px;
-}
-
-.pee2{
-    width: 70%;
-    background-color: #EAA2FC;
-    border-radius: 50px;
-    color: #0D0D10;
     font-family: 'Ubuntu', sans-serif;
     font-weight: 400;
     font-size: 20px;
