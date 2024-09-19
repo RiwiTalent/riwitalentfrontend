@@ -8,9 +8,9 @@
 }
 
 .mud-card {
-    border-radius: 16px;
+    border-radius: 8px;
     width: 250px;
-    height: 238px;
+    height: 300px;
     position: relative;
     overflow: hidden;
     margin-top: 40px;
