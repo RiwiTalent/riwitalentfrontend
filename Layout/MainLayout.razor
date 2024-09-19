@@ -1,7 +1,13 @@
 ﻿@page "/mypage"
 @inherits LayoutComponentBase
+<<<<<<< HEAD
 @using Microsoft.AspNetCore.Components.Authorization;
 @using riwi.Services;
+=======
+@using Microsoft.AspNetCore.Components.Authorization
+@using riwi.Services
+@using riwi.Theme
+>>>>>>> e9cdf7acd59799314b24f27284d01fa331c0f65c
 @inject AuthenticationStateProvider autenticacionProvider
 @inject NavigationManager navManager
 @inject NavigationManager NavigationManager
@@ -9,14 +15,17 @@
 
 
 
-<MudThemeProvider />
+<MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
 <MudLayout>
-    <MudAppBar>
+    <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        My Application
+        <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
+        <MudSpacer />
         <a @onclick="CerrarSesion" href="javascript:void(0)">Salir</a>
+        <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
+        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
     </MudAppBar>
-    <MudDrawer style="300px" @bind-Open="@_drawerOpen">
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu/>
     </MudDrawer>
     <MudMainContent>
@@ -27,11 +36,30 @@
 <CascadingBlazoredModal></CascadingBlazoredModal>
 
 @code {
-    bool _drawerOpen = true;
+    private bool _drawerOpen = true;
+    private bool _isDarkMode = true;
+    private MudTheme? _theme = null;
 
-    void DrawerToggle()
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _theme = new()
+        {
+            PaletteLight = CustomMudTheme.PaletteLight,
+            PaletteDark = CustomMudTheme.PaletteDark,
+            LayoutProperties = new LayoutProperties()
+        };
+    }
+
+    private void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    private void DarkModeToggle()
+    {
+        _isDarkMode = !_isDarkMode;
     }
 
     //Login
@@ -41,4 +69,10 @@
         await autenticacionExt.ActualizarEstadoAutenticacion(null);
         navManager.NavigateTo("/",true);
     }
+    
+    public string DarkLightModeButtonIcon => _isDarkMode switch
+    {
+        true => Icons.Material.Rounded.AutoMode,
+        false => Icons.Material.Outlined.DarkMode,
+    };
 }
