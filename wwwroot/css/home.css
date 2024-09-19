@@ -120,6 +120,30 @@
 }
 
 /*Badges*/
+.badges, .container-skills-top{
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.badge {
+    height: 20px;
+    display: inline-block;
+    padding: .35em .65em;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    color: black;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    background-color:#ffc107;
+}
+
 .cards__badges {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -161,13 +185,15 @@
 
 .blazored-modal-focus-trap {
     width: 75%;
+    max-width: 75%;
+    min-width: 50%;
     height: 440px;
     position: relative;
     background-color: white;
     display: flex;
     justify-content: center;
-    border-radius: 30px; 
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); 
+    border-radius: 30px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 .blazored-modal {
@@ -213,12 +239,19 @@
     align-items: center !important;
 }
 
-.bm-header{
+.bm-header {
     position: absolute !important;
+    z-index: 999;
 }
 
 .bm-close{
     color: #000 !important;
+    position: relative;
+    z-index: 999;
+}
+
+.bm-header span:hover{
+    color: #594ae2 !important;
 }
 
 .size-medium {
@@ -248,8 +281,7 @@
     width: 100%; 
     display: flex;
     justify-content: space-around;
-    height: 90%;
-    /* padding-left: 50px; */
+    height: 85%;
 }
 
 .bottom-buttom {
@@ -345,7 +377,6 @@ p{
 .left-mid-details {
     width: 100%;
     height: 10%;
-    padding: ;
     justify-content: center;
     display: flex;
     justify-content: flex-end;
@@ -395,16 +426,16 @@ p{
     padding: 30px;
 }
 
-.container-skills-top{
+/* .container-skills-top{
     display: grid;
     grid-template-columns: repeat(4, 2fr)!;
     justify-content: left;
     padding: 4px;
     width: 100%;
     gap: 7px;
-}
+} */
 
-.container-skills-bottom{
+.container-skills-bottom {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     justify-content: left;
@@ -412,6 +443,8 @@ p{
     width: 100%;
     gap: 7px;
 }
+
+
 
 .box--button-hv{
     color: white;
@@ -426,20 +459,32 @@ p{
     background-color: #6B5CFF;
 }
 
-.anchors-buttom{
-    width: 25%;
-}
-
-#buton1{
-    background-color: #E6CA52;
-    color: white;
-}
-
-#buton2{
+.anchors-buttom {
+    width: 8%;
+    height: 30px;
+    padding: 10px;
+    font-size: 12px;
     background-color: #7AE3CB;
+    color: aliceblue;
+    text-align: center;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-mid--details-button{
+    background-color: #594ae2;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 20%;
     color: white;
 }
 
 .title-skill{
-    margin-top: 14%;
+    font-size: 22px;
+    /* margin-top: 14%; */
 }
