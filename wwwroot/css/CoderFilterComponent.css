@@ -1,5 +1,4 @@
-
-/* Contenedor principal del filtro */
+/* Bloque principal del filtro */
 .filter-container {
     display: flex;
     align-items: center;
@@ -11,68 +10,67 @@
     max-width: 100%;
     margin: auto;
     flex-wrap: wrap;
-    justify-content: space-between; /* Asegura que los elementos se distribuyan proporcionalmente */
+    justify-content: space-between; /* Distribuye los elementos proporcionalmente */
 }
 
-/* Estilo para los filtros */
-.filter-container label {
-    margin: 0 10px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #6f6fc8;
+/* Elemento: botón principal dentro del contenedor */
+.filter-container__button {
     display: flex;
     align-items: center;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 12px; /* Ajuste de padding para botón más pequeño */
+    font-size: 12px; /* Tamaño de texto más pequeño */
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+/* Modificador: botón primario (Filtrar por) */
+.filter-container__button--primary {
+    background-color: #605bff;
+    color: #fff;
+}
+
+/* Modificador: botón de aplicar filtro */
+.filter-container__button--apply {
+    background-color: #605bff;
+}
+
+/* Modificador: botón de limpiar filtros */
+.filter-container__button--clear {
+    background-color: #ff5a82;
+}
+
+/* Estilo del icono dentro del botón */
+.filter-container__button i {
+    margin-right: 6px; /* Espacio reducido entre el icono y el texto */
+}
+
+/* Estilo para el campo de texto dentro del contenedor de filtros */
+.filter-container__input {
+    flex-grow: 1;
+    margin-right: 10px;
+    min-width: 120px; /* Tamaño mínimo reducido */
 }
 
 /* Ajuste para los campos de texto */
-.filter-container .mud-input {
-    flex-grow: 1; /* Esto permitirá que los inputs crezcan proporcionalmente */
-    margin-right: 10px;
-    min-width: 150px; /* Asegura un tamaño mínimo para que no se encojan demasiado */
+.filter-container__input input {
+    padding: 4px 8px; /* Reducido para inputs más pequeños */
+    font-size: 12px; /* Tamaño de texto más pequeño */
 }
 
-.filter-container .mud-input-input {
-    padding: 8px 12px;
-    font-size: 14px;
-}
-
-/* Estilo para los selects */
-.filter-container select {
+/* Estilo para los selects dentro del contenedor de filtros */
+.filter-container__select {
     flex-grow: 1;
-    padding: 8px 12px;
+    padding: 4px 8px; /* Reducido para selects más pequeños */
     border-radius: 20px;
     border: 1px solid #ccc;
     margin-right: 10px;
-    min-width: 150px;
+    min-width: 120px; /* Tamaño mínimo reducido */
+    font-size: 12px; /* Tamaño de texto más pequeño */
 }
 
-/* Estilo del botón "Filtrar por" */
-.filter-container button {
-    background-color: #605bff;
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 15px;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
-}
-
-.filter-container button i {
-    margin-right: 8px;
-}
-
-/* Hover y focos */
-.filter-container button:hover {
+/* Hover y focus para el botón */
+.filter-container__button:hover {
     background-color: #4948cc;
 }
-
-.filter-button.nuevo-filtro {
-    background-color: #ff5a82;
-    padding: 10px 30px; /* Aumenta el tamaño del botón */
-    font-size: 14px; /* Tamaño de texto más pequeño para que no sobresalga */
-    border-radius: 35px; /* Aumenta el redondeado del botón */
-}
-
