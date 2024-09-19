@@ -1,21 +1,39 @@
 @using riwi.Services;
 @using riwi.Models;
+@using MudBlazor;
 @inject CoderService coderService
 @inject IModalService model
+@using riwi.Theme;
+
 
 
 @*Filtrado - Coder*@
-<MudPaper Class="filter-container" style="width: 85%; margin-top: 50px;" Elevation="1">
+<MudPaper Class="filter-container d-flex justify-space-around  align-center" Style="@($"background-color: {RiwiPalette.NeutralWhite};")">
+    <p>
+        <span>23</span>
+        Resultados
+    </p>
     <!-- Botón "Filtrar por" -->
-    <button>
+    @* <button>
         <i class="fa fa-filter"></i> Filtrar por:
-    </button>
+    </button> *@
+        <!-- Botón "Filtrar por" -->
+    <MudButton OnClick="FilterCoders" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FilterList" 
+               Style="@($"background-color: {RiwiPalette.Secondary500};")" Size="Size.Small">
+        Filtrar
+    </MudButton>
 
     <!-- Campo para filtrar por FirstName -->
-    <MudTextField @bind-Value="firstName" Label="FirstName" Class="mud-input" />
+     <MudItem>
+        <MudTextField T="string"  Label="Buscar aquì" @bind-Value="firstLastName"  StartIcon="@Icons.Material.Filled.Search" Variant="Variant.Outlined" 
+       Style="@($"color: {RiwiPalette.Primary500};")" ></MudTextField>
+    </MudItem>
+     @* <MudItem>
+        <MudField Label="Buscar aquì"  @bind-Value="firstName" @bind-Value="firstLastName"  Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search"  Style="@($"color: {RiwiPalette.Primary500};")"></MudField>
+        a
+    </MudItem> *@
+    @* <MudTextField @bind-Value="firstName" @bind-Value="firstLastName" Style="@($"color: {RiwiPalette.Primary500};")"  Label="Buscar aquì" Class="mud-input" /> *@
 
-    <!-- Campo para filtrar por SecondName -->
-    <MudTextField @bind-Value="firstLastName" Label="FirstLastName" Class="mud-input" />
 
     <!-- Campo para filtrar por Stack -->
     
@@ -43,15 +61,15 @@
         <option value="C2">C2</option>
     </InputSelect>
 
-    <!-- Botón para aplicar el filtro. -->
+    @* <!-- Botón para aplicar el filtro. -->
     <MudButton OnClick="FilterCoders" Variant="Variant.Filled" Color="Color.Primary" Class="filter-button">
         Filtrar
-    </MudButton>
+    </MudButton> *@
 
-    <!-- Botón para limpiar filtros -->
+    @* <!-- Botón para limpiar filtros -->
     <MudButton OnClick="ClearFilters" Variant="Variant.Filled" Color="Color.Secondary" Class="filter-button">
         Limpiar
-    </MudButton>
+    </MudButton> *@
 </MudPaper>
 
 @if(coders != null)

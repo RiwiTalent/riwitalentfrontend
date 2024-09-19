@@ -2,16 +2,17 @@
 /* Contenedor principal del filtro */
 .filter-container {
     display: flex;
+    height: 60px;
+    width: 80%;
     align-items: center;
     padding: 10px;
     border: 1px solid #d3d3d3;
-    border-radius: 25px;
+    border-radius: 8px;
     background-color: #f0f4ff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
+    max-width: 80%;
     margin: auto;
-    flex-wrap: wrap;
-    justify-content: space-between; /* Asegura que los elementos se distribuyan proporcionalmente */
+    justify-content: space-between;
 }
 
 /* Estilo para los filtros */
