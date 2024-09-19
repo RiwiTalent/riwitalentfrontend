@@ -272,7 +272,7 @@ else
             var parameters = new ModalParameters();
             parameters.Add(nameof(ModalCoderDetails.Coder), coder);
 
-            var modal = model.Show<ModalCoderDetails>("Detalles del Coder", parameters);
+            var modal = model.Show<ModalCoderDetails>("", parameters);
             await modal.Result;
         }
     }
