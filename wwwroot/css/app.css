@@ -1,5 +1,6 @@
 html, body {
-    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    font-family: "Ubuntu", sans-serif !important;
+    background-color: #F4F4F4;
 }
 
 h1:focus {
