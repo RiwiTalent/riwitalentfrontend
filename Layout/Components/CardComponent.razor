@@ -1,58 +1,84 @@
-@using riwi.Services
-@using riwi.Models
+@using riwi.Services;
+@using riwi.Models;
+@using MudBlazor;
 @inject CoderService coderService
 @inject IModalService model
-
-
+@using riwi.Theme;
 
 
 @*Filtrado - Coder*@
-<MudPaper class="filter-container" style="width: 85%; margin-top: 50px;" Elevation="1">
-    <!-- Botón "Filtrar por" -->
-    <button class="filter-container__button filter-container__button--primary">
-        <i class="fa fa-filter"></i> Filtrar por:
-    </button>
-
-    <MudTextField @bind-Value="searchText" Label="Nombre" class="filter-container__input"></MudTextField>
-
-    <!-- Campo para filtrar por Skills -->
-    <InputSelect @bind-Value="skills" class="filter-container__select">
-        <option value="">Seleccione Skill</option>
-        <option value="JavaScript">JavaScript</option>
-        <option value="C#">C#</option>
-        <option value="Python">Python</option>
-        <option value="Java">Java</option>
-        <option value="Ruby">Ruby</option>
-        <option value="PHP">PHP</option>
-        <option value="React">React</option>
-    </InputSelect>
-
-
-    <!-- Campo para filtrar por Language Level -->
-    <InputSelect @bind-Value="languageLevel" class="filter-container__select">
-        <option value="">Seleccione Nivel de ingles</option>
-        <option value="A1">A1</option>
-        <option value="A2">A2</option>
-        <option value="B1">B1</option>
-        <option value="B2">B2</option>
-        <option value="C1">C1</option>
-        <option value="C2">C2</option>
-    </InputSelect>
-
-    <!-- Botón para aplicar el filtro -->
-    <MudButton OnClick="FilterCoders" Variant="Variant.Filled" Color="Color.Primary" class="filter-container__button filter-container__button--apply">
+<MudPaper Class="filter-container d-flex justify-space-around  align-center" Style="@($"background-color: {RiwiPalette.NeutralWhite};")">
+    
+        <!-- Botón "Filtrar por" -->
+    @* <MudButton OnClick="FilterCoders" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FilterList" 
+               Style="@($"background-color: {RiwiPalette.Secondary500};")" Size="Size.Small">
         Filtrar
-    </MudButton>
+    </MudButton> *@
 
-    <!-- Mostrar el botón limpiar solo si ya se ha aplicado el filtro -->
-    @if (FilterApplied)
-    {
-        <MudButton OnClick="ClearFilters" Variant="Variant.Filled" Color="Color.Secondary" class="filter-container__button filter-container__button--clear">
-            Limpiar 
-        </MudButton>
-    }
+    <MudText Typo="Typo.h6">557 
+        <span class="contenedor--search-span">Resultados</span>
+    </MudText>
+
+    @* Variant="Variant.Outlined"  *@
+
+
+    <MudPaper>
+    <!-- Contenido aquí -->
+        <MudText StartIcon="@Icons.Material.Rounded.Search"></MudText>
+        <MudInput T="string"  Label="Buscar aquì" @bind-Value="firstLastName"
+        Style="@($"color: {RiwiPalette.Primary500};")" />
+    </MudPaper>
 
     
+    <MudPaper class="container__filter_selects">
+
+        <!-- Campo para filtrar por Skills -->
+        <InputSelect @bind-Value="skills" class="filter-container__select" placeholder="Buscar aquì">
+            <option value="">Tecnologia</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="C#">C#</option>
+            <option value="Python">Python</option>
+            <option value="Java">Java</option>
+            <option value="Ruby">Ruby</option>
+            <option value="PHP">PHP</option>
+            <option value="React">React</option>
+            <option>
+            <MudButton OnClick="ClearFilters" Variant="Variant.Filled" Color="Color.Secondary" Class="filter-button">
+                X Limpiar
+            </MudButton>
+            </option>
+        </InputSelect>
+
+
+        <!-- Campo para filtrar por Language Level -->
+        <InputSelect @bind-Value="languageLevel" class="filter-container__select">
+            <option value=""> Nivel inglès</option>
+            <option value="A1">A1</option>
+            <option value="A2">A2</option>
+            <option value="B1">B1</option>
+            <option value="B2">B2</option>
+            <option value="C1">C1</option>
+            <option value="C2">C2</option>
+            <option>
+                <MudButton OnClick="ClearFilters" Variant="Variant.Filled" Color="Color.Secondary" Class="filter-button">
+                X Limpiar
+                </MudButton>
+            </option>
+                
+            
+        </InputSelect>
+
+    </MudPaper>
+
+    <!-- Botón para aplicar el filtro. -->
+    @* <MudButton OnClick="FilterCoders" Variant="Variant.Filled" Color="Color.Primary" Class="filter-button">
+        Filtrar
+    </MudButton> *@
+
+    <!-- Botón para limpiar filtros -->
+    @* <MudButton OnClick="ClearFilters" Variant="Variant.Filled" Color="Color.Secondary" Class="filter-button">
+        Limpiar
+    </MudButton> *@
 </MudPaper>
 
 
@@ -79,10 +105,10 @@
                         <div class="cards__container">
                             <div class="cards__profile">
                                 <div class="cards__coder">
-                                    <h3>@coder.FirstName @coder.FirstLastName</h3>
+                                    <h6>@coder.FirstName @coder.FirstLastName</h6>
                                     <p>@coder.Stack</p>
                                 </div>
-                                    <a><img src="images/group-add.svg" alt="icon"></a>
+                                    <a><img class="cards__container_img" src="images/group-add.svg" alt="icon"></a>
                             </div>
                             @*badges*@
                             @if(coder.Skills != null)
@@ -100,7 +126,7 @@
                             }
                             @*Buttons*@
                             <div class="cards__button">
-                                <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
+                                <MudButton class="cards__button_element" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
                             </div>
                         </div>
                 </MudCardContent>

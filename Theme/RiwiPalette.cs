@@ -1,14 +1,14 @@
-namespace riwi.Theme;
+    namespace riwi.Theme;
 
- public static class RiwiPalette
-    {
-        // Colores Primarios (Primary)
-        public const string Primary950 = "#0D0D10";
-        public const string Primary900 = "#17171C";
-        public const string Primary800 = "#191925";
-        public const string Primary700 = "#1D1D2E";
-        public const string Primary600 = "#191A3E";
-        public const string Primary500 = "#181E4B";
+    public static class RiwiPalette
+        {
+            // Colores Primarios (Primary)
+            public const string Primary950 = "#0D0D10";
+            public const string Primary900 = "#17171C";
+            public const string Primary800 = "#191925";
+            public const string Primary700 = "#1D1D2E";
+            public const string Primary600 = "#191A3E";
+            public const string Primary500 = "#181E4B";
         public const string Primary400 = "#4B64CF";
         public const string Primary300 = "#7E98DF";
         public const string Primary200 = "#AEC0EB";

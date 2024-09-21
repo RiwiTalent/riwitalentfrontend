@@ -1,29 +1,56 @@
-/* Bloque principal del filtro */
 .filter-container {
     display: flex;
     align-items: center;
     padding: 10px;
     border: 1px solid #d3d3d3;
-    border-radius: 25px;
-    background-color: #f0f4ff;
+    border-radius: 8px;
+    background-color: #ffff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
     margin: auto;
-    flex-wrap: wrap;
-    justify-content: space-between; /* Distribuye los elementos proporcionalmente */
+    justify-content: space-between;
+    height: 70px;
+    max-width: 95%;
+    min-width: 50%;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 /* Elemento: botón principal dentro del contenedor */
-.filter-container__button {
-    display: flex;
-    align-items: center;
-    border: none;
-    border-radius: 20px;
-    padding: 6px 12px; /* Ajuste de padding para botón más pequeño */
-    font-size: 12px; /* Tamaño de texto más pequeño */
+.filter-container button {
+    width: 80px !important;
+    color: #fff;
+    font-weight: 800;
+    border-radius: 8px;
     cursor: pointer;
-    margin-right: 10px;
+
 }
+
+.filter-container .mud-input {
+    /* margin-right: 10px; */
+    /* min-width: 150px; */
+    width: 200px !important;
+    height: 40px !important;
+    display: flex !important;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.mud-input-control {
+    /* border: 0; */
+    /* margin: 0; */
+    /* padding: 0; */
+    /* display: flex; */
+    flex: none !important;
+    /* max-width: 100%; */
+    /* position: relative; */
+    flex-direction: column;
+    /* vertical-align: top; */
+    width: 190px;
+    height: 30px;
+    background-color: yellow;
+}
+
+
 
 /* Modificador: botón primario (Filtrar por) */
 .filter-container__button--primary {
@@ -48,7 +75,6 @@
 
 /* Estilo para el campo de texto dentro del contenedor de filtros */
 .filter-container__input {
-    flex-grow: 1;
     margin-right: 10px;
     min-width: 120px; /* Tamaño mínimo reducido */
 }
@@ -59,17 +85,25 @@
     font-size: 12px; /* Tamaño de texto más pequeño */
 }
 
-/* Estilo para los selects dentro del contenedor de filtros */
-.filter-container__select {
-    flex-grow: 1;
-    padding: 4px 8px; /* Reducido para selects más pequeños */
-    border-radius: 20px;
-    border: 1px solid #ccc;
-    margin-right: 10px;
-    min-width: 120px; /* Tamaño mínimo reducido */
-    font-size: 12px; /* Tamaño de texto más pequeño */
+.container__filter_selects {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
+
+.filter-container select {
+
+    border-radius: 8px;
+    min-width: 50px;
+    width: 140px;
+    background-color: #ECEFFF;
+    color: #6B5CFF;
+    height: 30px;
+    padding: 5px;
+}
 /* Hover y focus para el botón */
 .filter-container__button:hover {
     background-color: #4948cc;
