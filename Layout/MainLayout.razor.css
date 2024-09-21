@@ -1,3 +1,13 @@
+.mud-drawer{
+    left: 0;
+    top: 0;
+    height: 100%;
+}
+
+.nav-bar{
+    width: 92%;
+}
+
 .page {
     position: relative;
     display: flex;

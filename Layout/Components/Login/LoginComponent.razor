@@ -1,11 +1,10 @@
 @namespace riwi.Layout.Components
-@using MudBlazor
-@using riwi.Models
-@using Microsoft.AspNetCore.Components.Authorization
-@using riwi.Services
-@inject AuthenticationStateProvider autenticacionProvider
-@inject NavigationManager NavigationManager
-@inject HttpClient HttpClient
+@using riwi.Models;
+@using Microsoft.AspNetCore.Components.Authorization;
+@using riwi.Services;
+@inject AuthenticationStateProvider autenticacionProvider;
+@inject NavigationManager NavigationManager;
+@inject HttpClient HttpClient;
 
 <head>
     <link rel="stylesheet" href="css/LoginComponent.css">
@@ -13,17 +12,16 @@
 
 @*Integracion*@
 
-
 <div class="main-container">
     <div class="secondary-container">
         <div class="login-card">
             <div class="card-content">
                 <div class="text-center mb-3">
-                    <img src="images/riwi.jpg" alt="Logo Riwi" class="riwi-logo" />
+                    <img src="images/riwi.png" alt="Logo Riwi" class="riwi-logo"/>
                 </div>
                 <h5 class="texto1">Bienvenido de nuevo</h5>
                 <p class="texto2">Ingresa con tu cuenta para continuar</p>
-                <MudForm  Valid="IniciarSesion">
+                <MudForm Valid="IniciarSesion">
                     <br>
                     <p class="input-container form-group">
                         <input type="text" placeholder="Ingresa tu correo electronico" @bind="login.Email" name="Email" id="text" class="input-field" autocomplete="Email">
@@ -41,11 +39,10 @@
             </div>
         </div>
         <div class="image-container">
-            <img src="images/login.png" alt="Imagen de login" class="login-image" />
+            <img src="images/login.png" alt="Imagen de login" class="login-image"/>
         </div>
     </div>
 </div>
-
 
 
 @code {
@@ -54,7 +51,7 @@
     private async Task IniciarSesion()
     {
         var loginResponse = await HttpClient.PostAsJsonAsync<User>("http://localhost:5113/riwitalent/login", login);
-        if(loginResponse.IsSuccessStatusCode)
+        if (loginResponse.IsSuccessStatusCode)
         {
             var sesionUsuario = await loginResponse.Content.ReadFromJsonAsync<User>();
             var autenticacionExt = (AuthenticacionExtension)autenticacionProvider;
@@ -67,4 +64,5 @@
             Console.WriteLine("No funciona");
         }
     }
+
 }
