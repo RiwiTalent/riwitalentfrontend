@@ -14,11 +14,12 @@
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
+            <NavLink class="nav-link riwi-image-content" href="" Match="NavLinkMatch.All">
+                <img class="riwi-image" src="images/riwi.png"/>
+            </NavLink>
         <MudSpacer />
-        <a @onclick="CerrarSesion" href="javascript:void(0)">Salir</a>
+        <MudAvatar Color="Color.Primary">D</MudAvatar>
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu/>
@@ -32,7 +33,7 @@
 
 @code {
     private bool _drawerOpen = true;
-    private bool _isDarkMode = true;
+    private bool _isDarkMode = false;
     private MudTheme? _theme = null;
 
     protected override void OnInitialized()
@@ -67,7 +68,14 @@
     
     public string DarkLightModeButtonIcon => _isDarkMode switch
     {
-        true => Icons.Material.Rounded.AutoMode,
-        false => Icons.Material.Outlined.DarkMode,
+        false => @Icons.Material.Outlined.WbSunny,
+        true => Icons.Material.Outlined.DarkMode,
     };
 }
+
+<style>
+    .riwi-image {
+        width: 103px;
+        height: 30px;
+    }
+</style>

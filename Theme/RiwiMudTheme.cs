@@ -12,6 +12,8 @@ namespace riwi.Theme;
 
             // Drawer (Panel Lateral)
             DrawerBackground = RiwiPalette.NeutralWhite,
+            DrawerText = RiwiPalette.Primary500,
+            DrawerIcon = RiwiPalette.Primary500,
 
             // Background (Fondo)
             Background = RiwiPalette.NeutralWhite,
