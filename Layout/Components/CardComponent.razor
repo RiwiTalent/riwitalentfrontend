@@ -1,23 +1,23 @@
-@using riwi.Services
-@using riwi.Models
-@inject CoderService coderService
-@inject IModalService model
+@using riwi.Services;
+@using riwi.Models;
+@inject CoderService coderService;
+@inject IModalService model;
 
-
+<head>
+    <link rel="stylesheet" href="css/CardComponent.css">
+</head>
 
 
 <MudPaper Class="container-filter" Elevation="1">
-    <MudPaper>
-        <MudText Typo="Typo.h6">557 Resultados</MudText>
+    <MudPaper Elevation="0" Class="d-flex align-center">
+        <MudText Class="text-resultado" Typo="Typo.h6">557 Resultados</MudText>
     </MudPaper>
 
-    <MudPaper Style="display: flex; justify-content: space-around; align-items: center; gap: 10px">
-        <MudTextField @bind-Value="firstName" Placeholder="Buscar aqui.." Class="mud-input" />
+    <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
+        <MudTextField @bind-Value="firstName" Placeholder="Buscar aqui.." Class="search" />
     </MudPaper>
-
-    <MudPaper Style="display: flex; align-items: center">
-        <MudButton>Cards</MudButton>
-        <MudButton>List</MudButton>
+    
+    <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select">
         <InputSelect @bind-Value="skills" Class="search-container">
             <option value="">Tecnologia</option>
             <option value="JavaScript">JavaScript</option>
@@ -40,56 +40,6 @@
     </MudPaper>
 </MudPaper>
 
-
-@*Filtrado - Coder*@
-<MudPaper Class="filter-container" style="width: 85%; margin-top: 50px;" Elevation="1">
-    <!-- Botón "Filtrar por" -->
-    <button>
-        <i class="fa fa-filter"></i> Filtrar por:
-    </button>
-
-    <!-- Campo para filtrar por FirstName -->
-    <MudTextField @bind-Value="firstName" Label="FirstName" Class="mud-input" />
-
-    <!-- Campo para filtrar por SecondName -->
-    <MudTextField @bind-Value="firstLastName" Label="FirstLastName" Class="mud-input" />
-
-    <!-- Campo para filtrar por Stack -->
-    
-
-    <!-- Campo para filtrar por Skills -->
-    <InputSelect @bind-Value="skills" Class="search-container">
-        <option value="">Seleccione Skill</option>
-        <option value="JavaScript">JavaScript</option>
-        <option value="C#">C#</option>
-        <option value="Python">Python</option>
-        <option value="Java">Java</option>
-        <option value="Ruby">Ruby</option>
-        <option value="PHP">PHP</option>
-        <option value="React">React</option>
-    </InputSelect>
-
-    <!-- Campo para filtrar por Language Level -->
-    <InputSelect @bind-Value="languageLevel" Class="search-container">
-        <option value="">Seleccione Nivel de Lenguaje</option>
-        <option value="A1">A1</option>
-        <option value="A2">A2</option>
-        <option value="B1">B1</option>
-        <option value="B2">B2</option>
-        <option value="C1">C1</option>
-        <option value="C2">C2</option>
-    </InputSelect>
-
-    <!-- Botón para aplicar el filtro. -->
-    <MudButton OnClick="FilterCoders" Variant="Variant.Filled" Color="Color.Primary" Class="filter-button">
-        Filtrar
-    </MudButton>
-
-    <!-- Botón para limpiar filtros -->
-    <MudButton OnClick="ClearFilters" Variant="Variant.Filled" Color="Color.Secondary" Class="filter-button">
-        Limpiar
-    </MudButton>
-</MudPaper>
 
 @if(coders != null)
 {
