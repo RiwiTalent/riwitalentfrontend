@@ -6,6 +6,7 @@
 @inject NavigationManager NavigationManager;
 @inject HttpClient HttpClient;
 @inject SweetAlertService Swal;
+@inject AlertServices alertServices;
 
 <head>
     <link rel="stylesheet" href="css/LoginComponent.css">
@@ -102,14 +103,10 @@
             await autenticacionExt.ActualizarEstadoAutenticacion(sesionUsuario);
 
             NavigationManager.NavigateTo("/home");
-            await Swal.FireAsync(new SweetAlertOptions
-            {
-                Title = "Bienvenido!",
-                Text = "continua",
-                Icon = SweetAlertIcon.Success,
-                ConfirmButtonText = "Cool",
-                Timer = 1500
-            });
+
+            //Service SweetAlert
+            await alertServices.SuccessSweetAlert();
+            
         }
         else
         {
