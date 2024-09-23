@@ -21,7 +21,7 @@
             <div class="card-content">
                 <div class="text-center mb-3">
                     <img src="images/riwi.png" alt="Logo Riwi" class="riwi-logo" />
-                    <img src="images/riwi.png" alt="Logo Riwi" class="riwi-logo" />
+                
                 </div>
                 <h5 class="texto1">Bienvenido de nuevo</h5>
                 <p class="texto2">Ingresa con tu cuenta para continuar</p>
@@ -52,9 +52,9 @@
                 </MudForm>
             </div>
         </div>
-        <button class="btn btn-primary" @onclick="SuccessSweetAlert">
+        @* <button class="btn btn-primary" @onclick="SuccessSweetAlert">
             error!
-        </button>
+        </button> *@
         <div class="image-container">
             <img src="images/fondo1.png" alt="Imagen de login" class="login-image" />
             <img src="images/fondo2.jpeg" alt="Imagen de login en celular" class="login-image-cel" />
@@ -104,7 +104,7 @@
             NavigationManager.NavigateTo("/home");
             await Swal.FireAsync(new SweetAlertOptions
             {
-                Title = "bIENVENIDO!",
+                Title = "Bienvenido!",
                 Text = "continua",
                 Icon = SweetAlertIcon.Success,
                 ConfirmButtonText = "Cool",
