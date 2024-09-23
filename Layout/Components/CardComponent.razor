@@ -92,7 +92,7 @@
             <MudCard>
                 @if(coder.Photo != null)
                 {
-                    <MudImage 
+                    <MudImage class=""
                             Src="@ImageNullOrEmpty(coder.Photo)" 
                             Alt="profile" 
                             />
@@ -116,7 +116,8 @@
                                 <div class="cards__badges">
                                     @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
                                     {
-                                        <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
+                                        <div class="cards__badge" OnClick="@(() => ShowDetails(@coder.Id))">@coder.Skills[i].Language_Programming</div>
+                                        
                                     }
                                 </div>
                             }
@@ -315,7 +316,7 @@ else
             var parameters = new ModalParameters();
             parameters.Add(nameof(ModalCoderDetails.Coder), coder);
 
-            var modal = model.Show<ModalCoderDetails>("Detalles del Coder", parameters);
+            var modal = model.Show<ModalCoderDetails>("", parameters);
             await modal.Result;
         }
     }
