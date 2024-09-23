@@ -88,14 +88,11 @@
 
     private async Task IniciarSesion()
     {
-        if (login.Email == "carlos")
-        {
-            Console.WriteLine("Func");
-        }
-
+    
         var loginResponse = await HttpClient.PostAsJsonAsync<User>("http://localhost:5113/riwitalent/login", login);
         Console.WriteLine(loginResponse);
-        if (loginResponse != null)
+
+        if (loginResponse !=null)
         {
             var sesionUsuario = await loginResponse.Content.ReadFromJsonAsync<User>();
             var autenticacionExt = (AuthenticacionExtension)autenticacionProvider;
@@ -105,7 +102,7 @@
             await Swal.FireAsync(new SweetAlertOptions
             {
                 Title = "Bienvenido!",
-                Text = "continua",
+                Text = "a RiwiTalent",
                 Icon = SweetAlertIcon.Success,
                 ConfirmButtonText = "Cool",
                 Timer = 1500
@@ -117,9 +114,8 @@
             await Swal.FireAsync(new SweetAlertOptions
             {
                 Title = "Error!",
-                Text = "continua",
+                Text = "Usuario o contraseña incorrectos",
                 Icon = SweetAlertIcon.Error,
-                ConfirmButtonText = "Cool",
                 Timer = 1500
             });
         }

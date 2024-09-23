@@ -12,78 +12,35 @@
     </BlazoredModalTitle>
 
     <BlazoredModalContent class="content-modal">
-        <div class="content-model-top">
-            <div class="left-content-details">
-                <div class="left-top-coder">
-                    <MudImage class="photo-modal" Src="@Coder.Photo" />
-                    <div class="left-right-coder">
-                        <p class="name-coder">
-                            @Coder.FirstName @Coder.FirstLastName @Coder.SecondLastName
-                            <img class="select-coder-icon" src="assets/corazon.png" alt="Select">
-                        </p>
-                        <div class="stacks-container">
-                            <p class="stack-role">Desarrollador @Coder.Stack</p>
-                            <p class="stack-age"><strong>Edad:</strong> @Coder.Age</p>
-                            <p class="description"><strong>Email:</strong> @Coder.Email</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="left-mid-details">
-                    <div class="containers-buttons-mid">
-                        <a class="left-mid--details-button" href="#">
-                            <img class="butons" src="assets/download.png" width="20px" alt="Download">(HV)
-                        </a>
-                    </div>
-                </div>
-                <div class="left-bottom-details">
-                    <h4 class="description">Descripción</h4>
-                    <p class="description-text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni, inventore
-                        blanditiis quaerat ipsa
-                        aspernatur velit id quia accusamus dolorem iusto perferendis nobis assumenda officia commodi? Nobis!
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, alias? Eaque perspiciatis molestias est enim laudantium ratione? Ipsam, voluptatum maiores facere optio, obcaecati dolor alias sunt deserunt eos vel voluptatem?
-                    </p>
-                </div>
-            </div>
-            <div class="right-skills-details">
-                <div class="right-skills-top">
-                    <h4 class="title-skill">Habilidades Idiomáticas</h4>
-                    <div class="container-skills-top">
-                        @if(Coder.LanguageSkills != null)
-                        {
-                            <span class="badge">@Coder.LanguageSkills.Language</span>
-                            <span class="badge">@Coder.LanguageSkills.Language_Level</span>
-                        }
-                        else
-                        {
-                            <p>Contenido no disponible...</p>
-                        }
-                    </div>
-                </div>
-                <div class="right-skills-top">
-                    <h4 class="title-skill">Habilidades Técnicas</h4>
-                    <div class="container-skills-top">
-                        @*badges*@
-                        @if(Coder.Skills != null)
-                        {
-                            <div class="badges">
-                                @for(int i = 0; i < Coder.Skills.Count && i < 6; i++)
-                                {
-                                    <span class="badge">@Coder.Skills[i].Language_Programming</span>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            <p>Contenido no disponible...</p>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="bottom-buttom">
-            <a class="anchors-buttom" id="buton2">Editar</a>
-        </div>
+
+        <MudPaper class="content__left-container">
+            <MudPaper class="content_left-container_top">
+                <img src="" alt="">
+                <p>Rol</p>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error">Delete</MudButton>
+            </MudPaper>
+
+            <MudPaper class="content_left-container_bot">
+                <h4>Proceso actual</h4>
+                <MudPaper>
+                    @* <img src="" alt="img grupo"> *@
+                    <h5>Grupo Celsia</h5>
+                    <p>Proceso de selecciòn</p>
+                </MudPaper>
+            </MudPaper>
+        </MudPaper>
+
+        <MudPaper class="content__right-container">
+            <MudPaper class="content__right-container_top">
+                <form action="">
+                    
+                </form>
+            </MudPaper>
+            <MudPaper class="content__right-container_bot">
+
+            </MudPaper>
+        </MudPaper>
+
     </BlazoredModalContent>
 }
 else
