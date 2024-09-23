@@ -1,110 +1,109 @@
+
+/* Contenedor principal del filtro */
 .filter-container {
     display: flex;
     align-items: center;
     padding: 10px;
     border: 1px solid #d3d3d3;
-    border-radius: 8px;
-    background-color: #ffff;
+    border-radius: 25px;
+    background-color: #f0f4ff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
     margin: auto;
-    justify-content: space-between;
-    height: 70px;
-    max-width: 95%;
-    min-width: 50%;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Asegura que los elementos se distribuyan proporcionalmente */
 }
 
-/* Elemento: botón principal dentro del contenedor */
-.filter-container button {
-    width: 80px !important;
-    color: #fff;
-    font-weight: 800;
-    border-radius: 8px;
-    cursor: pointer;
-
-}
-
-.filter-container .mud-input {
-    /* margin-right: 10px; */
-    /* min-width: 150px; */
-    width: 200px !important;
-    height: 40px !important;
-    display: flex !important;
-    justify-content: space-around;
+/* Estilo para los filtros */
+.filter-container label {
+    margin: 0 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6f6fc8;
+    display: flex;
     align-items: center;
-}
-
-.mud-input-control {
-    /* border: 0; */
-    /* margin: 0; */
-    /* padding: 0; */
-    /* display: flex; */
-    flex: none !important;
-    /* max-width: 100%; */
-    /* position: relative; */
-    flex-direction: column;
-    /* vertical-align: top; */
-    width: 190px;
-    height: 30px;
-    background-color: yellow;
-}
-
-
-
-/* Modificador: botón primario (Filtrar por) */
-.filter-container__button--primary {
-    background-color: #605bff;
-    color: #fff;
-}
-
-/* Modificador: botón de aplicar filtro */
-.filter-container__button--apply {
-    background-color: #605bff;
-}
-
-/* Modificador: botón de limpiar filtros */
-.filter-container__button--clear {
-    background-color: #ff5a82;
-}
-
-/* Estilo del icono dentro del botón */
-.filter-container__button i {
-    margin-right: 6px; /* Espacio reducido entre el icono y el texto */
-}
-
-/* Estilo para el campo de texto dentro del contenedor de filtros */
-.filter-container__input {
-    margin-right: 10px;
-    min-width: 120px; /* Tamaño mínimo reducido */
 }
 
 /* Ajuste para los campos de texto */
-.filter-container__input input {
-    padding: 4px 8px; /* Reducido para inputs más pequeños */
-    font-size: 12px; /* Tamaño de texto más pequeño */
+.filter-container .mud-input {
+    flex-grow: 1; /* Esto permitirá que los inputs crezcan proporcionalmente */
+    margin-right: 10px;
+    min-width: 150px; /* Asegura un tamaño mínimo para que no se encojan demasiado */
 }
 
-.container__filter_selects {
-    width: 40%;
-    height: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+.filter-container .mud-input-input {
+    padding: 8px 12px;
+    font-size: 14px;
 }
 
-
+/* Estilo para los selects */
 .filter-container select {
-
-    border-radius: 8px;
-    min-width: 50px;
-    width: 140px;
-    background-color: #ECEFFF;
-    color: #6B5CFF;
-    height: 30px;
-    padding: 5px;
+    flex-grow: 1;
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    min-width: 150px;
 }
-/* Hover y focus para el botón */
-.filter-container__button:hover {
+
+/* Estilo del botón "Filtrar por" */
+.filter-container button {
+    background-color: #605bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.filter-container button i {
+    margin-right: 8px;
+}
+
+/* Hover y focos */
+.filter-container button:hover {
     background-color: #4948cc;
 }
+
+.filter-button.nuevo-filtro {
+    background-color: #ff5a82;
+    padding: 10px 30px; /* Aumenta el tamaño del botón */
+    font-size: 14px; /* Tamaño de texto más pequeño para que no sobresalga */
+    border-radius: 35px; /* Aumenta el redondeado del botón */
+}
+
+
+
+.container-filter{
+    margin: auto;
+    width: 85%;
+    height: 70px;
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: calc(60% - 14px) 20% 20%;
+    gap: 7px;
+    padding: 10px;
+}
+
+@media (max-width: 768px) {
+    .container-filter {
+        grid-template-columns: 1fr; /* Una columna para todos los elementos */
+        height: auto; /* Ajusta la altura automáticamente */
+    }
+
+    .container-filter > :nth-child(1), /* Resultados */
+    .container-filter > :nth-child(2) { /* Buscar */
+        width: 100%; /* Ocupan todo el ancho disponible */
+    }
+
+    .container-filter > :nth-child(3), /* Primer select */
+    .container-filter > :nth-child(4) { /* Segundo select */
+        width: 40%; /* Ocupan el 40% del ancho */
+        margin: auto; /* Centra los selects horizontalmente */
+    }
+}
+
