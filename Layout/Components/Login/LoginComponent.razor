@@ -17,21 +17,31 @@
         <div class="login-card">
             <div class="card-content">
                 <div class="text-center mb-3">
-                    <img src="images/riwi.png" alt="Logo Riwi" class="riwi-logo"/>
+                    <img src="./riwi.png" alt="Logo Riwi" class="riwi-logo" />
                 </div>
                 <h5 class="texto1">Bienvenido de nuevo</h5>
                 <p class="texto2">Ingresa con tu cuenta para continuar</p>
-                <MudForm Valid="IniciarSesion">
+                <MudForm Style="display: flex; align-items: center " Valid="IniciarSesion">
                     <br>
-                    <p class="input-container form-group">
+                    <p class="input-container form-group Login_contenedor_input">
+                        <span class="correo_span">Correo</span>
+                        <label for="Password" class="input-icon-container">
+                            <img src="./mail-filled.svg" alt="Icono de correo electronico" class="input-icon" />
+                        </label>
                         <input type="text" placeholder="Ingresa tu correo electronico" @bind="login.Email" name="Email" id="text" class="input-field" autocomplete="Email">
-                        <label class="input-label" for="text">Correo</label>
                     </p>
                     <br>
-                    <p class="input-container form-group">
-                        <input type="password" placeholder="Ingresa tu contraseña" @bind="login.Password" name="Password" id="Password" class="input-field" autocomplete="Password">
-                        <label class="input-label" for="text">Contraseña</label>
+                    <p class="input-container form-group Login_contenedor_input">
+                        <span class="Password_span">Contraseña</span>
+                        <label for="Password" class="input-icon-container">
+                            <img src="./lock.svg" alt="Icono de contraseña" class="input-icon" />
+                        </label>
+                        <input type="@passwordInputType" placeholder="Ingresa tu contraseña" @bind="login.Password" name="Password" id="Password" class="input-field" autocomplete="Password">
+                        <label for="Password" class="eye-icon-container end-icon" @onclick="TogglePasswordVisibility">
+                            <img src="./eye-off.svg" alt="Icono para ocultar/mostrar contraseña" class="eye-icon" />
+                        </label>
                     </p>
+
                     <div class="button-container">
                         <button type="button" class="btn mt-3 Ingresar" @onclick="IniciarSesion">Ingresar</button>
                     </div>
@@ -39,19 +49,32 @@
             </div>
         </div>
         <div class="image-container">
-            <img src="images/login.png" alt="Imagen de login" class="login-image"/>
+            <img src="./fondo1.png" alt="Imagen de login" class="login-image" />
         </div>
+        
+        <div class="image-container2"></div>
     </div>
 </div>
 
-
 @code {
     private User login = new User();
+    private string passwordInputType = "password"; // Inicialmente oculto
+
+    private void TogglePasswordVisibility()
+    {
+        passwordInputType = passwordInputType == "password" ? "text" : "password"; // Alterna el tipo de input
+    }
 
     private async Task IniciarSesion()
     {
+        if (login.Email == "carlos")
+        {
+            Console.WriteLine("Func");
+        }
+
         var loginResponse = await HttpClient.PostAsJsonAsync<User>("http://localhost:5113/riwitalent/login", login);
-        if (loginResponse.IsSuccessStatusCode)
+        Console.WriteLine(loginResponse);
+        if (loginResponse != null)
         {
             var sesionUsuario = await loginResponse.Content.ReadFromJsonAsync<User>();
             var autenticacionExt = (AuthenticacionExtension)autenticacionProvider;
@@ -66,3 +89,4 @@
     }
 
 }
+
