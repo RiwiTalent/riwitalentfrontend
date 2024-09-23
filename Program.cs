@@ -6,9 +6,7 @@ using riwi.Services;
 using Blazored.Modal;
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Blazored.SessionStorage;
-using Microsoft.AspNetCore.Components.Authorization;
-
+using CurrieTechnologies.Razor.SweetAlert2;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -25,6 +23,9 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddScoped<AuthenticationStateProvider,AuthenticacionExtension>();
 builder.Services.AddAuthorizationCore();
+
+// Sweet alert services
+builder.Services.AddSweetAlert2();
 
 //Service to MudBlazor
 builder.Services.AddMudServices();
