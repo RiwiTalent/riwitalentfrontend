@@ -5,9 +5,12 @@
 @inject AuthenticationStateProvider autenticacionProvider;
 @inject NavigationManager NavigationManager;
 @inject HttpClient HttpClient;
+@inject SweetAlertService Swal;
 
 <head>
     <link rel="stylesheet" href="css/LoginComponent.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 @*Integracion*@
@@ -17,19 +20,21 @@
         <div class="login-card">
             <div class="card-content">
                 <div class="text-center mb-3">
-                    <img src="images/riwi.png" alt="Logo Riwi" class="riwi-logo"/>
+                    <img src="images/riwi.png" alt="Logo Riwi" class="riwi-logo" />
                 </div>
                 <h5 class="texto1">Bienvenido de nuevo</h5>
                 <p class="texto2">Ingresa con tu cuenta para continuar</p>
                 <MudForm Valid="IniciarSesion">
                     <br>
                     <p class="input-container form-group">
-                        <input type="text" placeholder="Ingresa tu correo electronico" @bind="login.Email" name="Email" id="text" class="input-field" autocomplete="Email">
+                        <input type="text" placeholder="Ingresa tu correo electronico" @bind="login.Email" name="Email"
+                            id="text" class="input-field" autocomplete="Email">
                         <label class="input-label" for="text">Correo</label>
                     </p>
                     <br>
                     <p class="input-container form-group">
-                        <input type="password" placeholder="Ingresa tu contraseña" @bind="login.Password" name="Password" id="Password" class="input-field" autocomplete="Password">
+                        <input type="password" placeholder="Ingresa tu contraseña" @bind="login.Password"
+                            name="Password" id="Password" class="input-field" autocomplete="Password">
                         <label class="input-label" for="text">Contraseña</label>
                     </p>
                     <div class="button-container">
@@ -38,14 +43,27 @@
                 </MudForm>
             </div>
         </div>
+        <button class="btn btn-primary" @onclick="SuccessSweetAlert">
+            error!
+        </button>
         <div class="image-container">
-            <img src="images/login.png" alt="Imagen de login" class="login-image"/>
+            <img src="images/login.png" alt="Imagen de login" class="login-image" />
         </div>
     </div>
 </div>
 
 
 @code {
+    private async Task SuccessSweetAlert()
+    {
+        await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Error!",
+                Text = "Do you want to continue",
+                Icon = SweetAlertIcon.Error,
+                ConfirmButtonText = "Cool"
+            });
+    }
     private User login = new User();
 
     private async Task IniciarSesion()
@@ -58,10 +76,26 @@
             await autenticacionExt.ActualizarEstadoAutenticacion(sesionUsuario);
 
             NavigationManager.NavigateTo("/home");
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "bIENVENIDO!",
+                Text = "continua",
+                Icon = SweetAlertIcon.Success,
+                ConfirmButtonText = "Cool",
+                Timer = 1500
+            });
         }
         else
         {
             Console.WriteLine("No funciona");
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Error!",
+                Text = "continua",
+                Icon = SweetAlertIcon.Error,
+                ConfirmButtonText = "Cool",
+                Timer = 1500
+            });
         }
     }
 
