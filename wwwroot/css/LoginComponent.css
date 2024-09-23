@@ -1,4 +1,6 @@
 /* Estilos globales */
+
+
 .main-container {
     min-width: 100vw;
     height: 100vh;
@@ -50,7 +52,6 @@
 }
 
 .login-image {
-    content: url("./fondo1.png");
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -108,6 +109,13 @@
     justify-content: center;
 }
 
+.login-image-cel {
+    display: none;
+}
+.image-container2 {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .main-container {
         margin: 0;
@@ -141,12 +149,81 @@
         background-color: #F9FAFC;
         /* Puedes agregar más estilos para ajustar la imagen aquí si es necesario */
     }
+
+    .login-image-cel {
+        display: block;
+    }
     
     .Ingresar{
         width: 84%;
     }
 }
 
+/* Inputs */
+.input-container {
+    --c-text: rgb(50, 50, 80);
+    --c-bg: rgb(252, 252, 252);
+    --c-outline: rgb(55, 45, 190);
+    display: grid;
+    gap: 1ch;
+    position: relative;
+    max-width: 490px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: black;
+}
+
+.input-field {
+    padding: 0.5em 3em;
+    padding-left: 40px; /* Aumenta el espacio a la izquierda para el icono */
+    border-radius: 10px;
+    border: 1px solid var(--c-border, #D9D9D9);
+    color: var(--c-text);
+    font-size: 16px;
+    letter-spacing: 0.1ch;
+    width: 100%;
+}
+
+.input-icon-container {
+    position: absolute;
+    left: 6px; /* Ajusta la posición del icono */
+    top: 70%;
+    transform: translateY(-50%);
+}
+
+.input-icon {
+    width: 30px; /* Tamaño del icono */
+    height: 30px;
+}
+
+.eye-icon{
+    height: 20px;
+    width: 20px;
+}
+
+
+
+.eye-icon-container {
+    position: absolute;
+    left: 225px;
+    top: 70%;
+    transform: translateY(-50%);
+}
+
+.eye-icon-container.eye-icon {
+    right: 10px;
+    left: auto;
+}
+
+.input-field:not(:placeholder-shown) + .input-label {
+    transform: translateY(-220%);
+    opacity: 1;
+}
+
+.input-field:invalid {
+    --c-border: rgb(230, 85, 60);
+    --c-text: rgb(230, 50, 50);
+}
+    
 
 @media (max-width: 480px) {
     .secondary-container {
@@ -170,8 +247,11 @@
         z-index: 1;
     }
 
-    .login-image {
-        content: url("./fondo2.jpeg");
+    .login-image{
+        display: none;
+    }
+
+    .login-image-cel {
         clip-path: polygon(100% 0%, 100% 0%, 100% 125%, 0% 65%, 0% 0%, 0% 0%);
         width: 100%;
         border-radius: 8%;
@@ -215,10 +295,11 @@
     }
 
     .image-container2 {
+        display: block;
+        /* background-image: url('images/bg-10.svg'); */
         position: fixed;
         bottom: 0;
         right: 0;
-        background-image: url('./bg-10.svg');
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
@@ -226,69 +307,9 @@
         height: 218px;
         z-index: 1000;
     }
-}
 
-/* Inputs */
-.input-container {
-    --c-text: rgb(50, 50, 80);
-    --c-bg: rgb(252, 252, 252);
-    --c-outline: rgb(55, 45, 190);
-    display: grid;
-    gap: 1ch;
-    position: relative;
-    max-width: 490px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: black;
-}
-
-.input-field {
-    padding: 0.5em 3em;
-    padding-left: 40px; /* Aumenta el espacio a la izquierda para el icono */
-    border-radius: 10px;
-    border: 1px solid var(--c-border, #D9D9D9);
-    color: var(--c-text);
-    font-size: 16px;
-    letter-spacing: 0.1ch;
-    width: 100%;
-}
-
-.input-icon-container {
-    position: absolute;
-    left: 6px; /* Ajusta la posición del icono */
-    top: 70%;
-    transform: translateY(-50%);
-}
-
-.input-icon {
-    width: 30px; /* Tamaño del icono */
-    height: 30px;
-}
-
-.eye-icon{
-    height: 30px;
-    width: 30px;
-}
-
-
-
-.eye-icon-container {
-    position: absolute;
-    left: 256px;
-    top: 70%;
-    transform: translateY(-50%);
-}
-
-.eye-icon-container.eye-icon {
-    right: 10px;
-    left: auto;
-}
-
-.input-field:not(:placeholder-shown) + .input-label {
-    transform: translateY(-220%);
-    opacity: 1;
-}
-
-.input-field:invalid {
-    --c-border: rgb(230, 85, 60);
-    --c-text: rgb(230, 50, 50);
+    .login-image-grafico-cel{
+        width: 50%;
+        height: 50%;
+    }
 }
