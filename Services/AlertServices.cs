@@ -9,6 +9,54 @@ namespace riwi.Services
         {
             Swal = swal;
         }
+
+        public async Task DeleteRegister(){
+            var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Icon = SweetAlertIcon.Warning,
+                Title = "¿Estás seguro/a de que deseas eliminar este registro?",
+                Text = "Esta acción no se podra deshacer.",
+                ShowCancelButton = true,
+                ConfirmButtonColor = "#FE654F",
+                ConfirmButtonText = "Eliminar",
+                CancelButtonColor = "#fff",
+                CancelButtonText="<button class='btn-eliminar'>Cancelar</button>"
+            });
+
+            if (result.IsConfirmed)
+            {
+                await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Los datos se han eliminado exitosamente",
+                    Icon = SweetAlertIcon.Success,
+                    ShowConfirmButton = false 
+                });
+            }
+        }
+
+        public async Task SaveChangesRegister(){
+            var result = await Swal.FireAsync(new SweetAlertOptions
+            {
+                Icon = SweetAlertIcon.Success,
+                Title = "¿Estás seguro/a de que deseas guardar los cambios de este registro?",
+                Text = "Esta acción actualizará la información y no podrá recuperarse.",
+                ShowCancelButton = true,
+                ConfirmButtonColor = "#5ACCA4",
+                ConfirmButtonText = "Si, Confirmar",
+                CancelButtonColor = "#fff",
+                CancelButtonText="<button style='color:#5ACCA4, background-color:#fff'>No, Cancelar</button>"
+            });
+
+            if (result.IsConfirmed)
+            {
+                await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Los datos se han guardado exitosamente",
+                    Icon = SweetAlertIcon.Success,
+                    ShowConfirmButton = false 
+                });
+            }
+        }
         
         public async Task NewRegister()
         {
@@ -18,56 +66,23 @@ namespace riwi.Services
                 Title = "¿Estás seguro/a de que deseas crear este nuevo registro?",
                 Text = "Verifique que la información ingresada este correcta.",
                 ShowCancelButton = true,
-                ConfirmButtonColor = "#fff",
-                ConfirmButtonText = "No, Cancelar",
-                CancelButtonColor = "#5ACCA4",
-                CancelButtonText="<button style='color:#5ACCA4, background-color:#fff'>Si, Confirmar</button>"
+                CancelButtonColor = "#fff",
+                CancelButtonText="<button style='color:#5ACCA4, background-color:#fff'>No, Cancelar</button>",
+                ConfirmButtonText = "Si, Confirmar",
+                ConfirmButtonColor = "#5ACCA4"
             });
 
             if (result.IsConfirmed)
             {
                 await Swal.FireAsync(new SweetAlertOptions
                 {
-                    Title = "Deleted!",
-                    Text = "Your file has been deleted.",
-                    Icon = SweetAlertIcon.Success
+                    Title = "Registro Creado Exitosamente",
+                    Icon = SweetAlertIcon.Success,
+                    ShowConfirmButton = false 
                 });
             }
         }
-
-        public async Task DataSuccess()
-        {
-            await Swal.FireAsync(new SweetAlertOptions
-                {   
-                    Title = "¡Los datos se han guardado exitosamente!",
-                    Icon = SweetAlertIcon.Success,
-                    ShowConfirmButton = false ,
-                    Timer = 1500
-                });
-        }
         
-        public async Task SuccessLogin()
-        {
-            await Swal.FireAsync(new SweetAlertOptions
-                {   
-                    Title = "Login Success",
-                    Icon = SweetAlertIcon.Success,
-                    ShowConfirmButton = false ,
-                    Timer = 1500
-                });
-        }
-
-        public async Task RegisterSuccess()
-        {
-            await Swal.FireAsync(new SweetAlertOptions
-                {   
-                    Title = "¡Registro se ha borrado exitosamente!",
-                    Icon = SweetAlertIcon.Success,
-                    ShowConfirmButton = false ,
-                    Timer = 1500
-                });
-        }
-
         public async Task Warning()
         {
             await Swal.FireAsync(new SweetAlertOptions
@@ -78,7 +93,5 @@ namespace riwi.Services
                     Timer = 1500
                 });
         }
-
-
     }
 }
