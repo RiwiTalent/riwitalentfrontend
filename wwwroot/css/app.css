@@ -99,10 +99,25 @@ a, .btn-link {
         content: var(--blazor-load-percentage-text, "Loading");
     }
 
-code {
-    color: #c02d76;
-}
+    /* code {
+        color: #c02d76;
+    } */
 
 .mud.drawer{
     height: 70svh;
+}
+
+.sweetAlert-cancel-button{
+    color: #d33 !important;
+}
+
+.swal2-styled.swal2-cancel {
+    border: 0;
+    border-radius: 0.25em;
+    background: initial;
+    background-color: #6e7881;
+    color: #5ACCA4 !important;
+    font-size: 1em;
+    background-color: white !important;
+    border: 2px solid grey !important;
 }

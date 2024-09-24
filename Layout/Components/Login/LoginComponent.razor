@@ -105,7 +105,7 @@
             NavigationManager.NavigateTo("/home");
 
             //Service SweetAlert
-            await alertServices.SuccessSweetAlert();
+            await alertServices.NewRegister();
             
         }
         else
@@ -115,7 +115,7 @@
             {
                 Title = "Error!",
                 Text = "continua",
-                Icon = SweetAlertIcon.Error,
+                Icon = SweetAlertIcon.Warning,
                 ConfirmButtonText = "Cool",
                 Timer = 1500
             });
