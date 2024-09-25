@@ -15,6 +15,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5113/") });
 builder.Services.AddTransient<CoderService>();
+builder.Services.AddTransient<GroupsServices>();
 
 //Jhoan
 builder.Services.AddBlazoredModal();

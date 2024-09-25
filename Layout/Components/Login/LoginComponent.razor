@@ -20,8 +20,8 @@
         <div class="login-card">
             <div class="card-content">
                 <div class="text-center mb-3">
-                    <img src="images/riwi.png" alt="Logo Riwi" class="riwi-logo" />
-                
+                    <img src="images/riwi.png" alt="Logo Riwi" class="riwi-logo"/>
+
                 </div>
                 <h5 class="texto1">Bienvenido de nuevo</h5>
                 <p class="texto2">Ingresa con tu cuenta para continuar</p>
@@ -30,7 +30,7 @@
                     <p class="input-container form-group Login_contenedor_input">
                         <span class="correo_span">Correo</span>
                         <label for="Password" class="input-icon-container">
-                            <img src="images/mail-filled.svg" alt="Icono de correo electronico" class="input-icon" />
+                            <img src="images/mail-filled.svg" alt="Icono de correo electronico" class="input-icon"/>
                         </label>
                         <input type="text" placeholder="Ingresa tu correo electronico" @bind="login.Email" name="Email" id="text" class="input-field" autocomplete="Email">
                     </p>
@@ -38,11 +38,11 @@
                     <p class="input-container form-group Login_contenedor_input">
                         <span class="Password_span">Contraseña</span>
                         <label for="Password" class="input-icon-container">
-                            <img src="images/lock.svg" alt="Icono de contraseña" class="input-icon" />
+                            <img src="images/lock.svg" alt="Icono de contraseña" class="input-icon"/>
                         </label>
                         <input type="@passwordInputType" placeholder="Ingresa tu contraseña" @bind="login.Password" name="Password" id="Password" class="input-field" autocomplete="Password">
                         <label for="Password" class="eye-icon-container end-icon" @onclick="TogglePasswordVisibility">
-                            <img src="images/eye-off.svg" alt="Icono para ocultar/mostrar contraseña" class="eye-icon" />
+                            <img src="images/eye-off.svg" alt="Icono para ocultar/mostrar contraseña" class="eye-icon"/>
                         </label>
                     </p>
 
@@ -56,13 +56,13 @@
             error!
         </button> *@
         <div class="image-container">
-            <img src="images/fondo1.png" alt="Imagen de login" class="login-image" />
-            <img src="images/fondo2.jpeg" alt="Imagen de login en celular" class="login-image-cel" />
-            
+            <img src="images/fondo1.png" alt="Imagen de login" class="login-image"/>
+            <img src="images/fondo2.jpeg" alt="Imagen de login en celular" class="login-image-cel"/>
+
         </div>
-        
+
         <div class="image-container2">
-            <img src="images/bg-10.svg" alt="Imagen de login en celular" class="login-image-grafico-cel" />
+            <img src="images/bg-10.svg" alt="Imagen de login en celular" class="login-image-grafico-cel"/>
         </div>
     </div>
 </div>
@@ -93,7 +93,7 @@
             Console.WriteLine("Func");
         }
 
-        var loginResponse = await HttpClient.PostAsJsonAsync<User>("http://localhost:5113/riwitalent/login", login);
+        var loginResponse = await HttpClient.PostAsJsonAsync<User>("https://backend-riwitalent.onrender.com/riwitalent/login", login);
         Console.WriteLine(loginResponse);
         if (loginResponse != null)
         {

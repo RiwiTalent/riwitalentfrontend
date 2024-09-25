@@ -293,9 +293,7 @@ else
         // Actualiza la UI
         StateHasChanged();
     }
-
-
-
+    
     private void LoadCoders(int pageNumber)
     {
         paginatedCoders = coders
@@ -303,10 +301,7 @@ else
                             .Take(pageSize)
                             .ToList();
     }
-
-
-
-
+    
     //Funcionalidad ver detalles
     private async Task ShowDetails(string id)
     {
@@ -320,8 +315,7 @@ else
             await modal.Result;
         }
     }
-
-
+    
     //Lógica para renderizar imagen por defecto
     private string ImageNullOrEmpty(string? photo)
     {
