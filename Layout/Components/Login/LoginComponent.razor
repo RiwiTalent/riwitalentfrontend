@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.Authorization;
 @using riwi.Services;
 @inject AuthenticationStateProvider autenticacionProvider;
+@inject AuthService AuthService;
 @inject NavigationManager NavigationManager;
 @inject HttpClient HttpClient;
 @inject SweetAlertService Swal;
@@ -32,7 +33,7 @@
                         <label for="Password" class="input-icon-container">
                             <img src="images/mail-filled.svg" alt="Icono de correo electronico" class="input-icon" />
                         </label>
-                        <input type="text" placeholder="Ingresa tu correo electronico" @bind="login.Email" name="Email" id="text" class="input-field" autocomplete="Email">
+                        <input type="text" placeholder="Ingresa tu correo electronico" @bind-value="email" name="Email" id="text" class="input-field" autocomplete="Email">
                     </p>
                     <br>
                     <p class="input-container form-group Login_contenedor_input">
@@ -40,14 +41,14 @@
                         <label for="Password" class="input-icon-container">
                             <img src="images/lock.svg" alt="Icono de contraseña" class="input-icon" />
                         </label>
-                        <input type="@passwordInputType" placeholder="Ingresa tu contraseña" @bind="login.Password" name="Password" id="Password" class="input-field" autocomplete="Password">
+                        <input type="@passwordInputType" placeholder="Ingresa tu contraseña" @bind-value="password" name="Password" id="Password" class="input-field" autocomplete="Password">
                         <label for="Password" class="eye-icon-container end-icon" @onclick="TogglePasswordVisibility">
                             <img src="images/eye-off.svg" alt="Icono para ocultar/mostrar contraseña" class="eye-icon" />
                         </label>
                     </p>
 
                     <div class="button-container">
-                        <button type="button" class="btn mt-3 Ingresar" @onclick="IniciarSesion">Ingresar</button>
+                        <button type="button" class="btn mt-3 Ingresar" @onclick="Login">Ingresar</button>
                     </div>
                 </MudForm>
             </div>
@@ -78,7 +79,8 @@
                 ConfirmButtonText = "Cool"
             });
     }
-    private User login = new User();
+    private string email;
+    private string password;
     private string passwordInputType = "password"; // Inicialmente oculto
 
     private void TogglePasswordVisibility()
@@ -86,21 +88,14 @@
         passwordInputType = passwordInputType == "password" ? "text" : "password"; // Alterna el tipo de input
     }
 
-    private async Task IniciarSesion()
+    private async Task Login()
     {
-        if (login.Email == "carlos")
-        {
-            Console.WriteLine("Func");
-        }
 
-        var loginResponse = await HttpClient.PostAsJsonAsync<User>("http://localhost:5113/riwitalent/login", login);
-        Console.WriteLine(loginResponse);
-        if (loginResponse != null)
-        {
-            var sesionUsuario = await loginResponse.Content.ReadFromJsonAsync<User>();
-            var autenticacionExt = (AuthenticacionExtension)autenticacionProvider;
-            await autenticacionExt.ActualizarEstadoAutenticacion(sesionUsuario);
+        var succes = await AuthService.Login(email, password);
 
+
+        if (succes)
+        {
             NavigationManager.NavigateTo("/home");
             await Swal.FireAsync(new SweetAlertOptions
             {
@@ -109,7 +104,7 @@
                 Icon = SweetAlertIcon.Success,
                 ConfirmButtonText = "Cool",
                 Timer = 1500
-            });
+            });            
         }
         else
         {
