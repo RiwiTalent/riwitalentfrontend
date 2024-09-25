@@ -16,6 +16,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5113/") });
 builder.Services.AddTransient<CoderService>();
 
+
 //Jhoan
 builder.Services.AddBlazoredModal();
 builder.Services.AddAuthorizationCore();
@@ -25,6 +26,7 @@ builder.Services.AddScoped<AuthenticationStateProvider,AuthenticacionExtension>(
 builder.Services.AddAuthorizationCore();
 
 // Sweet alert services
+builder.Services.AddScoped<AlertServices>();
 builder.Services.AddSweetAlert2();
 
 //Service to MudBlazor
