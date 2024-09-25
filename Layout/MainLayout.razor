@@ -7,11 +7,8 @@
 @inject NavigationManager navManager
 @inject NavigationManager NavigationManager
 
-
-
-
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
-<MudLayout>
+}<MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
             <NavLink class="nav-link riwi-image-content" href="" Match="NavLinkMatch.All">

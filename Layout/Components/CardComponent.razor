@@ -102,34 +102,39 @@
                     <p>Cargando...</p>
                 }
                 <MudCardContent>
-                        <div class="cards__container">
-                            <div class="cards__profile">
-                                <div class="cards__coder">
-                                    <h6>@coder.FirstName @coder.FirstLastName</h6>
-                                    <p>@coder.Stack</p>
-                                </div>
-                                    <a><img class="cards__container_img" src="images/group-add.svg" alt="icon"></a>
-                            </div>
-                            @*badges*@
-                            @if(coder.Skills != null)
-                            {
-                                <div class="cards__badges">
-                                    @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
-                                    {
-                                        <div class="cards__badge" OnClick="@(() => ShowDetails(@coder.Id))">@coder.Skills[i].Language_Programming</div>
-                                        
-                                    }
-                                </div>
-                            }
-                            else
-                            {
-                                <p>Contenido no disponible...</p>
-                            }
-                            @*Buttons*@
-                            <div class="cards__button">
-                                <MudButton class="cards__button_element" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
+                    <div class="cards__container">
+                        <MudContainer Class="d-flex justify-end flex-grow-1">
+                            <MudChipSet T="string" @bind-SelectedChips="selectedCoders" SelectionMode="SelectionMode.MultiSelection" CheckMark>
+                                <MudChip Class="border-solid border-2 mud-b mud-border-white" Icon="@Icons.Material.Rounded.PersonAddAlt1" Variant="Variant.Text" Color="Color.Secondary" OnClick="@(() => SelectCoder(coder.Id))">
+                                </MudChip>
+                            </MudChipSet>
+                        </MudContainer>
+                        <div class="cards__profile">
+                            <div class="cards__coder">
+                                <h6>@coder.FirstName @coder.FirstLastName</h6>
+                                <p>@coder.Stack</p>
                             </div>
                         </div>
+                        @*badges*@
+                        @if (coder.Skills != null)
+                        {
+                            <div class="cards__badges">
+                                @for (int i = 0; i < coder.Skills.Count && i < 6; i++)
+                                {
+                                    <div class="cards__badge" OnClick="@(() => ShowDetails(@coder.Id))">@coder.Skills[i].Language_Programming</div>
+
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                           <MudText Typo="Typo.h6">No hay habilidades que mostrar</MudText>
+                        }
+                        @*Buttons*@
+                        <MudContainer>
+                            <MudButton Color="Color.Secondary" Variant="Variant.Filled" FullWidth="true" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>
+                        </MudContainer>
+                    </div>
                 </MudCardContent>
             </MudCard>
         }
@@ -151,6 +156,9 @@ else
 {
     public string ButtonDetails = "Detalle";
     private List<Coder>? coders;
+    
+    // Lista que contiene los Ids de los Coders seleccionados
+    private List<string> selectedCoders = new List<string>();
 
     //paginación
     private List<Coder>? paginatedCoders;
@@ -209,6 +217,21 @@ else
     {
         currentPage = pageNumber;
         LoadCoders(currentPage);
+    }
+    
+    // Método para manejar la selección o deselección de Coders
+    private void SelectCoder(string coderId)
+    {
+        if (selectedCoders.Contains(coderId))
+        {
+            selectedCoders.Remove(coderId);  // Eliminar si ya está seleccionado
+        }
+        else
+        {
+            selectedCoders.Add(coderId);  // Agregar si no está seleccionado
+        }
+        
+        Console.WriteLine($"Coders seleccionados: {string.Join(", ", selectedCoders)}");
     }
 
     private async Task FilterCoders()
@@ -326,4 +349,4 @@ else
 
         return photo;
     }
-}
+};

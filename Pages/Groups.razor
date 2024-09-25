@@ -7,95 +7,118 @@
 @attribute [Authorize]
 
 <PageTitle>Grupos</PageTitle>
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <MudAlert Severity="Severity.Error">@errorMessage</MudAlert>
+}
 
 <AuthorizeView>
     <Authorized>
-        <MudContainer Class="d-flex flex-grow-1 flex-column">
+        <MudContainer Class="d-flex flex-grow-1 flex-column ma-2">
             <!-- Botón y Agregar -->
-            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
+            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3">
                 <MudIconButton Href="/Home" Icon="@Icons.Material.Rounded.KeyboardArrowLeft" Color="Color.Secondary" Class="border-solid border-2 mud-border-secondary pa-2"></MudIconButton>
-                <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Rounded.PersonAdd" Color="Color.Secondary">Crear grupo</MudButton>
             </MudContainer>
 
             <!-- Total grupos -->
             <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
-                <MudText Typo="Typo.h5">Total grupos: @GroupsCount</MudText>
+                <MudText Typo="Typo.h5">Total grupos:<b>@GroupsCount</b></MudText>
             </MudContainer>
-            <!-- Tabla de grupos -->
+
+            <!-- Grid de grupos -->
             <MudContainer Class="d-flex flex-grow-1 pa-3 ma-2">
                 @if (_loading)
                 {
-                <MudProgressLinear  Indeterminate="true" Color="Color.Info" Class="my-7"/>
+                    <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7" />
                 }
                 else
                 {
-                <MudTable Class="flex-grow-1" Items="@Group" LoadingProgressColor="Color.Info" Hover="true">
-                    <HeaderContent>
-                        <MudTh Class="text-center">#</MudTh> <!-- Contador -->
-                        <MudTh Class="text-center"><MudTableSortLabel InitialDirection="SortDirection.None" SortBy="new Func<Group, object>(x=>x.Name)">Nombre</MudTableSortLabel></MudTh>
-                        <MudTh Class="text-center"><MudTableSortLabel InitialDirection="SortDirection.None" SortBy="new Func< Group, object>(x=>x.Created_At)">Fecha Creación</MudTableSortLabel></MudTh>
-                        <MudTh Class="text-center"><MudTableSortLabel InitialDirection="SortDirection.None" SortBy="new Func< Group, object>(x=>x.Status)">Estado</MudTableSortLabel></MudTh>
-                        <MudTh Class="text-center">Opciones</MudTh>
-                    </HeaderContent>
-                    <RowTemplate Context="row">
-                        <MudTd><b>@(Group.IndexOf(row) + 1)</b></MudTd> <!-- Mostrar el índice + 1 -->
-                        <MudTd><b>@row.Name</b></MudTd>
-                        <MudTd><b>@row.Created_At.ToString("dd-MM-yyyy")</b></MudTd>
-                        <MudTd>
-                            <MudChip T="string" Color="@GetChipColor(row.Status)" Variant="Variant.Filled" Size="Size.Small" Class="px-4">
-                                @row.Status
-                            </MudChip>
-                        </MudTd>
-                        <MudTd class="justify-center gap-2">
-                                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Title="Editar" Color="Color.Secondary" Class="border-solid border-2 mud-border-secondary pa-1"></MudIconButton>
-                                <MudIconButton Icon="@Icons.Material.Outlined.RemoveRedEye" Title="Ver Detalles" Color="Color.Warning" Class="border-solid border-2 mud-border-warning pa-1"></MudIconButton>
-                                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" Title="Eliminar" Class="border-solid border-2 mud-border-error pa-1"></MudIconButton>
-                        </MudTd>
-                    </RowTemplate>
-                    <PagerContent>
-                        <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
-                                       RowsPerPageString="@rowsPerPageString"
-                                       InfoFormat="@infoFormat"
-                                       HideRowsPerPage="@hideRowsPerPage"
-                                       HidePageNumber="@hidePageNumber"
-                                       HidePagination="@hidePagination" />
-                    </PagerContent>
-                </MudTable>
+                    <MudDataGrid
+                        Class="flex-grow-1 pa-2"
+                        LoadingProgressColor="Color.Info"
+                        Hover="true"
+                        Items="@_groups" 
+                        MultiSelection="true" 
+                        QuickFilter="@_quickFilter">
+                        <ToolBarContent>
+                            <MudText Typo="Typo.h6">Periodic Elements</MudText>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                        </ToolBarContent>
+
+                        <Columns>
+                            <SelectColumn T="Group" />
+                            <PropertyColumn Property="x => _groups.IndexOf(x) + 1" Title="Number" Sortable="false" Filterable="false" />
+                            <PropertyColumn Property="x => x.Name" Title="Group Name" Sortable="true" />
+                            <PropertyColumn Property="x => x.Created_At" Title="Creation Date" SortBy="@_sortBy" />
+                            <PropertyColumn Property="x => x.Status" Title="Status" Sortable="true" />
+                        </Columns>
+
+                        <PagerContent>
+                            <MudDataGridPager T="Group" />
+                        </PagerContent>
+                    </MudDataGrid>
                 }
+                
             </MudContainer>
+            
         </MudContainer>
     </Authorized>
 </AuthorizeView>
 
-@code
-{
-    private List<Group>? Group;
+@code {
+    private List<Group> _groups = new List<Group>();    
+    private string _searchString;
+    private bool _sortNameByLength;
     private bool _loading = true;
-    
-    // Propiedad para el contador de grupos
-    private int GroupsCount => Group?.Count ?? 0;
-    private bool hidePageNumber;
-    private bool hidePagination;
-    private bool hideRowsPerPage;
-    private string rowsPerPageString = "Filas por página:";
-    private string infoFormat = "{first_item}-{last_item} de {all_items}";
-    
+    private int GroupsCount => _groups?.Count ?? 0;
+    private string errorMessage;
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            Group = await GroupsServices.GetGroupsAsync();
+            _groups = await GroupsServices.GetGroupsAsync() ?? new List<Group>();
+            _groups = _groups.Where(g => g != null).ToList();
+            Console.WriteLine($"Total grupos obtenidos: {_groups.Count}");        
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            Console.WriteLine($"Error al obtener coders: {ex.Message}");
+            errorMessage = "Hubo un error al cargar los grupos. Intente nuevamente más tarde.";
+            Console.WriteLine($"Error al obtener grupos: {ex.Message}");
         }
         finally
         {
             _loading = false;
         }
     }
-    
+
+    // Filtro de busqueda
+    private Func<Group, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        return MatchesSearchCriteria(x);
+    };
+
+    private bool MatchesSearchCriteria(Group group)
+    {
+        return (group.Name != null && group.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (group.Status != null && group.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (group.Created_At != null && group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+    }
+
+    // custom sort by name length
+    private Func<Group, object> _sortBy => x =>
+    {
+        if (_sortNameByLength)
+            return x.Name.Length;
+        else
+            return x.Name;
+    };
+
     private Color GetChipColor(string? status)
     {
         return status switch
