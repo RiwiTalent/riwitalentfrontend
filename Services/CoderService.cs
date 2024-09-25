@@ -23,8 +23,11 @@ namespace riwi.Services
 
          public async Task<bool> UpdateCoderAsync(Coder coder)
         {
-            var response = await _httpClient.PutAsJsonAsync("http://localhost:5113/riwitalent/updatecoder", coder);
+            var url = $"http://localhost:5113/riwitalent/updatecoder?Id={coder.Id}&FirstName={coder.FirstName}&SecondName={coder.SecondName}&FirstLastName={coder.FirstLastName}&SecondLastName={coder.SecondLastName}&Email={coder.Email}&Age={coder.Age}";
+            
+            var response = await _httpClient.PutAsync(url, null); // Enviar como PUT sin cuerpo
             return response.IsSuccessStatusCode;
         }
+
     }
 }

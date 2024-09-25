@@ -4,7 +4,6 @@
 @inject CoderService coderService
 @inject IModalService model
 
-
 <head>
     <link rel="stylesheet" href="css/ModalCoderDetails.css">
 </head>
@@ -49,55 +48,89 @@
                 </MudPaper>
             </MudPaper>
 
-            <MudButton StartIcon="@Icons.Material.Outlined.Edit" class="content_left-container_top__edit" Variant="Variant.Filled" OnClick="ToggleEditSave">
-                @buttonText
-            </MudButton>
-            
+           <MudButton StartIcon="@Icons.Material.Outlined.Edit" 
+            class="content_left-container_top__edit" 
+            Variant="Variant.Filled" 
+            OnClick="EnableEditMode" 
+            Hidden="@isEditMode">
+            Editar
+        </MudButton>
+
+        <MudButton StartIcon="@Icons.Material.Outlined.Save" 
+                    class="content_left-container_top__save" 
+                    Variant="Variant.Filled" 
+                    OnClick="UpdateCoder" 
+                    Hidden="!isEditMode">
+            Guardar
+        </MudButton>
+
+
         </MudPaper>
 
         <MudPaper Elevation="0" class="content__right-container">
             <MudPaper Elevation="0" class="content__right-container_top">
                 <h4 class="content__right-container_top__titulo_personal">Información personal</h4>
+
                 <form action="" class="content__right-container_top__form" Valid="formValid">
 
                     <div class="content__right-container_top_boxes-inputs">
                         <label class="content__right-container_top__labels" for="FirstName">Primer Nombre</label>
-                        <input type="text" class="content__right-container_top__input" id="FirstName" value="@Coder.FirstName" disabled="@(isEditMode ? null : "disabled")" />
+                        <input type="text" class="@($"content__right-container_top__input {(isEditMode ? "input-enabled" : "")}")" 
+                            id="FirstName" 
+                            @bind="Coder.FirstName" 
+                            disabled="@(isEditMode ? null : "disabled")" />
                     </div>
 
                     <div class="content__right-container_top_boxes-inputs">
                         <label class="content__right-container_top__labels" for="SecondName">Segundo Nombre</label>
-                        <input type="text" class="content__right-container_top__input" id="SecondName" value="@Coder.SecondName" disabled="@(isEditMode ? null : "disabled")" />
+                        <input type="text" class="@($"content__right-container_top__input {(isEditMode ? "input-enabled" : "")}")" 
+                            id="SecondName" 
+                            @bind="Coder.SecondName" 
+                            disabled="@(isEditMode ? null : "disabled")" />
                     </div>
-                    
+
                     <div class="content__right-container_top_boxes-inputs">
                         <label class="content__right-container_top__labels" for="FirstLastName">Primer Apellido</label>
-                        <input type="text" class="content__right-container_top__input" id="FirstLastName" value="@Coder.FirstLastName" disabled="@(isEditMode ? null : "disabled")" />
+                        <input type="text" class="@($"content__right-container_top__input {(isEditMode ? "input-enabled" : "")}")" 
+                            id="FirstLastName" 
+                            @bind="Coder.FirstLastName" 
+                            disabled="@(isEditMode ? null : "disabled")" />
                     </div>
 
                     <div class="content__right-container_top_boxes-inputs">
                         <label class="content__right-container_top__labels" for="SecondLastName">Segundo Apellido</label>
-                        <input type="text" class="content__right-container_top__input" id="SecondLastName" value="@Coder.SecondLastName" disabled="@(isEditMode ? null : "disabled")" />
+                        <input type="text" class="@($"content__right-container_top__input {(isEditMode ? "input-enabled" : "")}")" 
+                            id="SecondLastName" 
+                            @bind="Coder.SecondLastName" 
+                            disabled="@(isEditMode ? null : "disabled")" />
                     </div>
 
                     <div class="content__right-container_top_boxes-inputs">
                         <label class="content__right-container_top__labels" for="Email">Correo</label>
-                        <input type="email" class="content__right-container_top__input" id="Email" value="@Coder.Email" disabled="@(isEditMode ? null : "disabled")" />
+                        <input type="email" class="@($"content__right-container_top__input {(isEditMode ? "input-enabled" : "")}")" 
+                            id="Email" 
+                            @bind="Coder.Email" 
+                            disabled="@(isEditMode ? null : "disabled")" />
                     </div>
 
                     <div class="content__right-container_top_boxes-inputs">
                         <label class="content__right-container_top__labels" for="Age">Edad</label>
-                        <input type="number" class="content__right-container_top__input" id="Age" value="@Coder.Age" min="18" max="100" step="1" disabled="@(isEditMode ? null : "disabled")" />
+                        <input type="number" class="@($"content__right-container_top__input {(isEditMode ? "input-enabled" : "")}")" 
+                            id="Age" 
+                            @bind="Coder.Age" 
+                            min="18" max="100" step="1" 
+                            disabled="@(isEditMode ? null : "disabled")" />
                     </div>
 
                 </form>
+
 
             </MudPaper>
 
             <!-- Sección de Información Profesional -->
             <MudPaper Elevation="0" class="content__right-container_mid">
                 <h4 class="content__right-container_mid__title">Información Profesional</h4>
-                <p class="content__right-container_mid__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque nec justo metus. Duis scelerisque pellentesque nunc, semper tristique libero feugiat a. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque nec justo metus . Duis scelerisque pellentesque nunc, semper tristique libero feugiat a. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque nec justo metus. Duis scelerisque pellentesque nunc, semper tristique libero feugiat a. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque nec justo metus. Duis scelerisque pellentesque nunc, semper tristique libero feugiat a. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque nec justo metus. Duis scelerisque pellentesque nunc, semper tristique libero feugiat a. </p>
+                <p class="content__right-container_mid__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque nec justo metus. Duis scelerisque pellentesque nunc, semper tristique libero feugiat a.</p>
             </MudPaper>
 
             <!-- Sección de Habilidades Técnicas -->
@@ -132,41 +165,29 @@ else
     private List<Coder>? coders;
     [Parameter] public Coder Coder { get; set; }
 
-    private bool isEditMode = false;
     private MudForm coderForm;
     private string buttonText = "Editar";
 
-    private async Task ToggleEditSave()
-    {
-        try
-        {
-            if (isEditMode)
-            {
-                // Guardar los cambios llamando a la API
-                var response = await coderService.UpdateCoderAsync(Coder);
+    private bool isEditMode = false;
 
-                if (response)
-                {
-                    // Cambiar al modo de solo lectura (deshabilitado)
-                    isEditMode = false;
-                    buttonText = "Editar";
-                }
-                else
-                {
-                    Console.WriteLine("Error al guardar los cambios");
-                }
-            }
-            else
-            {
-                // Habilitar el modo de edición
-                isEditMode = true;
-                buttonText = "Guardar";
-            }
-        }
-        catch (Exception ex)
+    private void EnableEditMode()
+    {
+        isEditMode = true;
+    }
+
+    private async Task UpdateCoder()
+    {
+        // Llamada al servicio para actualizar el coder
+        var response = await coderService.UpdateCoderAsync(Coder);
+
+        if (response)
         {
-            Console.WriteLine($"Error: {ex.Message}");
-            // Aquí puedes mostrar un mensaje en el UI o loguear el error
+            // Cambiar de vuelta al modo de visualización
+            isEditMode = false;
+        }
+        else
+        {
+            Console.WriteLine("Error al actualizar el coder");
         }
     }
 }

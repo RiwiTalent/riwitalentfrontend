@@ -1,53 +1,27 @@
 @using riwi.Services;
 @using riwi.Models;
-@inject HttpClient HttpClient;
 @inject CoderService coderService;
 @inject IModalService model;
-@using System.Net.Http.Json;
-@inject IDialogService DialogService;
+
 <head>
     <link rel="stylesheet" href="css/CardComponent.css">
 </head>
-
-<!-- DialogUsageExample_Dialog.razor -->
-@inject IDialogService DialogService
-
-<MudDialog>
-    <DialogContent>
-        <h3>Título del Diálogo</h3>
-        <p>Este es el contenido de tu diálogo.</p>
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Close">Cerrar</MudButton>
-    </DialogActions>
-</MudDialog>
-
-@code {
-    @code {
-    private void Close()
-    {
-        DialogService.Close(null); // Puedes pasar un valor específico aquí si lo necesitas
-    }
-}
-
-}
-
-
-
-
 
 <MudPaper Class="container-filter" Elevation="1">
     <MudPaper Elevation="0" Class="d-flex align-center">
         <MudText Class="text-resultado" Typo="Typo.h6">557 Resultados</MudText>
     </MudPaper>
-     <MudButton OnClick="FilterCoders" Class=""> filtrar </MudButton>
+
+    <MudButton OnClick="CleanFilters" Class=""> Limpiar </MudButton>
+
+    <MudButton OnClick="FilterCoders" Class=""> Filtrar </MudButton>
 
     <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
         <MudTextField @bind-Value="searchText" Placeholder="Buscar aquí por nombre o apellido..." Class="search" Immediate="true" TextChanged="FilterCoders" />
     </MudPaper>
     
     <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select">
-        <InputSelect @bind-Value="skills" Class="search-container">
+        <InputSelect @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
             <option value="">Tecnologia</option>
             <option value="JavaScript">JavaScript</option>
             <option value="C#">C#</option>
@@ -56,19 +30,22 @@
             <option value="Ruby">Ruby</option>
             <option value="PHP">PHP</option>
             <option value="React">React</option>
+            <option value="clear">Limpiar Filtro</option> <!-- Opción para limpiar -->
         </InputSelect>
-        <InputSelect @bind-Value="languageLevel" Class="search-container">
-            <option value="">Nivel ingles</option>
+
+        <InputSelect @bind-Value="languageLevel" Class="search-container" @onchange="CleanFilterEnglishLevel">
+            <option value="">Nivel inglés</option>
             <option value="A1">A1</option>
             <option value="A2">A2</option>
             <option value="B1">B1</option>
             <option value="B2">B2</option>
             <option value="C1">C1</option>
             <option value="C2">C2</option>
+            <option value="clear">Limpiar Filtro</option> <!-- Opción para limpiar -->
         </InputSelect>
+
     </MudPaper>
 </MudPaper>
-
 
 
 
@@ -93,70 +70,35 @@
                 {
                     <p>Cargando...</p>
                 }
-            <MudCardContent>
-                <!-- Contenedor principal -->
-                <div class="cards__container">
-                    <div class="cards__profile">
-                        <!-- Muestra la información básica del coder -->
-                        <h3>@coder.FirstName @coder.FirstLastName</h3>
-                        <p>@coder.Stack</p>
-                        @* <a><img src="images/group-add.svg" alt="icon" @onclick="() => AddCoderToSelection(coder)"></a> *@
-
-                        <MudChipSet @bind-SelectedValues="_selected" SelectionMode="SelectionMode.MultiSelection" CheckMark>
-                            <MudChip Value="@("Milk")" />
-                    </MudChipSet>
-                    </div>
-                </div>
-                <!-- Botón para abrir el modal con los coders seleccionados -->
-                <MudButton Variant="Variant.Filled" OnClick="OpenModal">Ver Coders Seleccionados</MudButton>
-            </MudCardContent>
-
-            @code {
-            private IReadOnlyCollection<string> _selected = ["Milk", "Cornflakes"];
-                }
-
-
-        
-
-
-
-
-
-                <!-- Modal que lista los coders seleccionados -->
-                <MudDialog @bind-IsOpen="_isModalOpen">
-                    <DialogContent>
-                        <!-- Campo de búsqueda de grupos -->
-                        <MudTextField @bind-Value="groupSearchTerm" Placeholder="Buscar Grupo..." Immediate="true" @oninput="SearchGroup"/>
-
-                        <!-- Lista de coders seleccionados -->
-                        @if(selectedCoders.Count > 0)
-                        {
-                        <MudTable T="Coder">
-                            @foreach(var coder in selectedCoders)
+                <MudCardContent>
+                        <div class="cards__container">
+                            <div class="cards__profile">
+                                <div class="cards__coder">
+                                    <h3>@coder.FirstName @coder.FirstLastName</h3>
+                                    <p>@coder.Stack</p>
+                                </div>
+                                    <a><img src="images/group-add.svg" alt="icon"></a>
+                            </div>
+                            @*badges*@
+                            @if(coder.Skills != null)
                             {
-                                <MudTr>
-                                    <MudTd><img src="@coder.Photo" alt="Coder photo" style="width: 50px; height: 50px;" /></MudTd>
-                                    <MudTd>@coder.FirstName @coder.FirstLastName @coder.SecondLastName</MudTd>
-                                    <MudTd>
-                                        <MudButton Color="Color.Error" OnClick="() => RemoveCoderFromSelection(coder)">-</MudButton>
-                                    </MudTd>
-                                </MudTr>
+                                <div class="cards__badges">
+                                    @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
+                                    {
+                                        <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
+                                    }
+                                </div>
                             }
-                        </MudTable>
-
-                        }
-                        else
-                        {
-                            <p>No hay coders seleccionados</p>
-                        }
-
-                        <!-- Botón para agregar los coders seleccionados al grupo -->
-                        <MudButton OnClick="AddCodersToGroup" Disabled="@(!selectedGroupId.HasValue)">
-                            Agregar al Grupo
-                        </MudButton>
-                    </DialogContent>
-                </MudDialog>
-
+                            else
+                            {
+                                <p>Contenido no disponible...</p>
+                            }
+                            @*Buttons*@
+                            <div class="cards__button--primary">
+                                <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
+                            </div>
+                        </div>
+                </MudCardContent>
             </MudCard>
         }
     </div>
@@ -173,17 +115,8 @@ else
 
 }
 
-
-
-
-
-
 @code
-{
-    public bool CheckBox1 { get; set; } = false;
-    public bool CheckBox2 { get; set; } = false;
-    public bool CheckBox3 { get; set; } = false;
-    
+{    
     
     public string ButtonDetails = "Detalle";
     private List<Coder>? coders;
@@ -199,25 +132,16 @@ else
     //Lista para guardar los coder filtrados
     private List<Coder>? filterCoder;
 
-    // Variables para los filtros
-    private string? firstName;
-    private string? firstLastName;
+    // Filtros
+    private string? searchText;
     private string? skills;
     private string? languageLevel;
-    private string? secondLastName;
-    private string? secondName;
-
-    private string? searchText;
-
     private bool FilterApplied = false;
-
-
-
     
 
     protected override async Task OnInitializedAsync()
     {
-        //realizamos el llamado a la api
+        //Llamado a la api
         try
         {
             coders = await coderService.GetCodersAsync();
@@ -253,90 +177,73 @@ else
 
     private async Task FilterCoders()
     {
-    // Primero, cargamos la lista completa desde el servicio
-    Console.WriteLine("Aplicando filtros");
-    coders = await coderService.GetCodersAsync();
-
-    // Filtrar por nombres o apellidos (FirstName, SecondName, FirstLastName, SecondLastName)
-    if (!string.IsNullOrEmpty(searchText))
-    {
-        var searchTerms = searchText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        Console.WriteLine("Filtrando por nombres o apellidos...");
-
-        coders = coders.Where(c =>
-        {
-            var fullName = $"{c.FirstName} {c.SecondName} {c.FirstLastName} {c.SecondLastName}".ToLower();
-
-            // Verificar todas las combinaciones posibles
-            bool isMatch = searchTerms.All(term =>
-                $"{c.FirstName} {c.SecondName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.FirstLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.SecondName} {c.FirstLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.SecondName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstLastName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.SecondName} {c.FirstLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.SecondName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.FirstLastName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.SecondName} {c.FirstLastName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.SecondName} {c.FirstLastName} {c.SecondLastName}".ToLower().Contains(term.ToLower())
-            );
-            FilterApplied = true;
-            return isMatch;
-        }).ToList();
-    }
-
-    // Aplicar filtro de Skills
-    if (!string.IsNullOrEmpty(skills))
-    {
-        coders = coders.Where(c => c.Skills.Any(s => s.Language_Programming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
-    }
-    // Aplicar filtro de Nivel de Lenguaje
-    if (!string.IsNullOrEmpty(languageLevel))
-    {
-        coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.Language_Level.Equals(languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
-        FilterApplied = true;
-    }
-
-    totalCoders = coders.Count;
-    pag = (int)Math.Ceiling((double)totalCoders / pageSize);
-    LoadCoders(currentPage);
-
-    // Actualizar la UI para reflejar los cambios
-    StateHasChanged();
-    }
-
-
-
-
-
-
-    private async Task ClearFilters()
-    {
-        // Limpia los valores de los filtros
-        Console.WriteLine("Limpiaste");
-            // Limpia los valores de los filtros
-        firstName = "";
-        firstLastName = "";
-        skills = "";
-        
-        languageLevel = "";
-        
-        // Recarga la lista completa de coders sin filtros de manera asíncrona
+        Console.WriteLine("Aplicando filtros");
         coders = await coderService.GetCodersAsync();
 
-        // Actualiza el total de coders y las páginas
+        // Filtrar por nombres o apellidos
+        if (!string.IsNullOrEmpty(searchText))
+        {
+            var searchTerms = searchText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            coders = coders.Where(c =>
+            {
+                var fullName = $"{c.FirstName} {c.SecondName} {c.FirstLastName} {c.SecondLastName}".ToLower();
+                return searchTerms.All(term => fullName.Contains(term.ToLower()));
+            }).ToList();
+            FilterApplied = true;
+        }
+
+        // Filtro de Skills
+        if (!string.IsNullOrEmpty(skills))
+        {
+            coders = coders.Where(c => c.Skills.Any(s => s.Language_Programming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
+        }
+
+        // Filtro de Nivel de Lenguaje
+        if (!string.IsNullOrEmpty(languageLevel))
+        {
+            coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.Language_Level.Equals(languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
+            FilterApplied = true;
+        }
+
         totalCoders = coders.Count;
         pag = (int)Math.Ceiling((double)totalCoders / pageSize);
-
-        // Carga la primera página después de limpiar los filtros
-        currentPage = 1;
         LoadCoders(currentPage);
-
-        // Actualiza la UI
         StateHasChanged();
     }
 
+    private async Task CleanFilters()
+    {
+        searchText = "";
+        skills = "";
+        languageLevel = "";
+
+        coders = await coderService.GetCodersAsync();
+        totalCoders = coders.Count;
+        pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+
+        currentPage = 1;
+        LoadCoders(currentPage);
+        StateHasChanged();
+    }
+
+    private async Task CleanFilterSkill(ChangeEventArgs e)
+    {
+        if (e.Value?.ToString() == "clear")
+        {
+            skills = "";  // Resetea el valor de skills
+            await FilterCoders();  // Aplica los filtros
+        }
+        
+    }
+
+    private async Task CleanFilterEnglishLevel(ChangeEventArgs e)
+    {
+        if (e.Value?.ToString() == "clear")
+        {
+            languageLevel = "";  // Resetea el valor de languageLevel
+            await FilterCoders();  // Aplica los filtros
+        }
+    }
 
     private void LoadCoders(int pageNumber)
     {
@@ -345,9 +252,6 @@ else
                             .Take(pageSize)
                             .ToList();
     }
-
-
-
 
     //Funcionalidad ver detalles
     private async Task ShowDetails(string id)
@@ -373,57 +277,5 @@ else
         }
 
         return photo;
-    }
-
-
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**/
-
-    private bool _isModalOpen = false;
-    private List<Coder> selectedCoders = new List<Coder>();
-    private string groupSearchTerm = string.Empty;
-    private int? selectedGroupId;
-
-    // Método para agregar un coder a la lista seleccionada
-    private async Task AddCoderToSelection(Coder coder)
-    
-        
-        {  Console.WriteLine("Selecionado");
-            if (!selectedCoders.Contains(coder))
-            {
-                selectedCoders.Add(coder);
-            }
-        }
-
-        // Método para quitar un coder de la lista seleccionada (solo frontend)
-    private void RemoveCoderFromSelection(Coder coder)
-        {
-            selectedCoders.Remove(coder);
-        }
-
-        // Método para abrir el modal
-        private void OpenModal()
-        {
-            _isModalOpen = true;
-        }
-
-        // Método para buscar un grupo basado en el término ingresado
-        private async Task SearchGroup()
-        {
-            // Aquí se realizaría la búsqueda del grupo por nombre a través de un servicio
-            // y se asignaría el grupo seleccionado a `selectedGroupId`.
-        }
-
-    // Método para agregar los coders al grupo seleccionado
-    private async Task AddCodersToGroup()
-    {
-        if (selectedGroupId.HasValue)
-        {
-            // Llamar al endpoint para agregar los coders al grupo
-            await HttpClient.PostAsJsonAsync($"/api/groups/{selectedGroupId}/coders", selectedCoders.Select(c => c.Id));
-            
-            // Limpiar la selección después de agregar al grupo
-            selectedCoders.Clear();
-            _isModalOpen = false;
-        }
     }
 }
