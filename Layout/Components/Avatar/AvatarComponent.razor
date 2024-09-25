@@ -6,27 +6,53 @@
 
 @if (Inicial != null)
 {
-    <MudAvatar Color="Color.Info">@Inicial</MudAvatar>
+    <MudBadge Style="margin-right: 4px" Color="Status" Overlap="true" Bordered="true">
+        <MudAvatar Color="ColorRandom">@Inicial.ToUpper()</MudAvatar>
+    </MudBadge>
 }
 
 @code {
-    private Char? Inicial { get; set; }
+    private string? Inicial { get; set; } = null;
+    private Color ColorRandom { get; set; }
+    private Color Status { get; set; } = Color.Success;
+    
+    [Parameter]
+    public required string TypeAvatar { get; set; }
+    [Parameter]
+    public string? KeySesionStorage { get; set; }
+    [Parameter]
+    public GroupCoders? GroupCoders { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await obtenerSesionStorage();
+        await ObtenerSesionStorageAvatar();
+        GenerarColorRandom();
     }
 
-    private async Task obtenerSesionStorage()
+    private async Task ObtenerSesionStorageAvatar()
     {
-        User sesionStorageUser = await SessionStorage.GetItemAsync<User>("sesionUsuario");
-        if (sesionStorageUser != null)
+        if (TypeAvatar == "Usuario")
         {
-            Inicial = sesionStorageUser.Email[0];
-        }
-        else
+            User sesionStorageUser = await SessionStorage.GetItemAsync<User>(KeySesionStorage);
+            Inicial = sesionStorageUser != null ? $"{sesionStorageUser.Email?[0]}{sesionStorageUser.Email?[1]}" : null;
+        }else if (TypeAvatar == "GrupoCoders" && GroupCoders != null)
         {
-            Inicial = null;
+            Inicial = $"{GroupCoders.Name[0]}{GroupCoders.Name[1]}";
+            Status = GroupCoders.isActive == false ? Color.Error : Color.Success;
         }
+    }
+
+    private void GenerarColorRandom()
+    {
+        List<Color> listColors =
+        [
+            Color.Success,
+            Color.Primary,
+            Color.Warning
+        ];
+
+        Random numeroRandom = new Random();
+
+        ColorRandom = listColors[numeroRandom.Next(3)];
     }
 }

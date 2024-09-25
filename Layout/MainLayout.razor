@@ -21,7 +21,7 @@
             <img class="riwi-image" src="images/riwi.png"/>
         </NavLink>
         <MudSpacer/>
-        <AvatarComponent></AvatarComponent>
+        <AvatarComponent TypeAvatar="Usuario" KeySesionStorage="sesionUsuario"></AvatarComponent>
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
@@ -38,7 +38,7 @@
     private bool _drawerOpen = true;
     private bool _isDarkMode = false;
     private MudTheme? _theme = null;
-
+    
     protected override void OnInitialized()
     {
         base.OnInitialized();
