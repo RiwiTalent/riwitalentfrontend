@@ -20,15 +20,22 @@
         <MudPaper Elevation="0" class="content__left-container">
 
             <MudPaper Elevation="0" class="content_left-container_top">
-                <MudImage class="photo-modal-coder" Src="@Coder.Photo" />
-
+                @if (!string.IsNullOrEmpty(Coder.Photo))
+                {
+                    <MudImage class="photo-modal-coder" Src="@Coder.Photo" />
+                }
+                else
+                {
+                    <MudAvatar Color="Color.Primary" Class="photo-modal-coder">
+                        @((Coder.FirstName?[0] ?? ' ') + (Coder.FirstLastName?[0] ?? ' '))
+                    </MudAvatar>
+                }
 
                 <p class="content_left-container_top__stack">@Coder.Stack</p>
-
                 <p class="content_left-container_top__standar">@Coder.Status</p>
-
-                <MudButton EndIcon="@Icons.Material.Outlined.FileDownload" class="content_left-container_top__hv">Descargar CV</MudButton>
+                <MudButton EndIcon="@Icons.Material.Outlined.FileDownload" class="content_left-con∫tainer_top__hv">Descargar CV</MudButton>
             </MudPaper>
+
 
             <MudPaper Elevation="0" class="content_left-container_bot">
                 <h4 class="content_left-container_bot__process">Proceso actual</h4>
@@ -42,7 +49,11 @@
                 </MudPaper>
             </MudPaper>
             
-             <MudButton StartIcon="@Icons.Material.Outlined.Edit" class="content_left-container_top__edit">Editar</MudButton>
+             @* <MudButton onclick="toggleEditSave" StartIcon="@Icons.Material.Outlined.Edit" class="content_left-container_top__edit">Editar</MudButton> *@
+
+              <MudButton StartIcon="@Icons.Material.Outlined.Edit" class="content_left-container_top__edit" Variant="Variant.Filled" OnClick="ToggleEditSave">
+                @buttonText
+            </MudButton>
         </MudPaper>
 
         <MudPaper Elevation="0" class="content__right-container">
@@ -130,6 +141,9 @@ else
     private List<Coder>? coders;
     [Parameter] public Coder Coder { get; set; }
 
+    private bool isEditMode = false;
+    private MudForm coderForm;
+    private string buttonText = "Editar";
 
     private void SubmitForm()
     {
@@ -137,8 +151,31 @@ else
         Console.WriteLine("Formulario enviado y cambios guardados.");
     }
 
-    private void editButtonInputs(){
-        
+    private async Task ToggleEditSave()
+    {
+        if (isEditMode)
+        {
+            // Guardar los cambios llamando a la API
+            var response = await Http.PutAsJsonAsync("http://localhost:5113/riwitalent/updatecoder", Coder);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Cambiar al modo de solo lectura (deshabilitado)
+                isEditMode = false;
+                buttonText = "Editar";
+            }
+            else
+            {
+                // Manejar error si la llamada a la API falla
+                Console.WriteLine("Error al guardar los cambios");
+            }
+        }
+        else
+        {
+            // Habilitar el modo de edición
+            isEditMode = true;
+            buttonText = "Guardar";
+        }
     }
 }
 
