@@ -1,39 +1,24 @@
 @using riwi.Services;
 @using riwi.Models;
-@using MudBlazor;
-@inject CoderService coderService
-@inject IModalService model
-@using riwi.Theme;
+@inject CoderService coderService;
+@inject IModalService model;
+
+<head>
+    <link rel="stylesheet" href="css/CardComponent.css">
+</head>
 
 
-@*Filtrado - Coder*@
-<MudPaper Class="filter-container d-flex justify-space-around  align-center" Style="@($"background-color: {RiwiPalette.NeutralWhite};")">
-    
-        <!-- Botón "Filtrar por" -->
-    @* <MudButton OnClick="FilterCoders" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FilterList" 
-               Style="@($"background-color: {RiwiPalette.Secondary500};")" Size="Size.Small">
-        Filtrar
-    </MudButton> *@
-
-    <MudText Typo="Typo.h6">557 
-        <span class="contenedor--search-span">Resultados</span>
-    </MudText>
-
-    @* Variant="Variant.Outlined"  *@
-
-
-    <MudPaper>
-    <!-- Contenido aquí -->
-        <MudText StartIcon="@Icons.Material.Rounded.Search"></MudText>
-        <MudInput T="string"  Label="Buscar aquì" @bind-Value="firstLastName"
-        Style="@($"color: {RiwiPalette.Primary500};")" />
+<MudPaper Class="container-filter" Elevation="1">
+    <MudPaper Elevation="0" Class="d-flex align-center">
+        <MudText Class="text-resultado" Typo="Typo.h6">557 Resultados</MudText>
     </MudPaper>
 
+    <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
+        <MudTextField @bind-Value="firstName" Placeholder="Buscar aqui.." Class="search" />
+    </MudPaper>
     
-    <MudPaper class="container__filter_selects">
-
-        <!-- Campo para filtrar por Skills -->
-        <InputSelect @bind-Value="skills" class="filter-container__select" placeholder="Buscar aquì">
+    <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select">
+        <InputSelect @bind-Value="skills" Class="search-container">
             <option value="">Tecnologia</option>
             <option value="JavaScript">JavaScript</option>
             <option value="C#">C#</option>
@@ -42,45 +27,18 @@
             <option value="Ruby">Ruby</option>
             <option value="PHP">PHP</option>
             <option value="React">React</option>
-            <option>
-            <MudButton OnClick="ClearFilters" Variant="Variant.Filled" Color="Color.Secondary" Class="filter-button">
-                X Limpiar
-            </MudButton>
-            </option>
         </InputSelect>
-
-
-        <!-- Campo para filtrar por Language Level -->
-        <InputSelect @bind-Value="languageLevel" class="filter-container__select">
-            <option value=""> Nivel inglès</option>
+        <InputSelect @bind-Value="languageLevel" Class="search-container">
+            <option value="">Nivel ingles</option>
             <option value="A1">A1</option>
             <option value="A2">A2</option>
             <option value="B1">B1</option>
             <option value="B2">B2</option>
             <option value="C1">C1</option>
             <option value="C2">C2</option>
-            <option>
-                <MudButton OnClick="ClearFilters" Variant="Variant.Filled" Color="Color.Secondary" Class="filter-button">
-                X Limpiar
-                </MudButton>
-            </option>
-                
-            
         </InputSelect>
-
     </MudPaper>
-
-    <!-- Botón para aplicar el filtro. -->
-    @* <MudButton OnClick="FilterCoders" Variant="Variant.Filled" Color="Color.Primary" Class="filter-button">
-        Filtrar
-    </MudButton> *@
-
-    <!-- Botón para limpiar filtros -->
-    @* <MudButton OnClick="ClearFilters" Variant="Variant.Filled" Color="Color.Secondary" Class="filter-button">
-        Limpiar
-    </MudButton> *@
 </MudPaper>
-
 
 
 @if(coders != null)
@@ -108,10 +66,10 @@
                         <div class="cards__container">
                             <div class="cards__profile">
                                 <div class="cards__coder">
-                                    <h6>@coder.FirstName @coder.FirstLastName</h6>
+                                    <h3>@coder.FirstName @coder.FirstLastName</h3>
                                     <p>@coder.Stack</p>
                                 </div>
-                                    <a><img class="cards__container_img" src="images/group-add.svg" alt="icon"></a>
+                                    <a><img src="images/group-add.svg" alt="icon"></a>
                             </div>
                             @*badges*@
                             @if(coder.Skills != null)
@@ -119,8 +77,7 @@
                                 <div class="cards__badges">
                                     @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
                                     {
-                                        <div class="cards__badge" OnClick="@(() => ShowDetails(@coder.Id))">@coder.Skills[i].Language_Programming</div>
-                                        
+                                        <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
                                     }
                                 </div>
                             }
@@ -129,8 +86,8 @@
                                 <p>Contenido no disponible...</p>
                             }
                             @*Buttons*@
-                            <div class="cards__button">
-                                <MudButton class="cards__button_element" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
+                            <div class="cards__button--primary">
+                                <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
                             </div>
                         </div>
                 </MudCardContent>
@@ -152,17 +109,22 @@ else
 
 @code
 {
+    public bool CheckBox1 { get; set; } = false;
+    public bool CheckBox2 { get; set; } = false;
+    public bool CheckBox3 { get; set; } = false;
+    
+    
     public string ButtonDetails = "Detalle";
     private List<Coder>? coders;
 
-    //paginación
+    //pagination
     private List<Coder>? paginatedCoders;
     private int totalCoders;
     private int currentPage = 1;
     private int pageSize = 8;
     private int pag;
 
-    //filtrado*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+    //filtrado
     //Lista para guardar los coder filtrados
     private List<Coder>? filterCoder;
 
@@ -171,11 +133,8 @@ else
     private string? firstLastName;
     private string? skills;
     private string? languageLevel;
-    private string? searchText;
+    private string? stack;
 
-    private bool FilterApplied = false;
-
-    
     
 
     protected override async Task OnInitializedAsync()
@@ -216,59 +175,50 @@ else
 
     private async Task FilterCoders()
     {
-    // Primero, cargamos la lista completa desde el servicio
-    Console.WriteLine("HOLA");
-    coders = await coderService.GetCodersAsync();
+        // Primero, cargamos la lista completa desde el servicio
+        Console.WriteLine("HOLA");
+        coders = await coderService.GetCodersAsync();
 
-    // Filtrar por nombres o apellidos (FirstName, SecondName, FirstLastName, SecondLastName)
-    if (!string.IsNullOrEmpty(searchText))
-    {
-        var searchTerms = searchText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        Console.WriteLine("Filtrando por nombres o apellidos...");
-
-        coders = coders.Where(c =>
+        // Aplicar filtro de FirstName
+        if (!string.IsNullOrEmpty(firstName))
         {
-            var fullName = $"{c.FirstName} {c.SecondName} {c.FirstLastName} {c.SecondLastName}".ToLower();
+            Console.WriteLine("Hola --- first name: " + firstName);
+            coders = coders.Where(c => c.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
 
-            // Verificar todas las combinaciones posibles
-            bool isMatch = searchTerms.All(term =>
-                $"{c.FirstName} {c.SecondName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.FirstLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.SecondName} {c.FirstLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.SecondName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstLastName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.SecondName} {c.FirstLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.SecondName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.FirstLastName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.SecondName} {c.FirstLastName} {c.SecondLastName}".ToLower().Contains(term.ToLower()) ||
-                $"{c.FirstName} {c.SecondName} {c.FirstLastName} {c.SecondLastName}".ToLower().Contains(term.ToLower())
-            );
-            FilterApplied = true;
-            return isMatch;
-        }).ToList();
+        // Aplicar filtro de LastName
+        if (!string.IsNullOrEmpty(firstLastName))
+        {   
+            Console.WriteLine("LastName: " + firstLastName);
+            coders = coders.Where(c => c.FirstLastName.Contains(firstLastName, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        // Aplicar filtro de Skills
+        if (!string.IsNullOrEmpty(skills))
+        {
+            coders = coders.Where(c => c.Skills.Any(s => s.Language_Programming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
+        }
+
+        // Aplicar filtro de Nivel de Lenguaje
+        if (!string.IsNullOrEmpty(languageLevel))
+        {
+            coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.Language_Level.Equals(languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        // Aplicar filtro de Stack
+        if (!string.IsNullOrEmpty(stack))
+        {
+            coders = coders.Where(c => c.Stack != null && c.Stack.Contains(stack, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+            totalCoders = coders.Count;
+            pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+            LoadCoders(currentPage);
+
+        // Actualizar la UI para reflejar los cambios
+
+        StateHasChanged();
     }
-
-    // Aplicar filtro de Skills
-    if (!string.IsNullOrEmpty(skills))
-    {
-        coders = coders.Where(c => c.Skills.Any(s => s.Language_Programming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
-    }
-    // Aplicar filtro de Nivel de Lenguaje
-    if (!string.IsNullOrEmpty(languageLevel))
-    {
-        coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.Language_Level.Equals(languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
-        FilterApplied = true;
-    }
-
-    totalCoders = coders.Count;
-    pag = (int)Math.Ceiling((double)totalCoders / pageSize);
-    LoadCoders(currentPage);
-
-    // Actualizar la UI para reflejar los cambios
-    StateHasChanged();
-    }
-
 
     private async Task ClearFilters()
     {
@@ -279,7 +229,7 @@ else
         firstLastName = "";
         skills = "";
         languageLevel = "";
-
+        stack = "";
 
         // Recarga la lista completa de coders sin filtros de manera asíncrona
         coders = await coderService.GetCodersAsync();
@@ -291,12 +241,10 @@ else
         // Carga la primera página después de limpiar los filtros
         currentPage = 1;
         LoadCoders(currentPage);
-        FilterApplied = false;
 
         // Actualiza la UI
         StateHasChanged();
     }
-
 
 
     private void LoadCoders(int pageNumber)

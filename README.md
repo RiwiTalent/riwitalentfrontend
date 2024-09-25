@@ -52,7 +52,7 @@ dotnet watch
 
 ### Documentación
 
-![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+![Insomnia](https://avatars.githubusercontent.com/u/113130332?s=48&v=4)
 
 
 ## Gestión del Proyecto

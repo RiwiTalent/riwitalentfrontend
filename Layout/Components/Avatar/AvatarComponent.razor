@@ -1,0 +1,58 @@
+@namespace riwi.Layout.Components.Avatar
+@using Blazored.SessionStorage
+@using riwi.Models
+@inject ISessionStorageService SessionStorage
+
+
+@if (Inicial != null)
+{
+    <MudBadge Style="margin-right: 4px" Color="Status" Overlap="true" Bordered="true">
+        <MudAvatar Color="ColorRandom">@Inicial.ToUpper()</MudAvatar>
+    </MudBadge>
+}
+
+@code {
+    private string? Inicial { get; set; } = null;
+    private Color ColorRandom { get; set; }
+    private Color Status { get; set; } = Color.Success;
+    
+    [Parameter]
+    public required string TypeAvatar { get; set; }
+    [Parameter]
+    public string? KeySesionStorage { get; set; }
+    [Parameter]
+    public GroupCoders? GroupCoders { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerSesionStorageAvatar();
+        GenerarColorRandom();
+    }
+
+    private async Task ObtenerSesionStorageAvatar()
+    {
+        if (TypeAvatar == "Usuario")
+        {
+            User sesionStorageUser = await SessionStorage.GetItemAsync<User>(KeySesionStorage);
+            Inicial = sesionStorageUser != null ? $"{sesionStorageUser.Email?[0]}{sesionStorageUser.Email?[1]}" : null;
+        }else if (TypeAvatar == "GrupoCoders" && GroupCoders != null)
+        {
+            Inicial = $"{GroupCoders.Name[0]}{GroupCoders.Name[1]}";
+            Status = GroupCoders.isActive == false ? Color.Error : Color.Success;
+        }
+    }
+
+    private void GenerarColorRandom()
+    {
+        List<Color> listColors =
+        [
+            Color.Success,
+            Color.Primary,
+            Color.Warning
+        ];
+
+        Random numeroRandom = new Random();
+
+        ColorRandom = listColors[numeroRandom.Next(3)];
+    }
+}
