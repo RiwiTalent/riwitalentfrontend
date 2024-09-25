@@ -92,10 +92,13 @@
             <MudCard>
                 @if(coder.Photo != null)
                 {
-                    <MudImage class=""
+                    <MudImage Fluid="true"
+                    ObjetctFit="Cover" Src="@ImageNullOrEmpty(coder.Photo)" Alt="Mony the dog" Width="250" Height="300"/>
+
+                    @* <MudImage class=""
                             Src="@ImageNullOrEmpty(coder.Photo)" 
                             Alt="profile" 
-                            />
+                    </MudImage> *@
                 }
                 else
                 {
