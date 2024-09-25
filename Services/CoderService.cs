@@ -20,5 +20,11 @@ namespace riwi.Services
         {
             return await _httpClient.GetFromJsonAsync<List<Coder>>("http://localhost:5113/riwitalent/coders");
         }
+
+         public async Task<bool> UpdateCoderAsync(Coder coder)
+        {
+            var response = await _httpClient.PutAsJsonAsync("http://localhost:5113/riwitalent/updatecoder", coder);
+            return response.IsSuccessStatusCode;
+        }
     }
 }
