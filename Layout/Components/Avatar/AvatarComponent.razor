@@ -1,0 +1,32 @@
+@namespace riwi.Layout.Components.Avatar
+@using Blazored.SessionStorage
+@using riwi.Models
+@inject ISessionStorageService SessionStorage
+
+
+@if (Inicial != null)
+{
+    <MudAvatar Color="Color.Info">@Inicial</MudAvatar>
+}
+
+@code {
+    private Char? Inicial { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await obtenerSesionStorage();
+    }
+
+    private async Task obtenerSesionStorage()
+    {
+        User sesionStorageUser = await SessionStorage.GetItemAsync<User>("sesionUsuario");
+        if (sesionStorageUser != null)
+        {
+            Inicial = sesionStorageUser.Email[0];
+        }
+        else
+        {
+            Inicial = null;
+        }
+    }
+}

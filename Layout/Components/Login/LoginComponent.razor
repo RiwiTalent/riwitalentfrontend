@@ -13,6 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
+
+
 @*Integracion*@
 
 <div class="main-container">
@@ -93,13 +95,13 @@
             Console.WriteLine("Func");
         }
 
-        var loginResponse = await HttpClient.PostAsJsonAsync<User>("http://localhost:5113/riwitalent/login", login);
+        var loginResponse = await HttpClient.PostAsJsonAsync<User>("https://backend-riwitalent.onrender.com/riwitalent/login", login);
         Console.WriteLine(loginResponse);
         if (loginResponse != null)
         {
             var sesionUsuario = await loginResponse.Content.ReadFromJsonAsync<User>();
             var autenticacionExt = (AuthenticacionExtension)autenticacionProvider;
-            await autenticacionExt.ActualizarEstadoAutenticacion(sesionUsuario);
+            await autenticacionExt.ActualizarEstadoAutenticacion(login);
 
             NavigationManager.NavigateTo("/home");
             await Swal.FireAsync(new SweetAlertOptions
