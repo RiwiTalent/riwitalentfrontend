@@ -9,20 +9,16 @@
 <MudSnackbarProvider />
 
 
-<CascadingAuthenticationState>
+<CascadingAuthenticationState> 
 
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
 
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
+                    No estas autorizado para ver esta página.
                     @{
-                        if(context.User.Identity?.IsAuthenticated != true)
-                            navManager.NavigateTo("/");
-                        else
-                        {
-                            <p class="alert alert-danger">No esta autorizado para ver esta pagina</p>
-                        }
+                        navManager.NavigateTo("/");
                     }
                 </NotAuthorized>
             </AuthorizeRouteView>
@@ -37,4 +33,3 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
-

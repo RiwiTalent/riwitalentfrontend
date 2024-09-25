@@ -1,12 +1,8 @@
 ﻿@page "/mypage"
 @inherits LayoutComponentBase
-@using Blazored.SessionStorage
-@using Microsoft.AspNetCore.Components.Authorization
 @using riwi.Services
 @using riwi.Theme
-@using riwi.Layout.Components.Avatar
-@using riwi.Models
-@inject AuthenticationStateProvider autenticacionProvider
+@inject AuthService AuthService
 @inject NavigationManager navManager
 @inject NavigationManager NavigationManager
 @inject ISessionStorageService SessionStorage
@@ -61,13 +57,6 @@
         _isDarkMode = !_isDarkMode;
     }
 
-    //Login
-    private async Task CerrarSesion()
-    {
-        var autenticacionExt = (AuthenticacionExtension)autenticacionProvider;
-        await autenticacionExt.ActualizarEstadoAutenticacion(null);
-        navManager.NavigateTo("/",true);
-    }
     
     public string DarkLightModeButtonIcon => _isDarkMode switch
     {
