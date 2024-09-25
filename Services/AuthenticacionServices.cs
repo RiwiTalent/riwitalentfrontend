@@ -18,7 +18,7 @@ namespace riwi.Services
         public async Task ActualizarEstadoAutenticacion(User? sesionUsuario)
         {
             ClaimsPrincipal claimsPrincipal;
-
+            Console.WriteLine(sesionUsuario);
             if (sesionUsuario != null)
             {
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
