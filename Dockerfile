@@ -1,23 +1,17 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
+﻿# Etapa de compilación (opcional, si necesitas realizar cambios en el código)
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 WORKDIR /src
-COPY ["riwi.csproj", "./"]
-RUN dotnet restore "riwi.csproj"
 COPY . .
-WORKDIR "/src/"
-RUN dotnet build "riwi.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet restore "riwi.csproj"
+RUN dotnet publish "riwi.csproj" -c Release -o /app/publish
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "riwi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Etapa de ejecución
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
+COPY --from=build /app/publish .
 
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "riwi.dll"]
+# Configuración de Nginx (opcional, puedes personalizar)
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

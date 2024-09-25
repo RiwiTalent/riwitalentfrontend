@@ -18,4 +18,10 @@
     <PackageReference Include="MudBlazor" Version="7.8.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="src\web.config" />
+    <_ContentIncludedByDefault Remove="src\wwwroot\sample-data\weather.json" />
+    <_ContentIncludedByDefault Remove="src\wwwroot\_framework\blazor.boot.json" />
+  </ItemGroup>
+
 </Project>
