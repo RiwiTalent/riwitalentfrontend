@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.Authorization;
 @using riwi.Services;
 @using riwi.Models;
+@using riwi.Layout.Components.Avatar
 @inject GroupsServices GroupsServices; 
 @attribute [Authorize]
 
@@ -55,7 +56,7 @@
                             <PropertyColumn Property="x => x.Name" Title="Nombre del grupo">
                                 <CellTemplate Context="group">
                                     <MudContainer Class="d-flex gap-1">
-                                        <MudAvatar Color="Color.Primary">M</MudAvatar>
+                                        <AvatarComponent TypeAvatar="GrupoCoders" GroupCoders="GetGroupCoders(group.Item.Name, group.Item.Status)"></AvatarComponent>
                                         <MudContainer>
                                             <MudText><b>@group.Item.Name</b></MudText>
                                             <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.Description</MudText>
@@ -154,5 +155,27 @@
             "Inactive" => Color.Error,
             _ => Color.Default,
         };
+    }
+
+    public GroupCoders GetGroupCoders(string? name, string? status)
+    {
+        bool statusBool;
+
+        if (status == "Active")
+        {
+            statusBool = true;
+        }
+        else
+        {
+            statusBool = false;
+        }
+        
+        GroupCoders groupCoders = new GroupCoders()
+        {
+            Name = name,
+            isActive = statusBool
+        };
+
+        return groupCoders;
     }
 }
