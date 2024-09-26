@@ -6,70 +6,147 @@
 @using riwi.Models;
 @attribute [Authorize]
 
-<PageTitle>Grupos</PageTitle>
+<PageTitle>Coders</PageTitle>
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <MudAlert Severity="Severity.Error">@errorMessage</MudAlert>
+}
 
 <AuthorizeView>
     <Authorized>
-        <MudContainer Class="d-flex flex-grow-1 flex-column">
-            <!-- Botón y Edición -->
-            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
-                <MudIconButton Href="/Home" Icon="@Icons.Material.Rounded.KeyboardArrowLeft" Color="Color.Secondary" Class="border-solid border-2 mud-border-secondary pa-2"></MudIconButton>
-                <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Secondary">Editar</MudButton>
-            </MudContainer>
-            
-            <!-- Cards -->
-            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
-                <MudPaper Class="d-flex flex-grow-1 pa-3">
-                    Card 1
-                </MudPaper>
-                <MudPaper Class="d-flex flex-grow-1 pa-3">
-                    Card 2
-                </MudPaper>
+        <MudContainer Class="d-flex flex-grow-1 flex-column ma-2">
+            <!-- Botón y Agregar -->
+            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3">
+                <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
             </MudContainer>
 
-            <!-- Total grupos -->
-            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
-                <MudText Typo="Typo.h5">Total Coders: @GroupsCount</MudText>
+            <MudContainer Class="d-flex flex-column flex-grow-1 pa-3 ma-2">
+                @if (_loading)
+                {
+                    <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7" />
+                }
+                else
+                {
+                <!-- Total coders -->
+                <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
+                    <MudText Typo="Typo.h6"><b>@CoderCount</b> Coders encontrados</MudText>
+                </MudContainer>
+                
+                <!-- Grid de coders -->
+                <MudDataGrid
+                        Class="flex-grow-1 pa-2"
+                        LoadingProgressColor="Color.Info"
+                        Hover="true"
+                        Items="@_coders" 
+                        MultiSelection="true" 
+                        QuickFilter="@_quickFilter">
+                        <ToolBarContent>
+                            <MudTextField @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"></MudTextField>
+                            <MudSpacer/>
+                            <MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.PersonAdd">
+                                <MudText>Nuevo Coder</MudText>
+                            </MudButton>
+                        </ToolBarContent>
+
+                        <Columns>
+                            <SelectColumn T="Coder" />
+                            <PropertyColumn Property="x => _coders.IndexOf(x) + 1" Title="Numero" Filterable="false" />
+                            <PropertyColumn Property="x => x.FirstName" Title="Nombre"/>
+                            <PropertyColumn Property="x => x.FirstLastName" Title="Nombre"/>
+                            <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación" />
+                            <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
+                                <CellTemplate Context="group">
+                                    <MudStack Row>
+                                        <MudChip T="string" Color="@GetChipColor((string)group.Item.Status)" Variant="Variant.Filled" Size="Size.Small" Class="px-4">
+                                            @group.Item.Status</MudChip>
+                                    </MudStack>
+                                </CellTemplate>
+                            </PropertyColumn>
+                            <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
+                                <CellTemplate Context="coder">
+                                    <MudStack Row>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ModeEditOutline" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Outlined.RemoveRedEye" Color="Color.Warning" Size="Size.Small" Class="border-solid border-2 mud-border-warning pa-2"></MudIconButton>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.DeleteOutline" Color="Color.Error" Size="Size.Small" Class="border-solid border-2 mud-border-error pa-2"></MudIconButton>
+                                    </MudStack>
+                                </CellTemplate>
+                            </PropertyColumn>
+                        </Columns>
+
+                        <PagerContent>
+                            <MudDataGridPager T="Coder"
+                                              PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
+                                              RowsPerPageString="@rowsPerPageString"
+                                              InfoFormat="@infoFormat"/>
+                        </PagerContent>
+                    </MudDataGrid>
+                }
+                
             </MudContainer>
+            
         </MudContainer>
     </Authorized>
 </AuthorizeView>
 
-@code
-{
-    private List<Coder>? coder;
+@code {
+    private List<Coder> _coders = new List<Coder>();    
+    private string _searchString;
+    private bool _sortNameByLength;
     private bool _loading = true;
-    
-    // Propiedad para el contador de grupos
-    private int GroupsCount => coder?.Count ?? 0;
-    private bool hidePageNumber;
-    private bool hidePagination;
-    private bool hideRowsPerPage;
+    private int CoderCount => _coders?.Count ?? 0;
+    private string errorMessage;
     private string rowsPerPageString = "Filas por página:";
     private string infoFormat = "{first_item}-{last_item} de {all_items}";
     
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            coder = await CoderService.GetCodersAsync();
+            _coders = await CoderService.GetCodersAsync() ?? new List<Coder>();
+            _coders = _coders.Where(g => g != null).ToList();
+            Console.WriteLine($"Total coders obtenidos: {_coders.Count}");        
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            Console.WriteLine($"Error al obtener coders: {ex.Message}");
+            errorMessage = "Hubo un error al cargar los coder. Intente nuevamente más tarde.";
+            Console.WriteLine($"Error al obtener los coder: {ex.Message}");
         }
         finally
         {
             _loading = false;
         }
     }
-    
+
+    // Filtro de busqueda
+    private Func<Coder, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        return MatchesSearchCriteria(x);
+    };
+
+    private bool MatchesSearchCriteria(Coder coder)
+    {
+        return (coder.FirstName != null && coder.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.FirstLastName != null && coder.SecondName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.FirstName != null && coder.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.FirstName != null && coder.SecondLastName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.FirstName != null && coder.Email.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.Status != null && coder.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.Created_At != null && coder.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+    }
+
+    // Condicional para colores de los Chip de Status
     private Color GetChipColor(string? status)
     {
         return status switch
         {
             "Active" => Color.Success,
-            "Inactive" => Color.Error,
+            "Inactive" => Color.Default,
+            "Grouped" => Color.Error,
+            "Selected" => Color.Info,
             _ => Color.Default,
         };
     }

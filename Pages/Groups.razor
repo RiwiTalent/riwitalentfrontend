@@ -17,7 +17,7 @@
         <MudContainer Class="d-flex flex-grow-1 flex-column ma-2">
             <!-- Botón y Agregar -->
             <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3">
-                <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
+                <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
             </MudContainer>
 
             <MudContainer Class="d-flex flex-column flex-grow-1 pa-3 ma-2">
@@ -43,7 +43,9 @@
                         <ToolBarContent>
                             <MudTextField @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"></MudTextField>
                             <MudSpacer/>
-                            <MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.GroupAdd">Nuevo grupo</MudButton>
+                            <MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.GroupAdd">
+                                <MudText>Nuevo grupo</MudText>
+                            </MudButton>
                         </ToolBarContent>
 
                         <Columns>
@@ -62,9 +64,9 @@
                             <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
                                 <CellTemplate Context="group">
                                     <MudStack Row>
-                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ModeEditOutline" Color="Color.Primary" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
-                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Outlined.RemoveRedEye" Color="Color.Warning" Class="border-solid border-2 mud-border-warning pa-2"></MudIconButton>
-                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.DeleteOutline" Color="Color.Error" Class="border-solid border-2 mud-border-error pa-2"></MudIconButton>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ModeEditOutline" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Outlined.RemoveRedEye" Color="Color.Warning" Size="Size.Small" Class="border-solid border-2 mud-border-warning pa-2"></MudIconButton>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.DeleteOutline" Color="Color.Error" Size="Size.Small" Class="border-solid border-2 mud-border-error pa-2"></MudIconButton>
                                     </MudStack>
                                 </CellTemplate>
                             </PropertyColumn>
