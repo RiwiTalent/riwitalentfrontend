@@ -11,6 +11,8 @@
 
 @inject NavigationManager navManager
 @inject NavigationManager NavigationManager
+@using riwi.Layout.Components.Avatar
+
 
 
 
@@ -22,7 +24,11 @@
             <img class="riwi-image" src="images/riwi.png"/>
         </NavLink>
         <MudSpacer/>
-        <AvatarComponent TypeAvatar="Usuario" KeySesionStorage="sesionUsuario"></AvatarComponent>
+
+
+        <AvatarComponent TypeAvatar="Usuario" KeySesionStorage="userEmail"></AvatarComponent>
+
+
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
