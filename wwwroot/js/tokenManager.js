@@ -1,6 +1,6 @@
 // Función para guardar el token en una cookie
 window.setTokenInCookies = function (token) {
-    console.log("Guardando token en cookies: ", token);
+   
     document.cookie = `authToken=${token}; path=/; max-age=3600; SameSite=Lax;`;
 };
 

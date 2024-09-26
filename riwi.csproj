@@ -26,8 +26,4 @@
     <_ContentIncludedByDefault Remove="src\wwwroot\_framework\blazor.boot.json" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\DetailsCoders\" />
-  </ItemGroup>
-
 </Project>

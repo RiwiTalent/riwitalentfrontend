@@ -4,6 +4,8 @@
 @using riwi.Services;
 @inject AuthenticationStateProvider autenticacionProvider;
 @inject AuthService AuthService;
+@inject ISessionStorageService SessionStorage
+@using Blazored.SessionStorage
 @inject NavigationManager NavigationManager;
 @inject HttpClient HttpClient;
 @inject SweetAlertService Swal;
@@ -23,7 +25,7 @@
     <div class="secondary-container">
         <div class="login-card">
             <div class="card-content">
-                <div class="text-center mb-3">
+                <div class="card-content_contentainer-logo text-center mb-3">
                     <img src="images/riwi.png" alt="Logo Riwi" class="riwi-logo"/>
 
                 </div>
@@ -99,6 +101,10 @@
 
         if (succes)
         {
+
+             // Guardar el correo en SessionStorage
+            await SessionStorage.SetItemAsync("userEmail", email); // Cambia "userEmail" por la clave que desees usar
+
             NavigationManager.NavigateTo("/home");
             await Swal.FireAsync(new SweetAlertOptions
             {

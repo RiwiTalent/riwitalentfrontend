@@ -20,7 +20,7 @@
     <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
         <MudTextField StartIcon="@Icons.Material.Filled.Delete" @bind-Value="searchText" Placeholder="Buscar aquí..." Class="search" Immediate="true" TextChanged="FilterCoders" />
     </MudPaper>
-    
+
     <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select">
         <InputSelect @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
             <option value="">Tecnologia</option>
@@ -53,11 +53,10 @@
 @if(coders != null)
 {
     <div class="cards">
-    
-        @foreach(var coder in paginatedCoders)
+        @foreach (var coder in paginatedCoders)
         {
             <MudCard>
-                @if(coder.Photo != null)
+                @if (coder.Photo != null)
                 {
                     <MudImage Fluid="true"
                     ObjetctFit="Cover" Src="@ImageNullOrEmpty(coder.Photo)" Alt="Mony the dog" Width="250" Height="300"/>
@@ -108,7 +107,7 @@
 
     <div class="container-pagination">
         <div class="container-box">
-            <MudPagination Variant="Variant.Filled"  ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize"  TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
+            <MudPagination Variant="Variant.Filled" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize" TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
         </div>
     </div>
 }
@@ -132,7 +131,6 @@ else
     private int pag;
 
     //filtrado
-    //Lista para guardar los coder filtrados
     private List<Coder>? filterCoder;
 
     // Filtros
@@ -153,7 +151,7 @@ else
             Console.WriteLine(pag);
             LoadCoders(currentPage);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine($"Error al obtener coders: {ex.Message}");
         }
@@ -165,12 +163,11 @@ else
         {
             coders = await coderService.GetCodersAsync();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine($"Error al obtener coders: {ex.Message}");
         }
     }
-
 
     private void OnPageChanged(int pageNumber)
     {
@@ -251,9 +248,9 @@ else
     private void LoadCoders(int pageNumber)
     {
         paginatedCoders = coders
-                            .Skip((pageNumber - 1) * pageSize)
-                            .Take(pageSize)
-                            .ToList();
+            ?.Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
     }
 
     //Funcionalidad ver detalles
