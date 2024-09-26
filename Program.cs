@@ -17,6 +17,7 @@ builder.Services.AddBlazoredSessionStorage();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5113/") });
 builder.Services.AddTransient<CoderService>();
+builder.Services.AddTransient<GroupCodersServices>();
 
 
 // Sweet alert services
