@@ -1,7 +1,9 @@
 @page "/home"
 @using Microsoft.AspNetCore.Authorization
 @using riwi.Layout.Components
+@using Microsoft.AspNetCore.Components.Authorization;
 @using riwi.Layout.Components.BannerCoders
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 
 
@@ -13,7 +15,6 @@
     <link rel="stylesheet" href="css/PaginationComponent.css">
     <link rel="stylesheet" href="css/CoderFilterComponent.css">
 </head>
-
 
 <AuthorizeView>
     <Authorized>

@@ -1,0 +1,158 @@
+@page "/groups"
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.Authorization;
+@using riwi.Services;
+@using riwi.Models;
+@inject GroupsServices GroupsServices; 
+@attribute [Authorize]
+
+<PageTitle>Grupos</PageTitle>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <MudAlert Severity="Severity.Error">@errorMessage</MudAlert>
+}
+
+<AuthorizeView>
+    <Authorized>
+        @if (_loading)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7" />
+        }
+        else
+        {
+            <MudContainer Class="ma-3 w-full h-full">
+                <!-- Botón y Agregar -->
+                <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3">
+                    <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
+                </MudContainer>
+
+                <MudPaper Class="w-full h-full pa-4">
+                    <!-- Total coders -->
+                    <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
+                        <MudText Typo="Typo.h5"><b>@GroupsCount</b> Grupos encontrados</MudText>
+                    </MudContainer>
+
+                    <!-- Grid de grupos -->
+                    <MudDataGrid
+                        Class="flex-grow-1 pa-2 rounded-lg"
+                        LoadingProgressColor="Color.Info"
+                        Hover="true"
+                        Items="@_groups"
+                        MultiSelection="true"
+                        QuickFilter="@_quickFilter">
+                        <ToolBarContent>
+                            <MudTextField @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"></MudTextField>
+                            <MudSpacer/>
+                            <MudButton Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" StartIcon="@Icons.Material.Rounded.PersonAdd">
+                                <MudText>Nuevo grupo</MudText>
+                            </MudButton>
+                        </ToolBarContent>
+
+                        <Columns>
+                            <SelectColumn T="Group"/>
+                            <!-- <PropertyColumn Property="x => _groups.IndexOf(x) + 1" Title="Número" Filterable="false" /> -->
+                            <PropertyColumn Property="x => x.Name" Title="Nombre del grupo">
+                                <CellTemplate Context="group">
+                                    <MudContainer Class="d-flex gap-1">
+                                        <MudAvatar Color="Color.Primary">M</MudAvatar>
+                                        <MudContainer>
+                                            <MudText><b>@group.Item.Name</b></MudText>
+                                            <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.Description</MudText>
+                                        </MudContainer>
+                                    </MudContainer>
+                                </CellTemplate>
+                            </PropertyColumn>
+                            <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación"/>
+                            <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
+                                <CellTemplate Context="group">
+                                    <MudStack Row>
+                                        <MudChip T="string" Color="@GetChipColor(group.Item.Status)" Variant="Variant.Filled" Size="Size.Small" Class="px-4">
+                                            @group.Item.Status
+                                        </MudChip>
+                                    </MudStack>
+                                </CellTemplate>
+                            </PropertyColumn>
+                            <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
+                                <CellTemplate Context="group">
+                                    <MudStack Row>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ModeEditOutline" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Outlined.RemoveRedEye" Color="Color.Warning" Size="Size.Small" Class="border-solid border-2 mud-border-warning pa-2"></MudIconButton>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.DeleteOutline" Color="Color.Error" Size="Size.Small" Class="border-solid border-2 mud-border-error pa-2"></MudIconButton>
+                                    </MudStack>
+                                </CellTemplate>
+                            </PropertyColumn>
+                        </Columns>
+
+                        <PagerContent>
+                            <MudDataGridPager T="Group"
+                                              PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
+                                              RowsPerPageString="@rowsPerPageString"
+                                              InfoFormat="@infoFormat"/>
+                        </PagerContent>
+                    </MudDataGrid>
+                </MudPaper>
+            </MudContainer>
+        }
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private List<Group> _groups = new List<Group>();    
+    private string _searchString;
+    private bool _loading = true;
+    private int GroupsCount => _groups.Count;
+    private string errorMessage;
+    private string rowsPerPageString = "Filas por página:";
+    private string infoFormat = "{first_item}-{last_item} de {all_items}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadGroupsAsync();
+    }
+
+    private async Task LoadGroupsAsync()
+    {
+        try
+        {
+            _groups = await GroupsServices.GetGroupsAsync() ?? new List<Group>();
+            _groups = _groups.Where(g => g != null).ToList();
+            Console.WriteLine($"Total grupos obtenidos: {_groups.Count}");        
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Hubo un error al cargar los grupos. Intente nuevamente más tarde.";
+            Console.WriteLine($"Error al obtener grupos: {ex.Message}");
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    // Filtro de búsqueda
+    private Func<Group, bool> _quickFilter => group =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        return MatchesSearchCriteria(group);
+    };
+
+    private bool MatchesSearchCriteria(Group group)
+    {
+        return (group.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
+               (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
+               (group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+    }
+    
+    private Color GetChipColor(string? status)
+    {
+        return status switch
+        {
+            "Active" => Color.Success,
+            "Inactive" => Color.Error,
+            _ => Color.Default,
+        };
+    }
+}
