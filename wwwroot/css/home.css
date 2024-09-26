@@ -1,17 +1,15 @@
 .cards {
     margin: auto;
-    width: 95%;
+    width: 100%;
     max-width: 1120px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     gap: 15px;
-    background-color: #F9FAFC;
     max-height: 1030px;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 
@@ -124,7 +122,7 @@
     flex-direction: column;
 }
 
-.cards__coder h6 {
+.cards__coder h3 {
     color: var(--Colors-Base-White, #FFF);
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
