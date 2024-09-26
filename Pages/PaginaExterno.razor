@@ -1,0 +1,52 @@
+@inject GroupCodersServices _GroupCodersServices
+@page "/{Name}/{Key}"
+@using riwi.Models
+@using riwi.Services
+
+<MudForm Style="display: flex; align-items: center " Valid="IniciarSesion">
+    <br>
+    <p class="input-container form-group Login_contenedor_input">
+        <span class="correo_span">Correo</span>
+        <label for="Password" class="input-icon-container">
+            <img src="images/mail-filled.svg" alt="Icono de correo electronico" class="input-icon" />
+        </label>
+        <input disabled="disabled" type="text" @bind="@Name" name="Email" id="text" class="input-field">
+    </p>
+    <br>
+    <p class="input-container form-group Login_contenedor_input">
+        <span class="Password_span">Contraseña</span>
+        <label for="Password" class="input-icon-container">
+            <img src="images/lock.svg" alt="Icono de contraseña" class="input-icon" />
+        </label>
+        <input type="password" placeholder="Ingresa tu contraseña" @bind="@Login.Key" name="Password" id="Password" class="input-field" autocomplete="Password">
+        <label for="Password" class="eye-icon-container end-icon">
+            <img src="images/eye-off.svg" alt="Icono para ocultar/mostrar contraseña" class="eye-icon" />
+        </label>
+    </p>
+
+    <div class="button-container">
+        <button type="button" class="btn mt-3 Ingresar" @onclick="IniciarSesion">Ingresar</button>
+    </div>
+</MudForm>
+
+
+@code {
+    [Parameter]
+    public required string Name { get; set; }
+    [Parameter]
+    public required string Key { get; set; }
+    
+    public AuthExternalRequest Login { get; set; } = new();
+
+
+    private async Task IniciarSesion()
+    {
+        Login.Name = Name;
+
+        if (Login.Key != null)
+        {
+            await _GroupCodersServices.AuthenticationExternalAsync(login: Login, key: Key);
+        }
+        
+    }
+}

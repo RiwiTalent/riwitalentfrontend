@@ -1,0 +1,13 @@
+@inject HttpClient _client
+@page "/HomeExterno/{Key}"
+@using riwi.Models
+@using riwi.Layout.Components.GroupCoder
+
+<h1>Prueba</h1>
+
+<GroupCodersComponent Key="@Key"></GroupCodersComponent>
+
+@code {
+    [Parameter]
+    public string? Key { get; set; }
+}
