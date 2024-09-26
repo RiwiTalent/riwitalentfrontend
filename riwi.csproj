@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="MudBlazor" Version="7.8.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
   </ItemGroup>
@@ -23,6 +24,10 @@
     <_ContentIncludedByDefault Remove="src\web.config" />
     <_ContentIncludedByDefault Remove="src\wwwroot\sample-data\weather.json" />
     <_ContentIncludedByDefault Remove="src\wwwroot\_framework\blazor.boot.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\DetailsCoders\" />
   </ItemGroup>
 
 </Project>

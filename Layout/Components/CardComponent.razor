@@ -10,7 +10,7 @@
 <MudPaper Class="container-filter" Elevation="1">
     <MudPaper Elevation="0" Class="d-flex align-center">
         @* <MudText Class="text-resultado" Typo="Typo.h6">@coders.Count Coders</MudText> *@
-        <MudText Class="text-resultado" Typo="Typo.h6">557 Coders</MudText>
+        <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Coders</MudText>
     </MudPaper>
 
     <MudButton OnClick="CleanFilters" Class=""> Limpiar </MudButton>
@@ -120,7 +120,7 @@ else
 
 @code
 {    
-    
+
     public string ButtonDetails = "Detalle";
     private List<Coder>? coders;
 
@@ -177,10 +177,10 @@ else
         currentPage = pageNumber;
         LoadCoders(currentPage);
     }
+    
 
     private async Task FilterCoders()
     {
-        Console.WriteLine("Aplicando filtros");
         coders = await coderService.GetCodersAsync();
 
         // Filtrar por nombres o apellidos
@@ -269,8 +269,7 @@ else
             await modal.Result;
         }
     }
-
-
+    
     //Lógica para renderizar imagen por defecto
     private string ImageNullOrEmpty(string? photo)
     {

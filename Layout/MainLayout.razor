@@ -1,21 +1,24 @@
 ﻿@page "/mypage"
 @inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
 @using riwi.Services
 @using riwi.Theme
-@using Blazored.SessionStorage;
 
+@using Blazored.SessionStorage;
 @inject AuthService AuthService
+@inject AuthenticationStateProvider autenticacionProvider
+@inject ISessionStorageService SessionStorage
+
 @inject NavigationManager navManager
 @inject NavigationManager NavigationManager
-@inject ISessionStorageService SessionStorage
 
 
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
-<MudLayout>
+}<MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
-        <NavLink class="nav-link riwi-image-content" href="" Match="NavLinkMatch.All">
+        <NavLink class="nav-link riwi-image-content" href="/home" Match="NavLinkMatch.All">
             <img class="riwi-image" src="images/riwi.png"/>
         </NavLink>
         <MudSpacer/>

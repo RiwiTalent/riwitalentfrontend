@@ -3,6 +3,9 @@
 @using riwi.Services;
 @inject CoderService coderService
 @inject IModalService model
+@inject SweetAlertService Swal;
+@inject AlertServices alertServices;
+@inject NavigationManager NavigationManager
 
 <head>
     <link rel="stylesheet" href="css/ModalCoderDetails.css">
@@ -185,20 +188,53 @@ else
     }
 
 
-
     private async Task UpdateCoder()
     {
-        // Llamada al servicio para actualizar el coder
-        var response = await coderService.UpdateCoderAsync(Coder);
-
-        if (response)
+        // Mostrar alerta de confirmación
+        var result = await Swal.FireAsync(new SweetAlertOptions
         {
-            // Cambiar de vuelta al modo de visualización
-            isEditMode = false;
+            Icon = SweetAlertIcon.Success,
+            Title = "¿Estás seguro/a de que deseas guardar los cambios de este registro?",
+            Text = "Esta acción actualizará la información y no podrá recuperarse.",
+            ShowCancelButton = true,
+            ConfirmButtonColor = "#5ACCA4",
+            ConfirmButtonText = "Si, Confirmar",
+            CancelButtonColor = "#fff",
+            CancelButtonText = "<button style='color:#5ACCA4; background-color:#fff'>No, Cancelar</button>"
+        });
+
+        // Si el usuario confirma, proceder con la actualización
+        if (result.IsConfirmed)
+        {
+            // Llamada al servicio para actualizar el coder
+            var response = await coderService.UpdateCoderAsync(Coder);
+
+            if (response)
+            {
+                // Cambiar de vuelta al modo de visualización
+                isEditMode = false;
+
+                // Mostrar mensaje de éxito
+                await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Los datos se han guardado exitosamente",
+                    Icon = SweetAlertIcon.Success,
+                    ShowConfirmButton = false 
+                });
+
+                // Navegar a otra página si es necesario
+                NavigationManager.NavigateTo("/home");
+            }
+            else
+            {
+                Console.WriteLine("Error al actualizar el coder");
+            }
         }
         else
         {
-            Console.WriteLine("Error al actualizar el coder");
+            // Aquí puedes manejar la lógica si el usuario cancela, si es necesario
+            Console.WriteLine("Actualización cancelada");
         }
     }
+
 }

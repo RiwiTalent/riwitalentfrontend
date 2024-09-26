@@ -151,7 +151,7 @@
     }
 
     .login-image-cel {
-        display: block;
+        display: none;
     }
     
     .Ingresar{
@@ -252,6 +252,7 @@
     }
 
     .login-image-cel {
+        display: block;
         clip-path: polygon(100% 0%, 100% 0%, 100% 125%, 0% 65%, 0% 0%, 0% 0%);
         width: 100%;
         border-radius: 8%;

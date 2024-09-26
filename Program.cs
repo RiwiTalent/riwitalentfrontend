@@ -7,6 +7,8 @@ using Blazored.Modal;
 using Microsoft.AspNetCore.Components.Authorization;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Blazored.SessionStorage;
+using Microsoft.Extensions.DependencyInjection;
+
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -17,7 +19,12 @@ builder.Services.AddBlazoredSessionStorage();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5113/") });
 builder.Services.AddTransient<CoderService>();
-builder.Services.AddTransient<GroupCodersServices>();
+// builder.Services.AddTransient<GroupCodersServices>();
+
+builder.Services.AddHttpClient<GroupsServices>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5113/");
+});
 
 
 // Sweet alert services
