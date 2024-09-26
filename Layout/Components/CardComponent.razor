@@ -9,15 +9,15 @@
 
 <MudPaper Class="container-filter" Elevation="1">
     <MudPaper Elevation="0" Class="d-flex align-center">
-        <MudText Class="text-resultado" Typo="Typo.h6">557 Resultados</MudText>
+        <MudText Class="text-resultado" Typo="Typo.h6">@coders.Count Coders</MudText>
     </MudPaper>
 
     <MudButton OnClick="CleanFilters" Class=""> Limpiar </MudButton>
 
-    <MudButton OnClick="FilterCoders" Class=""> Filtrar </MudButton>
+    <MudButton Color="Color.Primary" OnClick="FilterCoders" Class=""> Filtrar </MudButton>
 
     <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
-        <MudTextField @bind-Value="searchText" Placeholder="Buscar aquí por nombre o apellido..." Class="search" Immediate="true" TextChanged="FilterCoders" />
+        <MudTextField StartIcon="@Icons.Material.Filled.Delete" @bind-Value="searchText" Placeholder="Buscar aquí..." Class="search" Immediate="true" TextChanged="FilterCoders" />
     </MudPaper>
     
     <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select">
@@ -74,8 +74,10 @@
                         <div class="cards__container">
                             <div class="cards__profile">
                                 <div class="cards__coder">
-                                    <h3>@coder.FirstName @coder.FirstLastName</h3>
-                                    <p>@coder.Stack</p>
+                                    <h6 class="">@coder.FirstName @coder.FirstLastName</h6>
+                                    <p>@coder.Stack
+                                        @coder.LanguageSkills.Language_Level
+                                    </p>
                                 </div>
                                     <a><img src="images/group-add.svg" alt="icon"></a>
                             </div>
