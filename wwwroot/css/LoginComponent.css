@@ -116,7 +116,7 @@
     display: none;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 620px) {
     .main-container {
         margin: 0;
         min-width: 100vw;

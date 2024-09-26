@@ -85,6 +85,23 @@
     font-size: 20px;
 }
 
+@media (max-width: 600px) {
+    .banner_image{
+        display: none !important;
+    }
+    .container-banner__item__rectangle span {
+        display: none;
+    }
+    .container-banner__item__rectangle{
+        display: none;
+    }
+    .paragraph_yellow{
+        display: none;
+    }
+}
+
+
+
 .container-banner__item__info-tex1, .container-banner__item__info-tex2{
     width: 70%;
     border-radius: 10px;
