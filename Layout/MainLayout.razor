@@ -1,5 +1,4 @@
-﻿@page "/mypage"
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Components.Authorization
 @using riwi.Services
 @using riwi.Theme
@@ -8,20 +7,20 @@
 @inject NavigationManager NavigationManager
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
-}<MudLayout>
+<MudLayout>
     <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-            <NavLink class="nav-link riwi-image-content" href="" Match="NavLinkMatch.All">
-                <img class="riwi-image" src="images/riwi.png"/>
-            </NavLink>
-        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Rounded.Menu" Color="Color.Primary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
+        <NavLink class="nav-link riwi-image-content" href="" Match="NavLinkMatch.All">
+            <img class="riwi-image" src="images/riwi.png"/>
+        </NavLink>
+        <MudSpacer/>
         <MudAvatar Color="Color.Primary">D</MudAvatar>
-        <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
+        <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Primary" OnClick="@DarkModeToggle"/>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="1">
         <NavMenu/>
     </MudDrawer>
-    <MudMainContent>
+    <MudMainContent Class="-flex flex-grow-1">
         @Body
     </MudMainContent>
 </MudLayout>

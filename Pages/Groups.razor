@@ -1,12 +1,13 @@
-@page "/Groups"
+@page "/groups"
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Components.Authorization;
 @using riwi.Services;
-@inject GroupsServices GroupsServices; 
 @using riwi.Models;
+@inject GroupsServices GroupsServices; 
 @attribute [Authorize]
 
 <PageTitle>Grupos</PageTitle>
+
 @if (!string.IsNullOrEmpty(errorMessage))
 {
     <MudAlert Severity="Severity.Error">@errorMessage</MudAlert>
@@ -14,50 +15,61 @@
 
 <AuthorizeView>
     <Authorized>
-        <MudContainer Class="d-flex flex-grow-1 flex-column ma-2">
-            <!-- Botón y Agregar -->
-            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3">
-                <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
-            </MudContainer>
-
-            <MudContainer Class="d-flex flex-column flex-grow-1 pa-3 ma-2">
-                @if (_loading)
-                {
-                    <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7" />
-                }
-                else
-                {
-                <!-- Total grupos -->
-                <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
-                    <MudText Typo="Typo.h6"><b>@GroupsCount</b> Grupos encontrados</MudText>
+        @if (_loading)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7" />
+        }
+        else
+        {
+            <MudContainer Class="ma-3 w-full h-full">
+                <!-- Botón y Agregar -->
+                <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3">
+                    <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
                 </MudContainer>
-                
-                <!-- Grid de grupos -->
-                <MudDataGrid
-                        Class="flex-grow-1 pa-2"
+
+                <MudPaper Class="w-full h-full pa-4">
+                    <!-- Total coders -->
+                    <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
+                        <MudText Typo="Typo.h5"><b>@GroupsCount</b> Grupos encontrados</MudText>
+                    </MudContainer>
+
+                    <!-- Grid de grupos -->
+                    <MudDataGrid
+                        Class="flex-grow-1 pa-2 rounded-lg"
                         LoadingProgressColor="Color.Info"
                         Hover="true"
-                        Items="@_groups" 
-                        MultiSelection="true" 
+                        Items="@_groups"
+                        MultiSelection="true"
                         QuickFilter="@_quickFilter">
                         <ToolBarContent>
                             <MudTextField @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"></MudTextField>
                             <MudSpacer/>
-                            <MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.GroupAdd">
+                            <MudButton Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" StartIcon="@Icons.Material.Rounded.PersonAdd">
                                 <MudText>Nuevo grupo</MudText>
                             </MudButton>
                         </ToolBarContent>
 
                         <Columns>
-                            <SelectColumn T="Group" />
-                            <PropertyColumn Property="x => _groups.IndexOf(x) + 1" Title="Numero" Filterable="false" />
-                            <PropertyColumn Property="x => x.Name" Title="Nombre del grupo"/>
-                            <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación" SortBy="@_sortBy" />
+                            <SelectColumn T="Group"/>
+                            <!-- <PropertyColumn Property="x => _groups.IndexOf(x) + 1" Title="Número" Filterable="false" /> -->
+                            <PropertyColumn Property="x => x.Name" Title="Nombre del grupo">
+                                <CellTemplate Context="group">
+                                    <MudContainer Class="d-flex gap-1">
+                                        <MudAvatar Color="Color.Primary">M</MudAvatar>
+                                        <MudContainer>
+                                            <MudText><b>@group.Item.Name</b></MudText>
+                                            <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.Description</MudText>
+                                        </MudContainer>
+                                    </MudContainer>
+                                </CellTemplate>
+                            </PropertyColumn>
+                            <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación"/>
                             <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
                                 <CellTemplate Context="group">
                                     <MudStack Row>
-                                        <MudChip T="string" Color="@GetChipColor((string)group.Item.Status)" Variant="Variant.Filled" Size="Size.Small" Class="px-4">
-                                            @group.Item.Status</MudChip>
+                                        <MudChip T="string" Color="@GetChipColor(group.Item.Status)" Variant="Variant.Filled" Size="Size.Small" Class="px-4">
+                                            @group.Item.Status
+                                        </MudChip>
                                     </MudStack>
                                 </CellTemplate>
                             </PropertyColumn>
@@ -79,26 +91,27 @@
                                               InfoFormat="@infoFormat"/>
                         </PagerContent>
                     </MudDataGrid>
-                }
-                
+                </MudPaper>
             </MudContainer>
-            
-        </MudContainer>
+        }
     </Authorized>
 </AuthorizeView>
 
 @code {
     private List<Group> _groups = new List<Group>();    
     private string _searchString;
-    private bool _sortNameByLength;
     private bool _loading = true;
-    private int GroupsCount => _groups?.Count ?? 0;
+    private int GroupsCount => _groups.Count;
     private string errorMessage;
     private string rowsPerPageString = "Filas por página:";
     private string infoFormat = "{first_item}-{last_item} de {all_items}";
-    
 
     protected override async Task OnInitializedAsync()
+    {
+        await LoadGroupsAsync();
+    }
+
+    private async Task LoadGroupsAsync()
     {
         try
         {
@@ -117,31 +130,22 @@
         }
     }
 
-    // Filtro de busqueda
-    private Func<Group, bool> _quickFilter => x =>
+    // Filtro de búsqueda
+    private Func<Group, bool> _quickFilter => group =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
 
-        return MatchesSearchCriteria(x);
+        return MatchesSearchCriteria(group);
     };
 
     private bool MatchesSearchCriteria(Group group)
     {
-        return (group.Name != null && group.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (group.Status != null && group.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (group.Created_At != null && group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+        return (group.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
+               (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
+               (group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
-
-    // custom sort by name length
-    private Func<Group, object> _sortBy => x =>
-    {
-        if (_sortNameByLength)
-            return x.Name.Length;
-        else
-            return x.Name;
-    };
-
+    
     private Color GetChipColor(string? status)
     {
         return status switch
