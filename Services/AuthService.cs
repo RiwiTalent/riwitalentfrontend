@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -8,6 +5,7 @@ using Microsoft.JSInterop;
 using riwi.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Headers;
+using Blazored.SessionStorage;
 
 
 namespace riwi.Services
@@ -17,23 +15,26 @@ namespace riwi.Services
         private readonly HttpClient _httpClient;
         private readonly IJSRuntime _jsRuntime;
         private AuthenticationStateProvider _authenticationStateProvider;
+        private readonly ISessionStorageService _sessionStorage;
 
-        public AuthService(HttpClient httpClient, IJSRuntime jsRuntime, AuthenticationStateProvider authenticationStateProvider)
+        // Constructor corregido sin la coma final
+        public AuthService(HttpClient httpClient, IJSRuntime jsRuntime, AuthenticationStateProvider authenticationStateProvider, ISessionStorageService sessionStorage)
         {
             _httpClient = httpClient;
-            _jsRuntime= jsRuntime;
+            _jsRuntime = jsRuntime;
             _authenticationStateProvider = authenticationStateProvider;
+            _sessionStorage = sessionStorage;
         }
 
         // Obtiene el endpoint y recibe los parametros enviados desde el login verificandolos
         public async Task<bool> Login(string email, string password)
         {
-            var LoginData = new { Email = email, Password = password};
-            var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/riwitalent/login", LoginData);
+            var loginData = new { Email = email, Password = password };
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/riwitalent/login", loginData);
 
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
-                // Cuardo el token y asigno autenticacion usando authenticationStateProvider
+                // Guardo el token y asigno autenticación usando authenticationStateProvider
                 var token = await response.Content.ReadAsStringAsync();
                 await SaveTokenInCookies(token);
                 var authenticationExt = (CustomAuthStateProvider)_authenticationStateProvider;
@@ -61,6 +62,9 @@ namespace riwi.Services
         public async Task Logout()
         {
             await _jsRuntime.InvokeVoidAsync("deleteTokenFromCookies");
+
+              // Eliminar el correo del SessionStorage
+            await _sessionStorage.RemoveItemAsync("userEmail");
         }
     }
 }
