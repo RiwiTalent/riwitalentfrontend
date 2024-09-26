@@ -1,12 +1,20 @@
 @inject HttpClient _client
 @page "/HomeExterno/{Key}"
 @using riwi.Models
+@using riwi.Layout.Components.BannerCoders
 @using riwi.Layout.Components.GroupCoder
 @layout ExternalLayout
+@using riwi.Layout.Components
 
-<h1>Prueba</h1>
+<head>
+    <link rel="stylesheet" href="css/CardComponent.css">
+</head>
 
-<GroupCodersComponent Key="@Key"></GroupCodersComponent>
+<!-- <GroupCodersComponent Key="@Key"></GroupCodersComponent>
+<GroupCodersComponent Key="@Key"></GroupCodersComponent> -->
+<MudMainContent />
+<BannerCodersComponent />
+<CardComponent />
 
 @code {
     [Parameter]
