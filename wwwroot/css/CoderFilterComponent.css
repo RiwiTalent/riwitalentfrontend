@@ -89,7 +89,7 @@
     padding: 10px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 425px) {
     .container-filter {
         grid-template-columns: 1fr; /* Una columna para todos los elementos */
         height: auto; /* Ajusta la altura automáticamente */
@@ -102,7 +102,7 @@
 
     .container-filter > :nth-child(3), /* Primer select */
     .container-filter > :nth-child(4) { /* Segundo select */
-        width: 40%; /* Ocupan el 40% del ancho */
+        width: 80%; /* Ocupan el 40% del ancho */
         margin: auto; /* Centra los selects horizontalmente */
     }
 }

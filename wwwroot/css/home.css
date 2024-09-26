@@ -14,7 +14,6 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-
 .mud-card {
     border-radius: 8px;
     width: 250px !important;
@@ -529,4 +528,72 @@ p{
 .title-skill{
     font-size: 22px;
     /* margin-top: 14%; */
+}
+
+.cardsCell{
+    display: none;
+}
+
+
+@media (max-width: 425px) {
+    
+    .cards{
+        display: none;
+    }
+    .align-self-end{
+        display: none;
+    }
+    .mud-carousel .mud-button-root{
+        display: none !important;
+    }
+    /* Aumentar el tamaño del slider */
+    .mud-carousel {
+        width: 100% !important; /* Ocupa el 100% del ancho de la pantalla */
+        height: 400px !important; /* Ajusta la altura del slider */
+    }
+
+    .mud-carousel-inner {
+        height: 100% !important; /* Asegura que el contenedor interno ocupe todo el slider */
+    }
+
+    /* Ajustes a las tarjetas dentro del slider */
+    .mud-card {
+        width: 90% !important; /* Ajusta el tamaño de las tarjetas dentro del slider */
+        height: auto !important;
+        margin: 0 auto; /* Centra las tarjetas */
+    }
+
+    .cardsCell {
+        margin: auto;
+        min-width: 80%;
+        max-width: 85%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        background-color: #F9FAFC;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .cards__profile {
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    /* Ajustes para imágenes dentro de las tarjetas */
+    .cards__container_img {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Ajustes generales del contenido */
+    .mud-card-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: auto;
+    }
 }

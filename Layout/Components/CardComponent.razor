@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/CardComponent.css">
 </head>
 
-
 <MudPaper Class="container-filter" Elevation="1">
     <MudPaper Elevation="0" Class="d-flex align-center">
         <MudText Class="text-resultado" Typo="Typo.h6">557 Resultados</MudText>
@@ -16,7 +15,7 @@
     <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
         <MudTextField @bind-Value="firstName" Placeholder="Buscar aqui.." Class="search" />
     </MudPaper>
-    
+
     <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select">
         <InputSelect @bind-Value="skills" Class="search-container">
             <option value="">Tecnologia</option>
@@ -40,53 +39,52 @@
     </MudPaper>
 </MudPaper>
 
-
-@if(coders != null)
+@if (coders != null)
 {
     <div class="cards">
-    
-        @foreach(var coder in paginatedCoders)
+        @foreach (var coder in paginatedCoders)
         {
             <MudCard>
-                @if(coder.Photo != null)
+                @if (coder.Photo != null)
                 {
-                    <MudImage 
-                            Src="@ImageNullOrEmpty(coder.Photo)" 
-                            Alt="profile" 
-                            />
+                    <MudImage
+                        Src="@ImageNullOrEmpty(coder.Photo)"
+                        Alt="profile" />
                 }
                 else
                 {
                     <p>Cargando...</p>
                 }
                 <MudCardContent>
-                        <div class="cards__container">
-                            <div class="cards__profile">
-                                <div class="cards__coder">
-                                    <h3>@coder.FirstName @coder.FirstLastName</h3>
-                                    <p>@coder.Stack</p>
-                                </div>
-                                    <a><img src="images/group-add.svg" alt="icon"></a>
+                    <div class="cards__container">
+                        <div class="cards__profile">
+                            <div class="cards__coder">
+                                <h3>@coder.FirstName @coder.FirstLastName</h3>
+                                <p>@coder.Stack</p>
                             </div>
-                            @*badges*@
-                            @if(coder.Skills != null)
-                            {
-                                <div class="cards__badges">
-                                    @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
-                                    {
-                                        <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
-                                    }
-                                </div>
-                            }
-                            else
-                            {
-                                <p>Contenido no disponible...</p>
-                            }
-                            @*Buttons*@
-                            <div class="cards__button--primary">
-                                <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
-                            </div>
+                            <a>
+                                <img src="images/group-add.svg" alt="icon">
+                            </a>
                         </div>
+                        @*badges*@
+                        @if (coder.Skills != null)
+                        {
+                            <div class="cards__badges">
+                                @for (int i = 0; i < coder.Skills.Count && i < 6; i++)
+                                {
+                                    <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p>Contenido no disponible...</p>
+                        }
+                        @*Buttons*@
+                        <div class="cards__button--primary">
+                            <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>
+                        </div>
+                    </div>
                 </MudCardContent>
             </MudCard>
         }
@@ -94,23 +92,78 @@
 
     <div class="container-pagination">
         <div class="container-box">
-            <MudPagination Variant="Variant.Filled"  ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize"  TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
+            <MudPagination Variant="Variant.Filled" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize" TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
         </div>
     </div>
 }
 else
 {
-    <p><em>Loading...</em></p>
-
+    <p>
+        <em>Loading...</em>
+    </p>
 }
 
-@code
+@if (coders != null)
 {
+    <div class="cardsCell">
+        <MudCarousel TData="Coder" Class="mud-carousel" AutoCycle="false" CycleInterval="0" VisibleItems="2" Style="width: 100% ; display: flex; justify-content: center;">
+            @foreach (var coder in paginatedCoders)
+            {
+                <MudCarouselItem>
+                    <MudCard>
+                        @if (coder.Photo != null)
+                        {
+                            <MudImage
+                                Src="@ImageNullOrEmpty(coder.Photo)"
+                                Alt="profile" />
+                        }
+                        else
+                        {
+                            <p>Cargando...</p>
+                        }
+                        <MudCardContent>
+                            <div class="cards__container">
+                                <div class="cards__profile">
+                                    <div class="cards__coder">
+                                        <h3>@coder.FirstName @coder.FirstLastName</h3>
+                                        <p>@coder.Stack</p>
+                                    </div>
+                                    <a>
+                                        <img src="images/group-add.svg" alt="icon" />
+                                    </a>
+                                </div>
+                                @*badges*@
+                                @if (coder.Skills != null)
+                                {
+                                    <div class="cards__badges">
+                                        @for (int i = 0; i < coder.Skills.Count && i < 6; i++)
+                                        {
+                                            <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>Contenido no disponible...</p>
+                                }
+                                @*Buttons*@
+                                <div class="cards__button--primary">
+                                    <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>
+                                </div>
+                            </div>
+                        </MudCardContent>
+                    </MudCard>
+                </MudCarouselItem>
+            }
+        </MudCarousel>
+    </div>
+}
+
+@code {
     public bool CheckBox1 { get; set; } = false;
     public bool CheckBox2 { get; set; } = false;
     public bool CheckBox3 { get; set; } = false;
-    
-    
+
     public string ButtonDetails = "Detalle";
     private List<Coder>? coders;
 
@@ -122,7 +175,6 @@ else
     private int pag;
 
     //filtrado
-    //Lista para guardar los coder filtrados
     private List<Coder>? filterCoder;
 
     // Variables para los filtros
@@ -132,11 +184,8 @@ else
     private string? languageLevel;
     private string? stack;
 
-    
-
     protected override async Task OnInitializedAsync()
     {
-        //realizamos el llamado a la api
         try
         {
             coders = await coderService.GetCodersAsync();
@@ -145,7 +194,7 @@ else
             Console.WriteLine(pag);
             LoadCoders(currentPage);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine($"Error al obtener coders: {ex.Message}");
         }
@@ -157,12 +206,11 @@ else
         {
             coders = await coderService.GetCodersAsync();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine($"Error al obtener coders: {ex.Message}");
         }
     }
-
 
     private void OnPageChanged(int pageNumber)
     {
@@ -172,112 +220,73 @@ else
 
     private async Task FilterCoders()
     {
-        // Primero, cargamos la lista completa desde el servicio
-        Console.WriteLine("HOLA");
         coders = await coderService.GetCodersAsync();
 
-        // Aplicar filtro de FirstName
         if (!string.IsNullOrEmpty(firstName))
         {
-            Console.WriteLine("Hola --- first name: " + firstName);
             coders = coders.Where(c => c.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
-        // Aplicar filtro de LastName
         if (!string.IsNullOrEmpty(firstLastName))
-        {   
-            Console.WriteLine("LastName: " + firstLastName);
+        {
             coders = coders.Where(c => c.FirstLastName.Contains(firstLastName, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
-        // Aplicar filtro de Skills
         if (!string.IsNullOrEmpty(skills))
         {
             coders = coders.Where(c => c.Skills.Any(s => s.Language_Programming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
         }
 
-        // Aplicar filtro de Nivel de Lenguaje
         if (!string.IsNullOrEmpty(languageLevel))
         {
             coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.Language_Level.Equals(languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
-        // Aplicar filtro de Stack
         if (!string.IsNullOrEmpty(stack))
         {
             coders = coders.Where(c => c.Stack != null && c.Stack.Contains(stack, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
-            totalCoders = coders.Count;
-            pag = (int)Math.Ceiling((double)totalCoders / pageSize);
-            LoadCoders(currentPage);
-
-        // Actualizar la UI para reflejar los cambios
+        totalCoders = coders.Count;
+        pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+        LoadCoders(currentPage);
 
         StateHasChanged();
     }
 
     private async Task ClearFilters()
     {
-        // Limpia los valores de los filtros
-        Console.WriteLine("Limpiaste");
-            // Limpia los valores de los filtros
         firstName = "";
         firstLastName = "";
         skills = "";
         languageLevel = "";
         stack = "";
 
-        // Recarga la lista completa de coders sin filtros de manera asíncrona
         coders = await coderService.GetCodersAsync();
-
-        // Actualiza el total de coders y las páginas
         totalCoders = coders.Count;
         pag = (int)Math.Ceiling((double)totalCoders / pageSize);
 
-        // Carga la primera página después de limpiar los filtros
         currentPage = 1;
         LoadCoders(currentPage);
 
-        // Actualiza la UI
         StateHasChanged();
     }
-
 
     private void LoadCoders(int pageNumber)
     {
         paginatedCoders = coders
-                            .Skip((pageNumber - 1) * pageSize)
-                            .Take(pageSize)
-                            .ToList();
+            ?.Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
     }
 
-
-
-
-    //Funcionalidad ver detalles
-    private async Task ShowDetails(string id)
+    private string ImageNullOrEmpty(string? src)
     {
-        var coder = coders.FirstOrDefault(c => c.Id == id);
-        if (coder != null)
-        {
-            var parameters = new ModalParameters();
-            parameters.Add(nameof(ModalCoderDetails.Coder), coder);
-
-            var modal = model.Show<ModalCoderDetails>("", parameters);
-            await modal.Result;
-        }
+        return string.IsNullOrEmpty(src) ? "images/defaultProfile.svg" : src;
     }
 
-
-    //Lógica para renderizar imagen por defecto
-    private string ImageNullOrEmpty(string? photo)
+    private void ShowDetails(string coderId)
     {
-        if(string.IsNullOrEmpty(photo))
-        {
-            return "images/Avatar1.png";
-        }
-
-        return photo;
+        // Lógica para mostrar detalles del coder
     }
 }
