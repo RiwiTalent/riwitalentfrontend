@@ -27,6 +27,7 @@ public class GroupCodersServices
     {
         var loginExternalResponse = await _client.PostAsJsonAsync<AuthExternalRequest>(
             $"https://backend-riwitalent-9pv2.onrender.com/riwitalent/validationexternal",
+            $"https://backend-riwitalent-9pv2.onrender.com/riwitalent/validationexternal",
             login
         );
 
