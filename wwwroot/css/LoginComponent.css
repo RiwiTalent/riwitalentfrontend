@@ -46,6 +46,13 @@
     background-color: #F9FAFC;
 }
 
+.card-content_contentainer-logo{
+    margin-bottom: 12px !important;
+    display: flex;
+    justify-content: center;
+    /* font-style: italic; */
+}
+
 .riwi-logo {
     height: 20%;
     width: 50%;
