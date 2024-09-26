@@ -10,7 +10,7 @@
 <MudPaper Class="container-filter" Elevation="1">
     <MudPaper Elevation="0" Class="d-flex align-center">
         @* <MudText Class="text-resultado" Typo="Typo.h6">@coders.Count Coders</MudText> *@
-        <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Coders</MudText>
+        <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Grupos</MudText>
     </MudPaper>
 
     <MudButton OnClick="CleanFilters" Class=""> Limpiar </MudButton>
@@ -25,7 +25,7 @@
         <InputSelect @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
             <option value="">Tecnologia</option>
             <option value="JavaScript">JavaScript</option>
-            <option value="CSharp">CSharp</option>
+            <option value="C#">C#</option>
             <option value="Python">Python</option>
             <option value="Java">Java</option>
             <option value="Ruby">Ruby</option>
