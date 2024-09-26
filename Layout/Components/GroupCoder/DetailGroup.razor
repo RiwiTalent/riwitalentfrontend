@@ -10,7 +10,7 @@
 <MudPaper Class="container-filter" Elevation="1">
     <MudPaper Elevation="0" Class="d-flex align-center">
         @* <MudText Class="text-resultado" Typo="Typo.h6">@coders.Count Coders</MudText> *@
-        <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Coders</MudText>
+        <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Grupos</MudText>
     </MudPaper>
 
     <MudButton OnClick="CleanFilters" Class=""> Limpiar </MudButton>
@@ -75,7 +75,9 @@
                             <div class="cards__profile">
                                 <div class="cards__coder">
                                     <h6 class="">@coder.FirstName @coder.FirstLastName</h6>
-                                    <p>@coder.Stack</p>
+                                    <p>@coder.Stack
+                                        @coder.LanguageSkills.Language_Level
+                                    </p>
                                 </div>
                                     <a><img src="images/group-add.svg" alt="icon"></a>
                             </div>
