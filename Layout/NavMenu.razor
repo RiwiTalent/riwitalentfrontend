@@ -1,4 +1,6 @@
 ﻿@using riwi.Theme;
+@inject riwi.Services.AuthService authService
+@inject NavigationManager navigationManager
 
 
 
@@ -29,7 +31,8 @@
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All"
                      @onmouseover="() => HoverIcon(3, true)"
-                     @onmouseout="() => HoverIcon(3, false)">
+                     @onmouseout="() => HoverIcon(3, false)"
+                     @onclick="Logout">
                 <MudIcon Icon="@Icons.Material.Outlined.Logout" Style="@($"color:{iconColors[3]};")"/>
                 <p class="text_Navmenu" style="@($"color:{iconColors[3]};")" href="javascript:void(0)">Cerrar Sesión</p>
             </NavLink>
@@ -38,6 +41,15 @@
 </div>
 
 @code {
+
+    private async Task Logout()
+    {
+        // Llamar a la función de Logout en AuthService
+        await authService.Logout();
+
+        // Redirigir a la página de inicio de sesión o cualquier otra ruta
+        navigationManager.NavigateTo("/", true);
+    }
     private bool collapseNavMenu = true;
 
     private Dictionary<int, string> iconColors = new Dictionary<int, string>
@@ -59,4 +71,3 @@
         iconColors[iconId] = isHovered ? RiwiPalette.Secondary500 : RiwiPalette.Primary500;
     }
 }
-
