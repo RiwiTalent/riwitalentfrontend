@@ -30,7 +30,7 @@ namespace riwi.Services
         public async Task<bool> Login(string email, string password)
         {
             var loginData = new { Email = email, Password = password };
-            var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/riwitalent/login", loginData);
+            var response = await _httpClient.PostAsJsonAsync("https://backend-riwitalent.onrender.com/riwitalent/login", loginData);
 
             if (response.IsSuccessStatusCode)
             {

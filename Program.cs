@@ -17,13 +17,13 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddBlazoredSessionStorage();
 
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5113/") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://backend-riwitalent.onrender.com/riwitalent/") });
 builder.Services.AddTransient<CoderService>();
 // builder.Services.AddTransient<GroupCodersServices>();
 
 builder.Services.AddHttpClient<GroupsServices>(client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5113/");
+    client.BaseAddress = new Uri("https://backend-riwitalent.onrender.com/riwitalent/");
 });
 
 
