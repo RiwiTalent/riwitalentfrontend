@@ -6,10 +6,13 @@ using riwi.Services;
 using Blazored.Modal;
 using Microsoft.AspNetCore.Components.Authorization;
 using CurrieTechnologies.Razor.SweetAlert2;
+using Blazored.SessionStorage;
+
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+builder.Services.AddBlazoredSessionStorage();
 
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5113/") });
