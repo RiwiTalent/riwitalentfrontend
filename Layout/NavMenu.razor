@@ -1,68 +1,41 @@
-﻿@using riwi.Theme;
-@inject riwi.Services.AuthService authService
-@inject NavigationManager navigationManager
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using riwi.Services
+@inject AuthenticationStateProvider autenticacionProvider
+@inject NavigationManager navManager
 
+<MudNavMenu Rounded="true" Margin="Margin.Dense" Color="Color.Primary" Bordered="true" Class="pa-2">
+    <MudNavLink Href="/coders" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.Code" >Coders</MudNavLink>
+    <MudNavLink href="/groups" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Groups">Grupos</MudNavLink>
+    
+    <!-- Llama a la función CerrarSesion cuando se hace clic -->
+    <MudNavLink OnClick="CerrarSesion" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.Logout">Cerrar Sesión</MudNavLink>
+</MudNavMenu>
 
+<!-- Muestra la alerta de error si hay un mensaje -->
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="my-2">
+        @errorMessage
+    </MudAlert>
+}
 
+@code
+{
+    public string errorMessage;
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink href="/Coders" Match="NavLinkMatch.All"
-                     @onmouseover="() => HoverIcon(1, true)"
-                     @onmouseout="() => HoverIcon(1, false)">
-                <MudIcon Icon="@Icons.Material.Rounded.PersonOutline" Style="@($"color:{iconColors[1]};")"/>
-                <p class="text_Navmenu" style="@($"color:{iconColors[1]};")">Coders</p>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink href="/Groups" Match="NavLinkMatch.All"
-                     @onmouseover="() => HoverIcon(2, true)"
-                     @onmouseout="() => HoverIcon(2, false)">
-                <MudIcon Icon="@Icons.Material.Outlined.Groups" Style="@($"color:{iconColors[2]};")"/>
-                <p class="text_Navmenu" style="@($"color:{iconColors[2]};")">Grupos</p>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All"
-                     @onmouseover="() => HoverIcon(3, true)"
-                     @onmouseout="() => HoverIcon(3, false)"
-                     @onclick="Logout">
-                <MudIcon Icon="@Icons.Material.Outlined.Logout" Style="@($"color:{iconColors[3]};")"/>
-                <p class="text_Navmenu" style="@($"color:{iconColors[3]};")" href="javascript:void(0)">Cerrar Sesión</p>
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
-@code {
-
-    private async Task Logout()
+    // Función para cerrar sesión
+    private async Task CerrarSesion()
     {
-        // Llamar a la función de Logout en AuthService
-        await authService.Logout();
-
-        // Redirigir a la página de inicio de sesión o cualquier otra ruta
-        navigationManager.NavigateTo("/", true);
-    }
-    private bool collapseNavMenu = true;
-
-    private Dictionary<int, string> iconColors = new Dictionary<int, string>
-    {
-        {1, RiwiPalette.Primary500},
-        {2, RiwiPalette.Primary500},
-        {3, RiwiPalette.Primary500}
-    };
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
-    private void HoverIcon(int iconId, bool isHovered)
-    {
-        iconColors[iconId] = isHovered ? RiwiPalette.Secondary500 : RiwiPalette.Primary500;
+        try
+        {
+            var autenticacionExt = (AuthenticacionExtension)autenticacionProvider;
+            await autenticacionExt.ActualizarEstadoAutenticacion(null); // Cierra la sesión
+            navManager.NavigateTo("/", true); // Redirige al inicio
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Hubo un error cerrando la sesión. Inténtalo nuevamente más tarde."; // Manejo de errores
+            Console.WriteLine($"Error cerrando sesión: {ex.Message}");
+        }
     }
 }

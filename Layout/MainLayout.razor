@@ -1,5 +1,4 @@
-﻿@page "/mypage"
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Components.Authorization
 @using riwi.Services
 @using riwi.Theme
@@ -17,7 +16,7 @@
 
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
-}<MudLayout>
+<MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
         <NavLink class="nav-link riwi-image-content" href="/home" Match="NavLinkMatch.All">
@@ -31,10 +30,10 @@
 
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="1">
         <NavMenu/>
     </MudDrawer>
-    <MudMainContent>
+    <MudMainContent Class="-flex flex-grow-1">
         @Body
     </MudMainContent>
 </MudLayout>

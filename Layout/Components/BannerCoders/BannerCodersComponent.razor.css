@@ -105,9 +105,6 @@
 .container-banner__item__info-tex1, .container-banner__item__info-tex2{
     width: 70%;
     border-radius: 10px;
-    width: 70%;
-    background-color: hotpink;
-    border-radius: 10px;
     padding: 10px;
     color: #FFFFFF;
     font-family: 'Ubuntu', sans-serif;
@@ -117,6 +114,7 @@
 .container-banner__item__info-tex1{
     background-color: #EAA2FC ;
 }
-.container-banner__item__info-tex1, .container-banner__item__info-tex2{
+
+.container-banner__item__info-tex2{
     background-color: #2DB588;
 }
