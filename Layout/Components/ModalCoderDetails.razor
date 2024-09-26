@@ -48,21 +48,26 @@
                 </MudPaper>
             </MudPaper>
 
-           <MudButton StartIcon="@Icons.Material.Outlined.Edit" 
-            class="content_left-container_top__edit" 
-            Variant="Variant.Filled" 
-            OnClick="EnableEditMode" 
-            Hidden="@isEditMode">
-            Editar
-        </MudButton>
+           @if (!isEditMode)
+            {
+                <MudButton StartIcon="@Icons.Material.Outlined.Edit" 
+                            class="content_left-container_top__edit" 
+                            Variant="Variant.Filled" 
+                            OnClick="EnableEditMode">
+                    Editar
+                </MudButton>
+            }
+            else
+            {
+                <MudButton StartIcon="@Icons.Material.Outlined.Save" 
+                            class="content_left-container_top__save" 
+                            Variant="Variant.Filled" 
+                            OnClick="UpdateCoder">
+                    Guardar
+                </MudButton>
+            }
 
-        <MudButton StartIcon="@Icons.Material.Outlined.Save" 
-                    class="content_left-container_top__save" 
-                    Variant="Variant.Filled" 
-                    OnClick="UpdateCoder" 
-                    Hidden="!isEditMode">
-            Guardar
-        </MudButton>
+
 
 
         </MudPaper>
@@ -151,6 +156,21 @@
                         <p>Contenido no disponible...</p>
                     }
                 </div>
+
+                @if (isEditMode)
+                {
+                    <div class="content__right-container_top_boxes-inputs">
+                        <label class="content__right-container_top__labels" for="Skills">Habilidades</label>
+                        @* @bind-Value="selectedSkills" *@
+                        <MudSelect T="Skill"  MultiSelection="true">
+                            @foreach (var skill in availableSkills)
+                            {
+                                @* <MudSelectItem T="Skill" Value="skill">@skill.Name</MudSelectItem> *@
+                            }
+                        </MudSelect>
+                    </div>
+                }
+
             </MudPaper>
         </MudPaper>
     </BlazoredModalContent>
@@ -170,10 +190,22 @@ else
 
     private bool isEditMode = false;
 
+    private List<Skill> availableSkills = new List<Skill>(); // Lista de habilidades disponibles
+    private List<Skill> selectedSkills = new List<Skill>();
+
+
+    
     private void EnableEditMode()
     {
         isEditMode = true;
+        Console.WriteLine($"isEditMode: {isEditMode}"); 
+
+        selectedSkills = Coder.Skills.ToList();
+
+        StateHasChanged();
     }
+
+
 
     private async Task UpdateCoder()
     {
@@ -189,5 +221,11 @@ else
         {
             Console.WriteLine("Error al actualizar el coder");
         }
+    }
+
+        protected override async Task OnInitializedAsync()
+    {
+        // Carga la lista de habilidades disponibles desde tu servicio
+        @* availableSkills = await skillService.GetAvailableSkillsAsync(); *@
     }
 }
