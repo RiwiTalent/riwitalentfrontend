@@ -17,23 +17,23 @@
         <MudContainer Class="d-flex flex-grow-1 flex-column ma-2">
             <!-- Botón y Agregar -->
             <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3">
-                <MudIconButton Href="/Home" Icon="@Icons.Material.Rounded.KeyboardArrowLeft" Color="Color.Secondary" Class="border-solid border-2 mud-border-secondary pa-2"></MudIconButton>
+                <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
             </MudContainer>
 
-            <!-- Total grupos -->
-            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
-                <MudText Typo="Typo.h5">Total grupos:<b>@GroupsCount</b></MudText>
-            </MudContainer>
-
-            <!-- Grid de grupos -->
-            <MudContainer Class="d-flex flex-grow-1 pa-3 ma-2">
+            <MudContainer Class="d-flex flex-column flex-grow-1 pa-3 ma-2">
                 @if (_loading)
                 {
                     <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7" />
                 }
                 else
                 {
-                    <MudDataGrid
+                <!-- Total grupos -->
+                <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
+                    <MudText Typo="Typo.h6"><b>@GroupsCount</b> Grupos encontrados</MudText>
+                </MudContainer>
+                
+                <!-- Grid de grupos -->
+                <MudDataGrid
                         Class="flex-grow-1 pa-2"
                         LoadingProgressColor="Color.Info"
                         Hover="true"
@@ -41,22 +41,40 @@
                         MultiSelection="true" 
                         QuickFilter="@_quickFilter">
                         <ToolBarContent>
-                            <MudText Typo="Typo.h6">Periodic Elements</MudText>
-                            <MudSpacer />
-                            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                            <MudTextField @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"></MudTextField>
+                            <MudSpacer/>
+                            <MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.GroupAdd">Nuevo grupo</MudButton>
                         </ToolBarContent>
 
                         <Columns>
                             <SelectColumn T="Group" />
-                            <PropertyColumn Property="x => _groups.IndexOf(x) + 1" Title="Number" Sortable="false" Filterable="false" />
-                            <PropertyColumn Property="x => x.Name" Title="Group Name" Sortable="true" />
-                            <PropertyColumn Property="x => x.Created_At" Title="Creation Date" SortBy="@_sortBy" />
-                            <PropertyColumn Property="x => x.Status" Title="Status" Sortable="true" />
+                            <PropertyColumn Property="x => _groups.IndexOf(x) + 1" Title="Numero" Filterable="false" />
+                            <PropertyColumn Property="x => x.Name" Title="Nombre del grupo"/>
+                            <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación" SortBy="@_sortBy" />
+                            <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
+                                <CellTemplate Context="group">
+                                    <MudStack Row>
+                                        <MudChip T="string" Color="@GetChipColor((string)group.Item.Status)" Variant="Variant.Filled" Size="Size.Small" Class="px-4">
+                                            @group.Item.Status</MudChip>
+                                    </MudStack>
+                                </CellTemplate>
+                            </PropertyColumn>
+                            <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
+                                <CellTemplate Context="group">
+                                    <MudStack Row>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ModeEditOutline" Color="Color.Primary" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Outlined.RemoveRedEye" Color="Color.Warning" Class="border-solid border-2 mud-border-warning pa-2"></MudIconButton>
+                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.DeleteOutline" Color="Color.Error" Class="border-solid border-2 mud-border-error pa-2"></MudIconButton>
+                                    </MudStack>
+                                </CellTemplate>
+                            </PropertyColumn>
                         </Columns>
 
                         <PagerContent>
-                            <MudDataGridPager T="Group" />
+                            <MudDataGridPager T="Group"
+                                              PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
+                                              RowsPerPageString="@rowsPerPageString"
+                                              InfoFormat="@infoFormat"/>
                         </PagerContent>
                     </MudDataGrid>
                 }
@@ -74,6 +92,9 @@
     private bool _loading = true;
     private int GroupsCount => _groups?.Count ?? 0;
     private string errorMessage;
+    private string rowsPerPageString = "Filas por página:";
+    private string infoFormat = "{first_item}-{last_item} de {all_items}";
+    
 
     protected override async Task OnInitializedAsync()
     {

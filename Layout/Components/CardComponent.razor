@@ -105,7 +105,7 @@
                     <div class="cards__container">
                         <MudContainer Class="d-flex justify-end flex-grow-1">
                             <MudChipSet T="string" @bind-SelectedChips="selectedCoders" SelectionMode="SelectionMode.MultiSelection" CheckMark>
-                                <MudChip Class="border-solid border-2 mud-b mud-border-white" Icon="@Icons.Material.Rounded.PersonAddAlt1" Variant="Variant.Text" Color="Color.Secondary" OnClick="@(() => SelectCoder(coder.Id))">
+                                <MudChip Class="border-solid border-2 mud-border-secondary" Icon="@Icons.Material.Rounded.PersonAddAlt1" Variant="Variant.Text" Color="Color.Secondary" OnClick="@(() => SelectCoder(coder.Id))">
                                 </MudChip>
                             </MudChipSet>
                         </MudContainer>
@@ -349,4 +349,4 @@ else
 
         return photo;
     }
-};
+}

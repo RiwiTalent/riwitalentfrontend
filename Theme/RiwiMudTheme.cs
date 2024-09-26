@@ -27,15 +27,15 @@ namespace riwi.Theme;
             GrayLighter = RiwiPalette.FeedbackWarning600,
 
             // Primary
-            Primary = RiwiPalette.Primary500,
-            PrimaryDarken = RiwiPalette.Primary600,
-            PrimaryLighten = RiwiPalette.Primary400,
+            Primary = RiwiPalette.Secondary500,
+            PrimaryDarken = RiwiPalette.Secondary600,
+            PrimaryLighten = RiwiPalette.Secondary400,
             PrimaryContrastText = RiwiPalette.NeutralWhite,
 
             // Secondary
-            Secondary = RiwiPalette.Secondary500,
-            SecondaryDarken = RiwiPalette.Secondary600,
-            SecondaryLighten = RiwiPalette.Secondary400,
+            Secondary = RiwiPalette.Primary500,
+            SecondaryDarken = RiwiPalette.Primary600,
+            SecondaryLighten = RiwiPalette.Primary400,
             SecondaryContrastText = RiwiPalette.NeutralWhite,
 
             // FeedbackInfo
