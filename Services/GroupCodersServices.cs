@@ -18,7 +18,7 @@ public class GroupCodersServices
 
     public async Task<CodersInGroup> GetCodersInGroupAsync(string key)
     {
-        var response = await _client.GetFromJsonAsync<CodersInGroup>($"https://backend-riwitalent.onrender.com/riwitalent/groupdetails/{key}");
+        var response = await _client.GetFromJsonAsync<CodersInGroup>($"https://backend-riwitalent-9pv2.onrender.com/riwitalent/groupdetails/{key}");
         return response;
     }
     
@@ -26,7 +26,7 @@ public class GroupCodersServices
     public async Task AuthenticationExternalAsync(AuthExternalRequest login, string key)
     {
         var loginExternalResponse = await _client.PostAsJsonAsync<AuthExternalRequest>(
-            $"https://backend-riwitalent.onrender.com/riwitalent/validationexternal",
+            $"https://backend-riwitalent-9pv2.onrender.com/riwitalent/validationexternal",
             login
         );
 
