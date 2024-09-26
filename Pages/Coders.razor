@@ -1,0 +1,76 @@
+@page "/Coders"
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.Authorization;
+@using riwi.Services;
+@inject CoderService CoderService; 
+@using riwi.Models;
+@attribute [Authorize]
+
+<PageTitle>Grupos</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <MudContainer Class="d-flex flex-grow-1 flex-column">
+            <!-- Botón y Edición -->
+            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
+                <MudIconButton Href="/Home" Icon="@Icons.Material.Rounded.KeyboardArrowLeft" Color="Color.Secondary" Class="border-solid border-2 mud-border-secondary pa-2"></MudIconButton>
+                <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Secondary">Editar</MudButton>
+            </MudContainer>
+            
+            <!-- Cards -->
+            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
+                <MudPaper Class="d-flex flex-grow-1 pa-3">
+                    Card 1
+                </MudPaper>
+                <MudPaper Class="d-flex flex-grow-1 pa-3">
+                    Card 2
+                </MudPaper>
+            </MudContainer>
+
+            <!-- Total grupos -->
+            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
+                <MudText Typo="Typo.h5">Total Coders: @GroupsCount</MudText>
+            </MudContainer>
+        </MudContainer>
+    </Authorized>
+</AuthorizeView>
+
+@code
+{
+    private List<Coder>? coder;
+    private bool _loading = true;
+    
+    // Propiedad para el contador de grupos
+    private int GroupsCount => coder?.Count ?? 0;
+    private bool hidePageNumber;
+    private bool hidePagination;
+    private bool hideRowsPerPage;
+    private string rowsPerPageString = "Filas por página:";
+    private string infoFormat = "{first_item}-{last_item} de {all_items}";
+    
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            coder = await CoderService.GetCodersAsync();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error al obtener coders: {ex.Message}");
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+    
+    private Color GetChipColor(string? status)
+    {
+        return status switch
+        {
+            "Active" => Color.Success,
+            "Inactive" => Color.Error,
+            _ => Color.Default,
+        };
+    }
+}

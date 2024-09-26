@@ -11,10 +11,10 @@
     max-width: 100%;
     margin: auto;
     flex-wrap: wrap;
-    justify-content: space-between; /* Asegura que los elementos se distribuyan proporcionalmente */
+    justify-content: space-between; 
 }
 
-/* Estilo para los filtros */
+
 .filter-container label {
     margin: 0 10px;
     font-size: 14px;
@@ -24,11 +24,11 @@
     align-items: center;
 }
 
-/* Ajuste para los campos de texto */
+
 .filter-container .mud-input {
-    flex-grow: 1; /* Esto permitirá que los inputs crezcan proporcionalmente */
+    flex-grow: 1; 
     margin-right: 10px;
-    min-width: 150px; /* Asegura un tamaño mínimo para que no se encojan demasiado */
+    min-width: 150px; 
 }
 
 .filter-container .mud-input-input {
@@ -71,39 +71,71 @@
 
 .filter-button.nuevo-filtro {
     background-color: #ff5a82;
-    padding: 10px 30px; /* Aumenta el tamaño del botón */
-    font-size: 14px; /* Tamaño de texto más pequeño para que no sobresalga */
-    border-radius: 35px; /* Aumenta el redondeado del botón */
+    padding: 10px 30px; 
+    font-size: 14px; 
+    border-radius: 35px; 
 }
 
 
 
-.container-filter{
+.container-filter {
     margin: auto;
     width: 85%;
     height: 70px;
     margin-top: 50px;
-    display: grid;
-    grid-template-columns: calc(60% - 14px) 20% 20%;
-    gap: 7px;
+    margin-bottom: 20px;
+    display: flex;
     padding: 10px;
+    justify-content: space-evenly;
+}
+
+.search{
+    width: 100%;
+    background: inherit;
+    border: 0.7px solid slategray;
+    border-radius: 7px;
+    padding: 5px;
+}
+
+.search-container{
+    height: 70%;
+    width: 45%;
+    border-radius: 6px;
+    background-color: #ECEFFF;
+    color: #6B5CFF;
 }
 
 @media (max-width: 768px) {
     .container-filter {
-        grid-template-columns: 1fr; /* Una columna para todos los elementos */
+        grid-template-columns: 1fr 1fr; /* Una columna para todos los elementos */
         height: auto; /* Ajusta la altura automáticamente */
+        grid-template-areas: 
+            "search search"
+            "select select";
     }
 
     .container-filter > :nth-child(1), /* Resultados */
     .container-filter > :nth-child(2) { /* Buscar */
         width: 100%; /* Ocupan todo el ancho disponible */
     }
+    
+    .text-resultado{
+        font-size: 2.5vh;
+    }
 
-    .container-filter > :nth-child(3), /* Primer select */
-    .container-filter > :nth-child(4) { /* Segundo select */
-        width: 40%; /* Ocupan el 40% del ancho */
-        margin: auto; /* Centra los selects horizontalmente */
+    .search{
+        height: 6vh;
+    }
+    
+    .container-select{
+        width: 100%;
+        margin: auto;
+        grid-area: select;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .search-container{
+        height: 6vh;
     }
 }
-
