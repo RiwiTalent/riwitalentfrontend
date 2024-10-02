@@ -20,8 +20,18 @@
     <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
         <MudTextField StartIcon="@Icons.Material.Filled.Delete" @bind-Value="searchText" Placeholder="Buscar aquí..." Class="search" Immediate="true" TextChanged="FilterCoders" />
     </MudPaper>
+    
 
     <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select">
+        
+        <InputSelect @bind-Value="status" Class="search-container" >
+            <option value="">Estado</option>
+            <option value="Active">Activo</option>
+            <option value="Grouped">Agrupado</option>
+            <option value="Selected">Seleccionado</option>
+        </InputSelect>
+        
+
         <InputSelect @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
             <option value="">Tecnologia</option>
             <option value="JavaScript">JavaScript</option>
@@ -48,7 +58,7 @@
     </MudPaper>
 </MudPaper>
 
-
+|
 
 @if(coders != null)
 {
@@ -115,8 +125,67 @@ else
 
 }
 
+@if (coders != null)
+{
+<div class="cardsCell">
+    <MudCarousel TData="Coder" Class="mud-carousel" AutoCycle="false" CycleInterval="0" VisibleItems="2" Style="width: 100% ; display: flex; justify-content: center;">
+        @foreach (var coder in paginatedCoders)
+        {
+        <MudCarouselItem>
+            <MudCard>
+                @if (coder.Photo != null)
+                {
+                <MudImage
+                    Src="@ImageNullOrEmpty(coder.Photo)"
+                    Alt="profile" />
+                }
+                else
+                {
+                <p>Cargando...</p>
+                }
+                <MudCardContent>
+                    <div class="cards__container">
+                        <div class="cards__profile">
+                            <div class="cards__coder">
+                                <h3>@coder.FirstName @coder.FirstLastName</h3>
+                                <p>@coder.Stack</p>
+                            </div>
+                            <a>
+                                <img src="images/group-add.svg" alt="icon" />
+                            </a>
+                        </div>
+                        @*badges*@
+                        @if (coder.Skills != null)
+                        {
+                        <div class="cards__badges">
+                            @for (int i = 0; i < coder.Skills.Count && i < 6; i++)
+                            {
+                            <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
+                            }
+                        </div>
+                        }
+                        else
+                        {
+                        <p>Contenido no disponible...</p>
+                        }
+                        @*Buttons*@
+                        <div class="cards__button--primary">
+                            <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>
+                        </div>
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudCarouselItem>
+        }
+    </MudCarousel>
+</div>
+}
+
 @code
 {    
+    public bool CheckBox1 { get; set; } = false;
+    public bool CheckBox2 { get; set; } = false;
+    public bool CheckBox3 { get; set; } = false;
 
     public string ButtonDetails = "Detalle";
     private List<Coder>? coders;
@@ -136,6 +205,7 @@ else
     private string? skills;
     private string? languageLevel;
     private bool FilterApplied = false;
+    private string? status;
     
 
     protected override async Task OnInitializedAsync()
@@ -202,6 +272,13 @@ else
             coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.Language_Level.Equals(languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
             FilterApplied = true;
         }
+         // Filtro por Status
+        if (!string.IsNullOrEmpty(status) && status.ToLower() != "clear")
+        {
+            coders = coders.Where(c => c.Status != null && c.Status.Equals(status, StringComparison.OrdinalIgnoreCase)).ToList();
+            FilterApplied = true;
+        }
+        
 
         totalCoders = coders.Count;
         pag = (int)Math.Ceiling((double)totalCoders / pageSize);
@@ -214,6 +291,7 @@ else
         searchText = "";
         skills = "";
         languageLevel = "";
+        status = "";
 
         coders = await coderService.GetCodersAsync();
         totalCoders = coders.Count;
@@ -242,6 +320,16 @@ else
             await FilterCoders();  // Aplica los filtros
         }
     }
+
+    private async Task CleanFilterStatus(ChangeEventArgs e)
+    {
+        if (e.Value?.ToString()== "clear")
+        {
+            status = "";
+            await FilterCoders();
+        }
+    }
+
 
     private void LoadCoders(int pageNumber)
     {
