@@ -17,7 +17,7 @@ namespace riwi.Services
         // Método para obtener una lista de coders desde la API
         public async Task<List<Coder>> GetCodersAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<Coder>>("https://backend-riwitalent-9pv2.onrender.com/riwitalent/coders");
+            return await _httpClient.GetFromJsonAsync<List<Coder>>("https://backend-riwitalent-9pv2.onrender.com/coders");
         }
 
          public async Task<bool> UpdateCoderAsync(Coder coder)
