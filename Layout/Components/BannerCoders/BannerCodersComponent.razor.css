@@ -1,26 +1,26 @@
 ﻿.container-banner{
     /*Medidas*/
     width: 85%;
-    height: 25vh;
+    height: 30vh;
     
     /*Margenes*/
     margin: auto;
     margin-top: 3vh;
     
-    /*Padding*/
-    padding: 15px;
     
     /*Bordes*/
-    border-radius: 30px;
-
-    /*Grid*/
-    display: grid;
-    grid-template-columns: 27% calc(53% - 10px) 20%;
-    gap: 5px;
+    border-radius: 8px;
+    
     
     /*Colores*/
     background-color: #342689;
     
+}
+
+.banner_image{
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
 }
 
 .container-banner__item{
@@ -87,7 +87,7 @@
 
 @media (max-width: 600px) {
     .banner_image{
-        display: none !important;
+        /*display: none !important;*/
     }
     .container-banner__item__rectangle span {
         display: none;
