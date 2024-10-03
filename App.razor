@@ -1,5 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager navManager
+@using Blazored.Modal
+@using Blazored.Modal.Services
 
 @* Required *@
 <MudThemeProvider />
@@ -7,30 +9,28 @@
 <MudDialogProvider />
 @* Needed for snackbars *@
 <MudSnackbarProvider />
-
-
 <MudPopoverProvider />
-<CascadingAuthenticationState> 
 
-    <Router AppAssembly="@typeof(App).Assembly">
-        <Found Context="routeData">
-
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
-                <NotAuthorized>
-                    No estas autorizado para ver esta página.
-                    @{
-                        navManager.NavigateTo("/");
-                    }
-                </NotAuthorized>
-            </AuthorizeRouteView>
-
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-        </Found>
-        <NotFound>
-            <PageTitle>Not found</PageTitle>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
+<CascadingAuthenticationState>
+    <CascadingBlazoredModal>
+        <Router AppAssembly="@typeof(App).Assembly">
+            <Found Context="routeData">
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                    <NotAuthorized>
+                        No estás autorizado para ver esta página.
+                        @{
+                            navManager.NavigateTo("/");
+                        }
+                    </NotAuthorized>
+                </AuthorizeRouteView>
+                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            </Found>
+            <NotFound>
+                <PageTitle>Not found</PageTitle>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <p role="alert">Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingBlazoredModal>
 </CascadingAuthenticationState>

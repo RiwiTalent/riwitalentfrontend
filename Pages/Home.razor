@@ -4,6 +4,8 @@
 @using Microsoft.AspNetCore.Components.Authorization;
 @using riwi.Layout.Components.BannerCoders
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@using riwi.Layout.Components.TermsAndConditions
+
 @attribute [Authorize]
 
 
@@ -20,6 +22,7 @@
     <Authorized>
         <MudText Color="Color.Primary" class="title">
         </MudText>
+        
         <BannerCodersComponent />
         <CardComponent />
     </Authorized>
