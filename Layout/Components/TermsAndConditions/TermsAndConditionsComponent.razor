@@ -1,0 +1,25 @@
+@inherits Blazored.Modal.BlazoredModal
+@using Blazored.Modal.Services
+@using riwi.Models;
+@using riwi.Services;
+
+<BlazoredModalTitle>
+    Términos y Condiciones
+</BlazoredModalTitle>
+<BlazoredModalContent>
+    <p>Este es un contenido simple para probar el modal.</p>
+</BlazoredModalContent>
+
+@code {
+    [CascadingParameter]
+    public IModalService ModalService { get; set; }
+
+    private List<Group>? groups;
+    [Parameter] public Group? group { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        Console.WriteLine($"Group recibido en el modal: {group?.Name ?? "null"}");
+        return base.OnInitializedAsync();
+    }
+}

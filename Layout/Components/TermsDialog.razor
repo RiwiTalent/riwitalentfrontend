@@ -1,0 +1,35 @@
+<MudDialog @bind-Open="Open">
+    <DialogContent>
+        <h3>¿Aceptas los términos y condiciones?</h3>
+        <p>Aquí están los términos y condiciones...</p>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="AcceptTerms">Aceptar</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="CancelTerms">Cancelar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback OnAccept { get; set; }
+
+    [Parameter]
+    public string? AssociateEmail { get; set; }
+
+    private async Task AcceptTerms()
+    {
+        // Call the method provided in the OnAccept parameter
+        await OnAccept.InvokeAsync();
+        Open = false; // Close the dialog after acceptance
+    }
+
+    private void CancelTerms()
+    {
+        // Close the dialog
+        Open = false;
+    }
+}

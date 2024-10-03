@@ -170,7 +170,6 @@ else
 
 @code {
 
-    private bool aceptoTerminos = false;
     private List<Coder>? coders;
     [Parameter] public Coder Coder { get; set; }
 
@@ -182,9 +181,9 @@ else
     private void EnableEditMode()
     {
         isEditMode = true;
-        Console.WriteLine($"isEditMode: {isEditMode}"); // Para depuración
+        Console.WriteLine($"isEditMode: {isEditMode}");
 
-        StateHasChanged(); // Fuerza la re-renderización del componente
+        StateHasChanged(); 
     }
 
 

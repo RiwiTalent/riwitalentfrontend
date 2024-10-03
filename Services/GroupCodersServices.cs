@@ -1,42 +1,58 @@
-using System.Net.Http.Json;
-using Microsoft.AspNetCore.Components;
-using riwi.Models;
+    using System.Net.Http.Json;
+    using Microsoft.AspNetCore.Components;
+    using riwi.Models;
 
-namespace riwi.Services;
+    namespace riwi.Services;
 
-public class GroupCodersServices
-{
-    private readonly HttpClient _client;
-    private readonly NavigationManager _navigation;
-
-    public GroupCodersServices(HttpClient client, NavigationManager navigation)
+    public class GroupCodersServices
     {
-        _client = client;
-        _navigation = navigation;
+        private readonly HttpClient _httpClient;
+        private readonly NavigationManager _navigation;
 
-    }
-
-    public async Task<CodersInGroup> GetCodersInGroupAsync(string key)
-    {
-        var response = await _client.GetFromJsonAsync<CodersInGroup>($"https://backend-riwitalent-9pv2.onrender.com/groupdetails/{key}");
-        return response;
-    }
-    
-
-    public async Task AuthenticationExternalAsync(AuthExternalRequest login, string key)
-    {
-        var loginExternalResponse = await _client.PostAsJsonAsync<AuthExternalRequest>(
-            $"https://backend-riwitalent-9pv2.onrender.com/riwitalent/validationexternal",
-            login
-        );
-
-        if (loginExternalResponse.IsSuccessStatusCode)
+        public GroupCodersServices(HttpClient httpClient, NavigationManager navigation)
         {
-            _navigation.NavigateTo($"/HomeExterno/{key}");
+            _httpClient = httpClient;
+            _navigation = navigation;
+
         }
-        else
+
+        public async Task<CodersInGroup> GetCodersInGroupAsync(string key)
         {
-            Console.WriteLine($"Error: {loginExternalResponse.StatusCode}");
+            var response = await _httpClient.GetFromJsonAsync<CodersInGroup>($"https://backend-riwitalent-9pv2.onrender.com/groupdetails/{key}");
+            return response;
         }
+        
+
+        public async Task<bool> AuthenticationExternalAsync(AuthExternalRequest login, string key)
+        {
+            var loginExternalResponse = await _httpClient.PostAsJsonAsync<AuthExternalRequest>(
+                $"http://localhost:5113/validation-external",
+                login
+            );
+
+            if (loginExternalResponse.IsSuccessStatusCode)
+            {
+                // _navigation.NavigateTo($"/HomeExterno/{key}");
+                return true; 
+            }
+            else
+            {
+                Console.WriteLine($"Error: {loginExternalResponse.StatusCode}");
+                return false; 
+            }
+        }
+
+
+        public async Task<Group> GetGroupInfoById(string groupId)
+        {
+            var response = await _httpClient.GetFromJsonAsync<Group>($"https://backend-riwitalent-9pv2.onrender.com/group-details/{groupId}");
+            return response;
+        }
+
+
+
+
+
+
+
     }
-}
