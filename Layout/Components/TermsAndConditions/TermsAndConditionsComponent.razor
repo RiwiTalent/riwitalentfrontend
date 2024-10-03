@@ -1,0 +1,69 @@
+@inject IModalService ModalService
+@using Blazored.Modal.Services
+@using Microsoft.AspNetCore.Components
+@inject GroupCodersServices _groupCodersServices
+@inject TermsAndConditionsService _termsAndConditionsService
+@inject NavigationManager NavigationManager // Inyección del NavigationManager
+@using riwi.Models;
+@using riwi.Services;
+
+<BlazoredModalTitle>
+    Términos y Condiciones
+</BlazoredModalTitle>
+<BlazoredModalContent>
+    <p>Por favor, acepte los términos y condiciones para continuar.</p>
+</BlazoredModalContent>
+<BlazoredModalFooter>
+    <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+    <button class="btn btn-primary" @onclick="Aceptar">Aceptar</button>
+</BlazoredModalFooter>
+
+@code {
+    [Parameter]
+    public string GroupId { get; set; }
+
+    private Group? group; // Variable para almacenar los detalles del grupo
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine($"Group recibido en el modal: {group?.Name ?? "null"}, GroupId: {GroupId}");
+        group = await _groupCodersServices.GetGroupInfoById(GroupId); // Asegúrate de que este método esté implementado
+    }
+
+    private async Task Aceptar()
+    {
+        // Verifica que el grupo esté cargado
+        if (group == null)
+        {
+            Console.WriteLine("El grupo no se pudo cargar.");
+            return;
+        }
+
+        var newTerms = new TermAndCondition
+        {
+            IsActive = true,
+            Accepted = true,
+            GroupId = group.Id, 
+            AcceptedEmail = group.AssociateEmail, 
+            CreatorEmail = group.CreatedBy 
+        };
+
+        // Llamar al servicio para aceptar los términos
+        bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
+
+        if (success)
+        {
+            NavigationManager.NavigateTo($"/HomeExterno/{GroupId}");
+        }
+        else
+        {
+            Console.WriteLine("No se pudo aceptar los términos y condiciones.");
+        }
+    }
+
+    private void Cancelar()
+    {
+        // Cerrar el modal sin hacer nada
+        Console.WriteLine("Cerrado Modal");
+    }
+}

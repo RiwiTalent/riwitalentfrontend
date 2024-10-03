@@ -1,60 +1,88 @@
-@inject GroupCodersServices _GroupCodersServices
 @page "/{Name}/{Key}"
-@using riwi.Models
-@using riwi.Layout.Components
-@using riwi.Services
+@inject GroupCodersServices _groupCodersServices
+@using riwi.Models;
+@inject IModalService ModalService
 @layout ExternalLayout
 
-        @* <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7" />
-            <p>cargando...></p> *@
+<MudForm Style="display: flex; align-items: center " Valid="IniciarSesion">
+    <br>
+    <p class="input-container form-group Login_contenedor_input">
+        <span class="correo_span">Correo</span>
+        <label for="Password" class="input-icon-container">
+            <img src="images/mail-filled.svg" alt="Icono de correo electronico" class="input-icon" />
+        </label>
+        <input disabled="disabled" type="text" @bind="@Name" name="Email" id="text" class="input-field">
+    </p>
+    <br>
+    <p class="input-container form-group Login_contenedor_input">
+        <span class="Password_span">Contraseña</span>
+        <label for="Password" class="input-icon-container">
+            <img src="images/lock.svg" alt="Icono de contraseña" class="input-icon" />
+        </label>
+        <input type="password" placeholder="Ingresa tu contraseña" @bind="@Login.Key" name="Password" id="Password" class="input-field" autocomplete="Password">
+        <label for="Password" class="eye-icon-container end-icon">
+            <img src="images/eye-off.svg" alt="Icono para ocultar/mostrar contraseña" class="eye-icon" />
+        </label>
+    </p>
 
-        <MudForm Style="display: flex; align-items: center " Valid="IniciarSesion">
-            <br>
-            <p class="input-container form-group Login_contenedor_input">
-                <span class="correo_span">Correo</span>
-                <label for="Password" class="input-icon-container">
-                    <img src="images/mail-filled.svg" alt="Icono de correo electronico" class="input-icon" />
-                </label>
-                <input disabled="disabled" type="text" @bind="@Name" name="Email" id="text" class="input-field">
-            </p>
-            <br>
-            <p class="input-container form-group Login_contenedor_input">
-                <span class="Password_span">Contraseña</span>
-                <label for="Password" class="input-icon-container">
-                    <img src="images/lock.svg" alt="Icono de contraseña" class="input-icon" />
-                </label>
-                <input type="password" placeholder="Ingresa tu contraseña" @bind="@Login.Key" name="Password" id="Password" class="input-field" autocomplete="Password">
-                <label for="Password" class="eye-icon-container end-icon">
-                    <img src="images/eye-off.svg" alt="Icono para ocultar/mostrar contraseña" class="eye-icon" />
-                </label>
-            </p>
-
-            <div class="button-container">
-                <button type="button" class="btn mt-3 Ingresar" @onclick="IniciarSesion">Ingresar</button>
-            </div>
-        </MudForm>
-
+    <div class="button-container">
+        <button type="button" class="btn mt-3 Ingresar" @onclick="IniciarSesion">Ingresar</button>
+    </div>
+</MudForm>
 
 @code {
-
-    <!-- private bool _loading = true; -->
-
-    [Parameter]
-    public required string Name { get; set; }
-    [Parameter]
-    public required string Key { get; set; }
+    [Parameter] public Group? Group { get; set; } // Asegúrate de que sea nullable
+    [Parameter] public required string Name { get; set; }
+    [Parameter] public required string Key { get; set; }
     
     public AuthExternalRequest Login { get; set; } = new();
 
-
     private async Task IniciarSesion()
     {
-        Login.Name = Name;
+        Login.Name = Name; // Vincular el nombre al objeto de inicio de sesión
 
-        if (Login.Key != null)
+        // Autenticación externa
+        var authResult = await _groupCodersServices.AuthenticationExternalAsync(login: Login, key: Key);
+        await LoadCodersAsync();
+        // Mostrar el modal de términos y condiciones
+        var parameters = new ModalParameters();
+        @* parameters.Add(nameof(TermsAndConditionsComponent.Group), Group); // Aquí pasas el objeto Group *@
+        parameters.Add("GroupId", Key); // Aquí pasas el id del grupo
+
+
+        Console.WriteLine("Intentando mostrar el modal...");
+        var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
+        await modal.Result;
+
+        if (authResult)
         {
-            await _GroupCodersServices.AuthenticationExternalAsync(login: Login, key: Key);
+            // Aquí puedes manejar el flujo si la autenticación es exitosa
         }
-        
+        else
+        {
+            Console.WriteLine("Error en la autenticación.");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Llamar a LoadCodersAsync cuando la página se inicialice
+        await LoadCodersAsync();
+    }
+
+    private async Task LoadCodersAsync()
+    {
+        try
+        {
+            // Llamada a la API para obtener información del grupo
+            Group = await _groupCodersServices.GetGroupInfoById(Key); // Asigna directamente a Group
+
+            Console.WriteLine("Información de los grupos cargada correctamente.");
+            Console.WriteLine($"ID: {Group?.Id}"); // Usa el operador null-conditional
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener la información del grupo: {ex.Message}");
+        }
     }
 }
