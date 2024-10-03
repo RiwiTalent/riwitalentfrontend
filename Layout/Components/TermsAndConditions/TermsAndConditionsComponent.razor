@@ -1,5 +1,6 @@
-@inherits Blazored.Modal.BlazoredModal
+@inject IModalService ModalService
 @using Blazored.Modal.Services
+@using Microsoft.AspNetCore.Components
 @using riwi.Models;
 @using riwi.Services;
 
@@ -7,15 +8,56 @@
     Términos y Condiciones
 </BlazoredModalTitle>
 <BlazoredModalContent>
-    <p>Este es un contenido simple para probar el modal.</p>
+    <p>Por favor, acepte los términos y condiciones para continuar.</p>
 </BlazoredModalContent>
+<BlazoredModalFooter>
+    <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+    <button class="btn btn-primary" @onclick="Aceptar">Aceptar</button>
+</BlazoredModalFooter>
 
 @code {
-    [CascadingParameter]
-    public IModalService ModalService { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
 
-    private List<Group>? groups;
+    [Inject]
+    private TermsAndConditionsService TermsService { get; set; } // Inyección del servicio
+
     [Parameter] public Group? group { get; set; }
+
+    private async Task Aceptar()
+    {
+        // Crear el modelo para los términos y condiciones
+        var newTerms = new TermAndCondition
+        {
+            GroupId = group?.Id,
+            Clicked_Date = DateTime.Now // O cualquier otra propiedad relevante
+        };
+
+        // Llamar al servicio para aceptar los términos
+        bool success = await TermsService.AcceptTermsAsync(newTerms);
+
+        if (success)
+        {
+            // Cerrar el modal
+            Console.WriteLine("Aceptó modal");
+
+            // Redirigir a la página de inicio
+            NavigationManager.NavigateTo($"/HomeExterno/{group?.Id}");
+        }
+        else
+        {
+            // Manejar el error, por ejemplo, mostrar un mensaje
+            Console.WriteLine("No se pudo aceptar los términos y condiciones.");
+        }
+    }
+
+    private void Cancelar()
+    {
+        // Cerrar el modal sin hacer nada
+        Console.WriteLine("Cerrado Modal");
+        // Aquí puedes cerrar el modal si decides hacerlo
+        // ModalService.Close(); // Opcional si decides cerrar el modal aquí
+    }
 
     protected override Task OnInitializedAsync()
     {

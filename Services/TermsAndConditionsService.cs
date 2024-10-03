@@ -1,34 +1,34 @@
-    using System.Net.Http.Json;
-    using riwi.Models;
-    using Microsoft.AspNetCore.Components;
+using System.Net.Http.Json;
+using riwi.Models;
+using Microsoft.AspNetCore.Components;
 
-    namespace riwi.Services
+namespace riwi.Services
+{
+    public class TermsAndConditionsService
     {
-        public class TermsAndConditionsService
+        private readonly HttpClient _client;
+        private readonly NavigationManager _navigation;
+
+        public TermsAndConditionsService(HttpClient client, NavigationManager navigation)
         {
-            private readonly HttpClient _client;
-            private readonly NavigationManager _navigation;
+            _client = client;
+            _navigation = navigation;
+        }
 
-            public TermsAndConditionsService(HttpClient client, NavigationManager navigation)
+        // Método para aceptar los términos y crear el registro en la base de datos
+        public async Task<bool> AcceptTermsAsync(TermAndCondition newTerms)
+        {
+            var response = await _client.PostAsJsonAsync("http://localhost:5113/terms", newTerms);
+
+            if (response.IsSuccessStatusCode)
             {
-                _client = client;
-                _navigation = navigation;
+                return true; // Retorna true si la creación fue exitosa
             }
-
-            // Método para aceptar los términos y crear el registro en la base de datos
-            public async Task<bool> AcceptTermsAsync(TermAndCondition newTerms)
+            else
             {
-                var response = await _client.PostAsJsonAsync("http://localhost:5113/terms", newTerms);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return true; // Retorna true si la creación fue exitosa
-                }
-                else
-                {
-                    Console.WriteLine($"Error creating terms: {response.StatusCode}");
-                    return false; // Retorna false si falló
-                }
+                Console.WriteLine($"Error creating terms: {response.StatusCode}");
+                return false; // Retorna false si falló
             }
         }
     }
+}
