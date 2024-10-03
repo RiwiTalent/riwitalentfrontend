@@ -1,6 +1,9 @@
 @inject IModalService ModalService
 @using Blazored.Modal.Services
 @using Microsoft.AspNetCore.Components
+@inject GroupCodersServices _groupCodersServices
+@inject TermsAndConditionsService _termsAndConditionsService
+@inject NavigationManager NavigationManager // Inyección del NavigationManager
 @using riwi.Models;
 @using riwi.Services;
 
@@ -14,43 +17,46 @@
     <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
     <button class="btn btn-primary" @onclick="Aceptar">Aceptar</button>
 </BlazoredModalFooter>
+
 @code {
-    [Inject]
-    private NavigationManager NavigationManager { get; set; }
+    [Parameter]
+    public string GroupId { get; set; }
 
-    [Inject]
-    private TermsAndConditionsService TermsService { get; set; } // Inyección del servicio
+    private Group? group; // Variable para almacenar los detalles del grupo
 
-    [Parameter] public Group? group { get; set; }
-    [Parameter] public string GroupId { get; set; } // Recibe el id del grupo
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine($"Group recibido en el modal: {group?.Name ?? "null"}, GroupId: {GroupId}");
+        group = await _groupCodersServices.GetGroupInfoById(GroupId); // Asegúrate de que este método esté implementado
+    }
 
     private async Task Aceptar()
     {
-        // Crear el modelo para los términos y condiciones
+        // Verifica que el grupo esté cargado
+        if (group == null)
+        {
+            Console.WriteLine("El grupo no se pudo cargar.");
+            return;
+        }
+
         var newTerms = new TermAndCondition
         {
-            Clicked_Date = DateTime.Now,
             IsActive = true,
             Accepted = true,
-            GroupId = GroupId, // Utiliza GroupId aquí
-            AcceptedEmail = group?.AssociateEmail,
-            CreatorEmail = group?.CreatedBy
+            GroupId = group.Id, 
+            AcceptedEmail = group.AssociateEmail, 
+            CreatorEmail = group.CreatedBy 
         };
 
         // Llamar al servicio para aceptar los términos
-        bool success = await TermsService.AcceptTermsAsync(newTerms);
+        bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
 
         if (success)
         {
-            // Cerrar el modal
-            Console.WriteLine("Aceptó modal");
-
-            // Redirigir a la página de inicio
             NavigationManager.NavigateTo($"/HomeExterno/{GroupId}");
         }
         else
         {
-            // Manejar el error, por ejemplo, mostrar un mensaje
             Console.WriteLine("No se pudo aceptar los términos y condiciones.");
         }
     }
@@ -59,11 +65,5 @@
     {
         // Cerrar el modal sin hacer nada
         Console.WriteLine("Cerrado Modal");
-    }
-
-    protected override Task OnInitializedAsync()
-    {
-        Console.WriteLine($"Group recibido en el modal: {group?.Name ?? "null"}, GroupId: {GroupId}");
-        return base.OnInitializedAsync();
     }
 }
