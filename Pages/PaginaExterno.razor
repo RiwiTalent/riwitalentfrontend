@@ -47,36 +47,42 @@
     public required string Name { get; set; }
     [Parameter]
     public required string Key { get; set; }
+    [Parameter] public string GroupId { get; set; }
+
     
     public AuthExternalRequest Login { get; set; } = new();
 
-    private async Task IniciarSesion()
+   private async Task IniciarSesion()
     {
         // Vincular el nombre al objeto de inicio de sesión
         Login.Name = Name;
-        
+
         // Autenticación externa
         var authResult = await _groupCodersServices.AuthenticationExternalAsync(login: Login, key: Key);
-        
-        // Cargar la información de los coders en el grupo
         await LoadCodersAsync();
 
         // Mostrar el modal de términos y condiciones
         var parameters = new ModalParameters();
-        parameters.Add(nameof(TermsAndConditionsComponent.group), Group); // Asegúrate de tener `Group` asignado
+        parameters.Add(nameof(TermsAndConditionsComponent.group), Group); // Aquí pasas el objeto Group
+        parameters.Add("GroupId", Key); // Aquí pasas el id del grupo
+
         Console.WriteLine("Intentando mostrar el modal...");
         var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
         await modal.Result;
 
-        if (!string.IsNullOrEmpty(Login.Key) && authResult)
+        if (!string.IsNullOrEmpty(Login.Key))
         {
-            // Cargar la información de los coders en el grupo
+            if (authResult)
+            {
+                // Cargar la información de los coders en el grupo
+            }
+            else
+            {
+                Console.WriteLine("Error en la autenticación.");
+            }
         }
-        else
-        {
-            Console.WriteLine("Error en la autenticación.");
-        }
-    }
+}
+
 
 
     protected override async Task OnInitializedAsync()

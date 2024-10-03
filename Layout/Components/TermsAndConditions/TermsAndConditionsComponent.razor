@@ -14,7 +14,6 @@
     <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
     <button class="btn btn-primary" @onclick="Aceptar">Aceptar</button>
 </BlazoredModalFooter>
-
 @code {
     [Inject]
     private NavigationManager NavigationManager { get; set; }
@@ -23,11 +22,9 @@
     private TermsAndConditionsService TermsService { get; set; } // Inyección del servicio
 
     [Parameter] public Group? group { get; set; }
+    [Parameter] public string GroupId { get; set; } // Recibe el id del grupo
 
-   private async Task Aceptar()
-{
-    // Asegúrate de que el group no sea nulo
-    if (group != null)
+    private async Task Aceptar()
     {
         // Crear el modelo para los términos y condiciones
         var newTerms = new TermAndCondition
@@ -35,9 +32,9 @@
             Clicked_Date = DateTime.Now,
             IsActive = true,
             Accepted = true,
-            GroupId = group.Id // Asegúrate de usar el Id aquí
-            @* AcceptedEmail = group.AssociateEmail, // Asegúrate de que este campo existe en tu modelo
-            CreatorEmail = group.CreatedBy // Asegúrate de que este campo existe en tu modelo *@
+            GroupId = GroupId, // Utiliza GroupId aquí
+            AcceptedEmail = group?.AssociateEmail,
+            CreatorEmail = group?.CreatedBy
         };
 
         // Llamar al servicio para aceptar los términos
@@ -47,31 +44,26 @@
         {
             // Cerrar el modal
             Console.WriteLine("Aceptó modal");
-            NavigationManager.NavigateTo($"/HomeExterno/{group.Id}");
+
+            // Redirigir a la página de inicio
+            NavigationManager.NavigateTo($"/HomeExterno/{GroupId}");
         }
         else
         {
+            // Manejar el error, por ejemplo, mostrar un mensaje
             Console.WriteLine("No se pudo aceptar los términos y condiciones.");
         }
     }
-    else
-    {
-        Console.WriteLine("Grupo no está disponible.");
-    }
-}
-
 
     private void Cancelar()
     {
         // Cerrar el modal sin hacer nada
         Console.WriteLine("Cerrado Modal");
-        // Aquí puedes cerrar el modal si decides hacerlo
-        // ModalService.Close(); // Opcional si decides cerrar el modal aquí
     }
 
     protected override Task OnInitializedAsync()
     {
-        Console.WriteLine($"Group recibido en el modal: {group?.Name ?? "null"}");
+        Console.WriteLine($"Group recibido en el modal: {group?.Name ?? "null"}, GroupId: {GroupId}");
         return base.OnInitializedAsync();
     }
 }
