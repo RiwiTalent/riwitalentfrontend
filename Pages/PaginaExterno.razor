@@ -54,37 +54,30 @@
     {
         // Vincular el nombre al objeto de inicio de sesión
         Login.Name = Name;
-            // Autenticación externa
-            var authResult = await _groupCodersServices.AuthenticationExternalAsync(login: Login, key: Key);
-             await LoadCodersAsync();
+        
+        // Autenticación externa
+        var authResult = await _groupCodersServices.AuthenticationExternalAsync(login: Login, key: Key);
+        
+        // Cargar la información de los coders en el grupo
+        await LoadCodersAsync();
 
+        // Mostrar el modal de términos y condiciones
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(TermsAndConditionsComponent.group), Group); // Asegúrate de tener `Group` asignado
+        Console.WriteLine("Intentando mostrar el modal...");
+        var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
+        await modal.Result;
 
-             // Mostrar el modal de términos y condiciones
-            var parameters = new ModalParameters();
-            parameters.Add(nameof(TermsAndConditionsComponent.group), Group); // Asegúrate de tener `yourGroupObject`
-            Console.WriteLine("Intentando mostrar el modal...");
-            var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
-            await modal.Result;
-
-
-
-
-
-        if (!string.IsNullOrEmpty(Login.Key))
+        if (!string.IsNullOrEmpty(Login.Key) && authResult)
         {
-
-            if (authResult)
-            {
-
-                // Cargar la información de los coders en el grupo
-            }
-            else
-            {
-                Console.WriteLine("Error en la autenticación.");
-               
-            }
+            // Cargar la información de los coders en el grupo
+        }
+        else
+        {
+            Console.WriteLine("Error en la autenticación.");
         }
     }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,18 +85,22 @@
         await LoadCodersAsync();
     }
 
-    private async Task LoadCodersAsync()  // Aquí estaba el error
+   private async Task LoadCodersAsync()
     {
         try
         {
             // Llamada a la API para obtener información del grupo
-            var groupInfo = await _groupCodersServices.GetGroupInfoById(Key);
+            var group = await _groupCodersServices.GetGroupInfoById(Key);
+            Group = group; // Asegúrate de asignar la información del grupo aquí
 
             Console.WriteLine("Información de los grupos cargada correctamente.");
+            Console.WriteLine($"ID::::");
+            Console.WriteLine($"ID: {group.Id}");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error al obtener la información del grupo: {ex.Message}");
         }
     }
+
 }

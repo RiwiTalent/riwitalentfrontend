@@ -24,13 +24,20 @@
 
     [Parameter] public Group? group { get; set; }
 
-    private async Task Aceptar()
+   private async Task Aceptar()
+{
+    // Asegúrate de que el group no sea nulo
+    if (group != null)
     {
         // Crear el modelo para los términos y condiciones
         var newTerms = new TermAndCondition
         {
-            GroupId = group?.Id,
-            Clicked_Date = DateTime.Now // O cualquier otra propiedad relevante
+            Clicked_Date = DateTime.Now,
+            IsActive = true,
+            Accepted = true,
+            GroupId = group.Id // Asegúrate de usar el Id aquí
+            @* AcceptedEmail = group.AssociateEmail, // Asegúrate de que este campo existe en tu modelo
+            CreatorEmail = group.CreatedBy // Asegúrate de que este campo existe en tu modelo *@
         };
 
         // Llamar al servicio para aceptar los términos
@@ -40,16 +47,19 @@
         {
             // Cerrar el modal
             Console.WriteLine("Aceptó modal");
-
-            // Redirigir a la página de inicio
-            NavigationManager.NavigateTo($"/HomeExterno/{group?.Id}");
+            NavigationManager.NavigateTo($"/HomeExterno/{group.Id}");
         }
         else
         {
-            // Manejar el error, por ejemplo, mostrar un mensaje
             Console.WriteLine("No se pudo aceptar los términos y condiciones.");
         }
     }
+    else
+    {
+        Console.WriteLine("Grupo no está disponible.");
+    }
+}
+
 
     private void Cancelar()
     {
