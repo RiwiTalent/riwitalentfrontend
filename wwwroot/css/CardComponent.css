@@ -538,9 +538,9 @@ p{
     margin: auto;
     width: 85%;
     height: 70px;
-    margin-top: 50px;
+    margin-top: 15px;
     display: grid;
-    grid-template-columns: calc(52% - 14px) 22% 26%;
+    grid-template-columns: calc(40% - 25px) 35% 25%;
     gap: 7px;
     padding: 10px;
 }
