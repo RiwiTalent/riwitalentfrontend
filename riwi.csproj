@@ -24,6 +24,11 @@
     <_ContentIncludedByDefault Remove="src\web.config" />
     <_ContentIncludedByDefault Remove="src\wwwroot\sample-data\weather.json" />
     <_ContentIncludedByDefault Remove="src\wwwroot\_framework\blazor.boot.json" />
+    <_ContentIncludedByDefault Remove="Layout\Components\DataGridCoders\DataGridCoders.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Layout\Components\Layout\" />
   </ItemGroup>
 
 </Project>

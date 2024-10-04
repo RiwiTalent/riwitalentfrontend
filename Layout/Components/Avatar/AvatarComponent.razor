@@ -41,22 +41,10 @@ else
         {
             // Cambia esto para obtener un string directamente
             var email = await SessionStorage.GetItemAsync<string>(KeySesionStorage); // KeySesionStorage debe ser "userEmail"
-            
-            if (!string.IsNullOrEmpty(email))
-            {
-                Inicial = email.Length > 1 ? $"{email[0]}{email[1]}" : email[0].ToString();
-                Console.WriteLine($"Email recuperado: {email}");
-                Console.WriteLine($"Inicial: {Inicial}");
-            }
-            else
-            {
-                Console.WriteLine("El usuario no se encontró en el Session Storage.");
-            }
-        }
-        else if (TypeAvatar == "GrupoCoders" && GroupCoders != null)
-        {
+            Inicial = email.Length > 1 ? $"{email[0]}{email[1]}" : email[0].ToString();
             Inicial = $"{GroupCoders.Name[0]}{GroupCoders.Name[1]}";
             Status = GroupCoders.isActive == false ? Color.Error : Color.Success;
+            if (!string.IsNullOrEmpty(email)) ;
         }
     }
 

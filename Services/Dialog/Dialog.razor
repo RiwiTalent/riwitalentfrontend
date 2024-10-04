@@ -1,0 +1,31 @@
+@inherits ComponentBase
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField T="string" Label="Name" @bind-Value="name"></MudTextField>
+        <MudSelect T="string" Label="Favorite Coffee" @bind-Value="favoriteCoffee" AnchorOrigin="Origin.BottomCenter">
+            <MudSelectItem Value="@("Cappuccino")" />
+            <MudSelectItem Value="@("Cafe Latte")" />
+            <MudSelectItem Value="@("Espresso")" />
+            <MudSelectItem Value="@("Irish Coffee")" />
+        </MudSelect>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+
+    private string name;
+    private string favoriteCoffee;
+
+    private void Submit() 
+    {
+        MudDialog.Close(DialogResult.Ok(new { Name = name, FavoriteCoffee = favoriteCoffee }));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

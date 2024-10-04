@@ -1,36 +1,56 @@
 @page "/coders"
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Components.Authorization;
-@using riwi.Services;
-@inject CoderService CoderService; 
-
 @using riwi.Models;
+@using riwi.Layout.Components.Dialog
+@using riwi.Services.Implementations
 @attribute [Authorize]
 
-<PageTitle>Coders</PageTitle>
+@inject ICoderService CoderService
+@inject IDialogService DialogService
+
+
+<PageTitle>RiwiTalent: Explora el Mejor Talento de Desarrolladores</PageTitle>
+
 @if (!string.IsNullOrEmpty(errorMessage))
 {
+    <!-- Muestra alerta si se produce un error -->
     <MudAlert Severity="Severity.Error">@errorMessage</MudAlert>
 }
 <AuthorizeView>
     <Authorized>
         @if (_loading)
         {
-            <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7" />
+            <ProgressComponent Indeterminate="true" Color="Color.Info" Class="my-7" />
         }
         else
         {
-        <MudContainer Class="ma-3 w-full h-full">
-            <!-- Botón y Agregar -->
-            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3">
-                <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
+            <!-- Total coders -->
+            <MudContainer Class="ma-3 w-full h-full">
+                <MudText Typo="Typo.h5"><b>@CoderCount</b> Coders encontrados</MudText>
             </MudContainer>
+            <MudContainer Class="ma-3 w-full h-full">
+                
+                
+                
+                
+                <MudChipSet @bind-SelectedValues="_selectedSkills" SelectionMode="SelectionMode.MultiSelection" CheckMark="true" Variant="Variant.Text" Color="Color.Default"  SelectedColor="Color.Primary">
+                    @foreach (var skill in skillsList)
+                    {
+                        <MudChip T="string" Value="skill">@skill</MudChip>
+                    }
 
-            <MudPaper Class="w-full h-full pa-4">
-                <!-- Total coders -->
-                <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 pa-3 ma-2">
-                    <MudText Typo="Typo.h5"><b>@CoderCount</b> Coders encontrados</MudText>
-                </MudContainer>
+                </MudChipSet>
+                <div class="d-flex flex-column align-center">
+                    @if (_selectedSkills.Any())
+                    {
+                        <MudText>Tecnologias @string.Join(", ", _selectedSkills.OrderBy(x => x))</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Ninguna tecnología seleccionada.</MudText>
+                    }
+                </div>
 
                 <!-- Grid de coders -->
                 <MudDataGrid T="Coder"
@@ -41,14 +61,14 @@
                              MultiSelection="true"
                              QuickFilter="@_quickFilter">
                     <ToolBarContent>
-                        <MudTextField @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined"
-                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search"
-                                      AdornmentColor="Color.Primary">
-                        </MudTextField>
-                        <MudSpacer/>
-                        <MudButton Color="Color.Primary" Variant="Variant.Filled" Size="Size.Large" StartIcon="@Icons.Material.Rounded.PersonAdd">
-                            <MudText>Nuevo Coder</MudText>
-                        </MudButton>
+                        <MudGrid>
+                            <MudItem xs="12" Class="d-flex flex-grow-1 gap-3 justify-space-between">
+                                <MudTextField Placeholder="Buscar aquí..." @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Search" AdornmentColor="Color.Primary"></MudTextField>
+                                <MudSpacer />
+                                <MudButton Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.Tune">Filtros</MudButton>
+                                <MudButton @onclick="OpenDialogAsync" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.PersonAdd">Nuevo</MudButton>
+                            </MudItem>
+                        </MudGrid>
                     </ToolBarContent>
 
                     <Columns>
@@ -109,14 +129,13 @@
                                           InfoFormat="@infoFormat"/>
                     </PagerContent>
                 </MudDataGrid>
-            </MudPaper>
-        </MudContainer>
+            </MudContainer>
         }
     </Authorized>
 </AuthorizeView>
 
 @code {
-    private List<Coder> _coders = new List<Coder>();    
+    private List<Coder> _coders; 
     private string? _searchString;
     private bool _sortNameByLength;
     private bool _loading = true;
@@ -124,27 +143,89 @@
     private string errorMessage;
     private string rowsPerPageString = "Filas por página:";
     private string infoFormat = "{first_item}-{last_item} de {all_items}";
-    
+    private IReadOnlyCollection<string> _selectedSkills = new HashSet<string>();
+    private IReadOnlyCollection<string> skillsList = new HashSet<string>();
 
+    
     protected override async Task OnInitializedAsync()
     {
+        await LoadCodersAsync();
+    }
+    
+    private async Task LoadCodersAsync()
+    {
+        _loading = true;
+        errorMessage = string.Empty; // Limpiar el mensaje de error previo
+    
         try
         {
-            _coders = await CoderService.GetCodersAsync() ?? new List<Coder>();
-            _coders = _coders.Where(g => g != null).ToList();
-            Console.WriteLine($"Total coders obtenidos: {_coders.Count}");        
+            // Intentar obtener los coders
+            _coders = await CoderService.GetCodersAsync();
+
+            // Asegurarse de que no haya coder nulos
+            _coders = _coders?.Where(c => c != null).ToList() ?? new List<Coder>();
+
+            Console.WriteLine($"Total coder obtenidos: {_coders.Count}");
+            
+            // Busca las Skill de los coders
+            skillsList = SearchSkills();
+
         }
-        catch (Exception ex)
+        catch (HttpRequestException httpEx) // Manejo específico de errores de red
+        {
+            errorMessage = "Hubo un problema con la conexión a internet. Intente nuevamente más tarde.";
+            LogError(httpEx); // Método para loguear el error
+        }
+        catch (NullReferenceException nullEx) // Manejo de errores de referencia nula
+        {
+            errorMessage = "Ocurrió un error inesperado. Intente más tarde.";
+            LogError(nullEx);
+        }
+        catch (Exception ex) // Catch general para cualquier otra excepción
         {
             errorMessage = "Hubo un error al cargar los coder. Intente nuevamente más tarde.";
-            Console.WriteLine($"Error al obtener los coder: {ex.Message}");
+            LogError(ex); // Loguear cualquier otro tipo de error
         }
         finally
         {
             _loading = false;
         }
     }
+    
+    // Método para loguear errores
+    private void LogError(Exception ex)
+    {
+        Console.WriteLine($"Error al obtener grupos: {ex.Message}");
+    }
+    
+    private Task OpenDialogAsync()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
 
+        return DialogService.ShowAsync<DialogComponent>("Creación de grupo", options);
+    }
+    
+    private HashSet<string> SearchSkills()
+    {
+        var skillsList = new HashSet<string>();
+
+        foreach (var coder in _coders)
+        {
+            if (coder.Skills != null)
+            {
+                foreach (var skill in coder.Skills)
+                {
+                    if (!string.IsNullOrEmpty(skill.Language_Programming))
+                    {
+                        skillsList.Add(skill.Language_Programming);
+                    }
+                }
+            }
+        }
+        return skillsList;
+    }
+
+    
     // Filtro de busqueda
     private Func<Coder, bool> _quickFilter => x =>
     {
@@ -157,10 +238,9 @@
     private bool MatchesSearchCriteria(Coder coder)
     {
         return (coder.FirstName != null && coder.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.FirstLastName != null && coder.SecondName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.FirstName != null && coder.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.FirstName != null && coder.SecondLastName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.FirstName != null && coder.Email.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.SecondName != null && coder.SecondName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.SecondLastName != null && coder.SecondLastName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.Email != null && coder.Email.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
                (coder.Status != null && coder.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
                (coder.Created_At != null && coder.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }

@@ -1,35 +1,32 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
-@inject NavigationManager navManager
+@using riwi.Pages
 
 @* Required *@
 <MudThemeProvider />
+<MudPopoverProvider />
+
 @* Needed for dialogs *@
 <MudDialogProvider />
+
 @* Needed for snackbars *@
 <MudSnackbarProvider />
 
-
-<MudPopoverProvider />
 <CascadingAuthenticationState> 
-
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <AuthorizeRouteView RouteData="@routeData">
                 <NotAuthorized>
-                    No estas autorizado para ver esta página.
-                    @{
-                        navManager.NavigateTo("/");
-                    }
+                    <LayoutView Layout="@typeof(LoginLayout)">
+                        <NotAuthorized />
+                    </LayoutView>
                 </NotAuthorized>
             </AuthorizeRouteView>
-
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
+
         <NotFound>
-            <PageTitle>Not found</PageTitle>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
+            <LayoutView Layout="@typeof(LoginLayout)">
+                <NotFound />
             </LayoutView>
         </NotFound>
     </Router>

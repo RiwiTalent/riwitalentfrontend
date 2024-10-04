@@ -1,0 +1,203 @@
+@page "/GroupDetails/{groupId}"
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.Authorization;
+@using riwi.Services;
+@using riwi.Models;
+@inject GroupService GroupService; 
+@attribute [Authorize]
+
+<PageTitle>RiwiTalent: Detalles del Grupo</PageTitle>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <!-- Muestra alerta si se produce un error -->
+    <MudAlert Severity="Severity.Error">@errorMessage</MudAlert>
+}
+<AuthorizeView>
+    <Authorized>
+        @if (_loading)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7"></MudProgressLinear>
+        }
+        else
+        {
+            <MudContainer Class="ma-3 w-full h-full">
+                <!-- Botón y Agregar -->
+                <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 py-3 px-0">
+                    <MudIconButton Href="/groups" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
+                </MudContainer>
+
+                <!-- Detail groups -->
+                <MudGrid Justify="Justify.SpaceBetween" Spacing="3">
+                    <MudItem xs="4">
+                        <MudCard Class="d-flex flex-column align-center justify-center mud-width-full rounded-lg pa-4">
+                            <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary">A</MudAvatar>
+                            <MudText Typo="Typo.h6" Color="Color.Primary">@group.Name</MudText>
+                            <MudChip T="string" Color="@GetChipColor(group.Status)" Value="@group.Status"></MudChip>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="8">
+                        <MudCard Class="d-flex rounded-lg pa-4">
+                            <MudCardContent Class="FullWidth">
+                                <MudForm Spacing="2">
+                                    <!-- Grid Layout -->
+                                    <MudGrid>
+                                        <!-- Título: Información del grupo -->
+                                        <MudItem xs="12">
+                                            <MudText Align="Align.Start" Typo="Typo.h5"><b>Información del grupo</b></MudText>
+                                        </MudItem>
+
+                                        <!-- Nombre del Grupo -->
+                                        <MudItem xs="12" sm="6">
+                                            <MudText Typo="Typo.subtitle2"><b>Nombre</b></MudText>
+                                            <MudTextField T="string" @bind-Value="@group.Name" Placeholder="Ingresa el nombre del grupo" Variant="Variant.Outlined" FullWidth="true" Margin="Margin.Dense" AdornmentIcon="@Icons.Material.Rounded.PeopleOutline" Adornment="Adornment.Start" AdornmentColor="Color.Primary"></MudTextField>
+                                        </MudItem>
+
+                                        <!-- Descripción del Grupo -->
+                                        <MudItem xs="12">
+                                            <MudText Typo="Typo.subtitle2"><b>Descripción</b></MudText>
+                                            <MudTextField T="string" @bind-Value="@group.Description" Placeholder="Escribe una breve descripción del grupo" Variant="Variant.Outlined" FullWidth="true" Lines="3" Margin="Margin.Dense" AdornmentIcon="@Icons.Material.Rounded.TextSnippet" Adornment="Adornment.Start" AdornmentColor="Color.Primary"></MudTextField>
+                                        </MudItem>
+
+                                        <!-- Título: Credenciales -->
+                                        <MudItem xs="12">
+                                            <MudText Typo="Typo.h5"><b>Credenciales</b></MudText>
+                                        </MudItem>
+
+                                        <!-- Link Público -->
+                                        <MudItem xs="12" sm="6">
+                                            <MudText Typo="Typo.subtitle2"><b>Enlace público</b></MudText>
+                                            <MudItem Class="d-flex flex-row align-center gap-2">
+                                                <MudTextField T="string" @bind-Value="group.ExternalKeys[0].url" Placeholder="Ingresa el enlace público del grupo" Variant="Variant.Outlined" Margin="Margin.Dense" FullWidth="true" AdornmentIcon="@Icons.Material.Rounded.InsertLink" Adornment="Adornment.Start" AdornmentColor="Color.Primary"></MudTextField>
+                                                <MudIconButton Icon="@Icons.Material.Rounded.Autorenew" Color="Color.Primary" Variant="Variant.Outlined"/>
+                                            </MudItem>
+                                            <MudItem>
+                                                <MudText Typo="Typo.subtitle2"><b>Pin de acceso</b></MudText>
+                                                <MudTextField T="string" @bind-Value="group.ExternalKeys[0].key" Placeholder="Ingresa la clave de acceso" InputType="InputType.Password" Variant="Variant.Outlined" FullWidth="true" Margin="Margin.Dense" Adornment="Adornment.End"  AdornmentIcon="@Icons.Material.Filled.Visibility" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver pin"></MudTextField>
+                                            </MudItem>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudForm>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                </MudGrid>
+            </MudContainer>
+
+            <!-- Total coders -->
+            <MudContainer Class="ma-3 w-full h-full">
+                <MudText Typo="Typo.h5"><b>43</b> Grupos encontrados</MudText>
+            </MudContainer>
+        }
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private Group group; 
+    private string _searchString;
+    private bool _loading = true;
+    private string errorMessage;
+    private string rowsPerPageString = "Filas por página:";
+    private string infoFormat = "{first_item}-{last_item} de {all_items}";
+
+    // Parámetro que recibe el Id del grupo desde la URL
+    [Parameter] public string groupId { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadGroupDetailsAsync();
+    }
+
+    private async Task LoadGroupDetailsAsync()
+    {
+        try
+        {
+            group = await GroupService.GetGroupByIdAsync(groupId);
+            if (group != null)
+            {
+                Console.WriteLine($"Grupo obtenido: {group.Name}, Estado: {group.Status}");
+            }
+            else
+            {
+                errorMessage = "No se encontró el grupo.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Hubo un error al obtener los detalles del grupo: {ex.Message}";
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    // Filtro de búsqueda
+    private Func<Models.Group, bool> _quickFilter => group =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        return MatchesSearchCriteria(group);
+    };
+
+    private bool MatchesSearchCriteria(Models.Group group)
+    {
+        return (group.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
+               (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
+               (group.CreatedAt.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+    }
+    
+    private Color GetChipColor(string? status)
+    {
+        return status switch
+        {
+            "Active" => Color.Success,
+            "Inactive" => Color.Error,
+            _ => Color.Default,
+        };
+    }
+
+    public GroupCoders GetGroupCoders(string? name, string? status)
+    {
+        bool statusBool;
+
+        if (status == "Active")
+        {
+            statusBool = true;
+        }
+        else
+        {
+            statusBool = false;
+        }
+        
+        GroupCoders groupCoders = new GroupCoders()
+        {
+            Name = name,
+            isActive = statusBool
+        };
+
+        return groupCoders;
+    }
+    
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+}

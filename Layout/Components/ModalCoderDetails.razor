@@ -1,10 +1,10 @@
 @inherits Blazored.Modal.BlazoredModal
 @using riwi.Models;
 @using riwi.Services;
-@inject CoderService coderService
+@inject CodersService CodersService
 @inject IModalService model
 @inject SweetAlertService Swal;
-@inject AlertServices alertServices;
+@inject AlertService AlertService;
 @inject NavigationManager NavigationManager
 
 <head>
@@ -207,7 +207,7 @@ else
         if (result.IsConfirmed)
         {
             // Llamada al servicio para actualizar el coder
-            var response = await coderService.UpdateCoderAsync(Coder);
+            var response = await CodersService.UpdateCoderAsync(Coder);
 
             if (response)
             {

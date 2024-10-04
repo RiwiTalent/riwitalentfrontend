@@ -1,11 +1,12 @@
 using CurrieTechnologies.Razor.SweetAlert2;
+using riwi.Services.Interfaces;
 
 namespace riwi.Services
 {
-    public class AlertServices
+    public class AlertService :IAlertService
     {
         private readonly SweetAlertService Swal;
-        public AlertServices(SweetAlertService swal)
+        public AlertService(SweetAlertService swal)
         {
             Swal = swal;
         }

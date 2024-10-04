@@ -12,7 +12,15 @@
 @inject NavigationManager NavigationManager
 @using riwi.Layout.Components.Avatar
 
+@* Required *@
+<MudThemeProvider />
+<MudPopoverProvider />
 
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
 
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
@@ -33,7 +41,7 @@
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="1">
         <NavMenu/>
     </MudDrawer>
-    <MudMainContent Class="-flex flex-grow-1">
+    <MudMainContent Fixed="true" Style="height: 100vw;">
         @Body
     </MudMainContent>
 </MudLayout>

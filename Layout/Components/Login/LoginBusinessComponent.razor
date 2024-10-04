@@ -1,0 +1,102 @@
+@namespace riwi.Layout.Components
+@using Microsoft.AspNetCore.Components.Authorization;
+@using riwi.Services;
+@inject AuthenticationStateProvider autenticacionProvider;
+@inject AuthService AuthService;
+@inject ISessionStorageService SessionStorage
+@using Blazored.SessionStorage
+@inject NavigationManager NavigationManager;
+@inject HttpClient HttpClient;
+@inject SweetAlertService Swal;
+@inject AlertService AlertService;
+
+
+@*Integracion*@
+<MudGrid Class="pa-0 ma-0">
+    <MudItem Class="d-flex justify-center align-center">
+        <MudItem xs="6" sm="6" Class="d-flex justify-center align-center pa-0">
+            <MudItem xs="8">
+                <MudCard Class="pa-6 d-flex justify-center align-center rounded-lg">
+                    <MudCardHeader>
+                        <MudItem xs="12" Class="d-flex justify-center align-center">
+                            <MudImage Src="images/riwi.png" ObjectFit="ObjectFit.ScaleDown" Height="50" Alt="Logo Riwi"></MudImage>
+                        </MudItem>
+                    </MudCardHeader>
+                    <MudItem>
+                        <MudText Align="Align.Center" Typo="Typo.h5"><b>¡Bienvenido/a de nuevo!</b></MudText>
+                        <MudText Align="Align.Center" Typo="Typo.subtitle1">Ingresa con tu cuenta para continuar</MudText>
+                    </MudItem>
+                    <MudCardContent Class="FullWidth" Style="width: 100%;">
+                        <MudForm Spacing="2">
+                            <MudTextField T="string" Label="Correo" @bind-value="_email" Variant="Variant.Outlined" InputType="InputType.Email"/>
+                            <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@PasswordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
+                        </MudForm>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="Login">Ingresar</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </MudItem>
+        <MudItem xs="12" sm="6" Class="d-flex justify-center align-center pa-0 ma-0 rounded-xl" Style="background-image: url('images/Image.jpeg'); background-size: cover; background-position: center; height: 100vh; width: 100vw">
+        </MudItem>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private string _email;
+    private string _password;
+
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+    
+    private async Task Login()
+    {
+        var succes = await AuthService.Login(_email, _password);
+        
+        if (succes)
+        {
+             // Guardar el correo en SessionStorage
+            await SessionStorage.SetItemAsync("userEmail", _email);
+
+            NavigationManager.NavigateTo("/home");
+            await Swal.FireAsync(new SweetAlertOptions
+            {   
+                Title = "¡Bienvenido",
+                Position = "top-end",
+                Icon = SweetAlertIcon.Success,
+                ShowConfirmButton = false ,
+                Timer = 1500
+            });
+        }
+        else
+        {
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Correo o contraseña incorrectos!",
+                Text = "",
+                Icon = SweetAlertIcon.Warning,
+                ConfirmButtonText = "Intenta de nuevo",
+                Timer = 1500
+            });
+        }
+    }
+
+}
+

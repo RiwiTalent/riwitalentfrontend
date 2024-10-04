@@ -8,20 +8,21 @@ using Microsoft.AspNetCore.Components.Authorization;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Blazored.SessionStorage;
 using Microsoft.Extensions.DependencyInjection;
-
+using riwi.Services.Implementations;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddBlazoredSessionStorage();
+builder.Services.AddMudServices();
 
-
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<ICoderService, CodersService>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://backend-riwitalent-9pv2.onrender.com/riwitalent/") });
-builder.Services.AddTransient<CoderService>();
-builder.Services.AddTransient<GroupCodersServices>();
+builder.Services.AddTransient<CodersService>();
 
-builder.Services.AddHttpClient<GroupsServices>(client =>
+builder.Services.AddHttpClient<GroupService>(client =>
 {
     client.BaseAddress = new Uri("https://backend-riwitalent-9pv2.onrender.com/riwitalent/");
 });
@@ -32,7 +33,7 @@ builder.Services.AddHttpClient<GroupsServices>(client =>
 
 
 // Sweet alert services
-builder.Services.AddScoped<AlertServices>();
+builder.Services.AddScoped<AlertService>();
 builder.Services.AddSweetAlert2();
 
 //Service to MudBlazor

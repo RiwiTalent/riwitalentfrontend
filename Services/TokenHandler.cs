@@ -16,7 +16,7 @@ namespace riwi.Services
             _jsRuntime = jsRuntime;
         }
 
-        // Esta funcion sirve para establecer el token como cabecera de la autenticacion
+        // Este metodo sirve para establecer el token como cabecera de la autenticacion
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             // Obtener el token de las cookies

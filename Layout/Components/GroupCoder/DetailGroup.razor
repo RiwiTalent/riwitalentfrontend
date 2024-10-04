@@ -1,6 +1,6 @@
 @using riwi.Services;
 @using riwi.Models;
-@inject CoderService coderService;
+@inject CodersService CodersService;
 @inject IModalService model;
 
 <head>
@@ -58,8 +58,7 @@
             <MudCard>
                 @if (coder.Photo != null)
                 {
-                    <MudImage Fluid="true"
-                    ObjetctFit="Cover" Src="@ImageNullOrEmpty(coder.Photo)" Alt="Mony the dog" Width="250" Height="300"/>
+                    <MudImage Fluid="true" Src="@ImageNullOrEmpty(coder.Photo)" Alt="Mony the dog" Width="250" Height="300"/>
 
                     @* <MudImage class=""
                             Src="@ImageNullOrEmpty(coder.Photo)" 
@@ -145,7 +144,7 @@ else
         //Llamado a la api
         try
         {
-            coders = await coderService.GetCodersAsync();
+            coders = await CodersService.GetCodersAsync();
             totalCoders = coders.Count;
             pag = (int)Math.Ceiling((double)totalCoders / pageSize);
             Console.WriteLine(pag);
@@ -161,7 +160,7 @@ else
     {
         try
         {
-            coders = await coderService.GetCodersAsync();
+            coders = await CodersService.GetCodersAsync();
         }
         catch (Exception ex)
         {
@@ -178,7 +177,7 @@ else
 
     private async Task FilterCoders()
     {
-        coders = await coderService.GetCodersAsync();
+        coders = await CodersService.GetCodersAsync();
 
         // Filtrar por nombres o apellidos
         if (!string.IsNullOrEmpty(searchText))
@@ -217,7 +216,7 @@ else
         skills = "";
         languageLevel = "";
 
-        coders = await coderService.GetCodersAsync();
+        coders = await CodersService.GetCodersAsync();
         totalCoders = coders.Count;
         pag = (int)Math.Ceiling((double)totalCoders / pageSize);
 
