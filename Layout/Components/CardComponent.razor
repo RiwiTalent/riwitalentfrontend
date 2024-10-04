@@ -7,33 +7,33 @@
     <link rel="stylesheet" href="css/CardComponent.css">
 </head>
 
+<MudContainer Class="d-flex" Style="margin: 15px auto auto auto ; padding: 0; width: 85%;">
+    <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Coders</MudText>
+</MudContainer>
+
+
 <MudPaper Class="container-filter" Elevation="1">
-    <MudPaper Elevation="0" Class="d-flex align-center">
-        @* <MudText Class="text-resultado" Typo="Typo.h6">@coders.Count Coders</MudText> *@
-        <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Coders</MudText>
+    <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px;">
+        <MudTextField StartIcon="@Icons.Material.Filled.Delete"
+                      @bind-Value="searchText"
+                      Placeholder="Buscar aquí..."
+                      Class="search"
+                      Immediate="true"
+                      TextChanged="FilterCoders"/>
     </MudPaper>
 
-    <MudButton OnClick="CleanFilters" Class=""> Limpiar </MudButton>
 
-    <MudButton Color="Color.Primary" OnClick="FilterCoders" Class=""> Filtrar </MudButton>
 
-    <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
-        <MudTextField StartIcon="@Icons.Material.Filled.Delete" @bind-Value="searchText" Placeholder="Buscar aquí..." Class="search" Immediate="true" TextChanged="FilterCoders" />
-    </MudPaper>
-    
-
-    <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select">
-        
-        <InputSelect @bind-Value="status" Class="search-container" >
-            <option value="">Estado</option>
-            <option value="Active">Activo</option>
-            <option value="Grouped">Agrupado</option>
-            <option value="Selected">Seleccionado</option>
-        </InputSelect>
-        
+    <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select" Style="padding: 0; gap: 5px">
 
         <InputSelect @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
-            <option value="">Tecnologia</option>
+            <option value="">Estado</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="CSharp">CSharp</option>
+        </InputSelect>
+
+        <InputSelect @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
+            <option value="">Tecnología</option>
             <option value="JavaScript">JavaScript</option>
             <option value="CSharp">CSharp</option>
             <option value="Python">Python</option>
@@ -41,7 +41,7 @@
             <option value="Ruby">Ruby</option>
             <option value="PHP">PHP</option>
             <option value="React">React</option>
-            <option value="clear">Limpiar Filtro</option> <!-- Opción para limpiar -->
+            <option value="clear">Limpiar Filtro</option>
         </InputSelect>
 
         <InputSelect @bind-Value="languageLevel" Class="search-container" @onchange="CleanFilterEnglishLevel">
@@ -52,13 +52,19 @@
             <option value="B2">B2</option>
             <option value="C1">C1</option>
             <option value="C2">C2</option>
-            <option value="clear">Limpiar Filtro</option> <!-- Opción para limpiar -->
+            <option value="clear">Limpiar Filtro</option>
         </InputSelect>
-
+    </MudPaper>
+    <MudPaper Elevation="0" Class="d-flex align-center justify-space-between" Style="padding: 10px;">
+        <div>
+            <MudButton OnClick="CleanFilters" Class="mr-2"> Limpiar </MudButton>
+            <MudButton Color="Color.Primary" OnClick="FilterCoders"> Filtrar </MudButton>
+        </div>
     </MudPaper>
 </MudPaper>
 
-|
+
+
 
 @if(coders != null)
 {
@@ -205,7 +211,6 @@ else
     private string? skills;
     private string? languageLevel;
     private bool FilterApplied = false;
-    private string? status;
     
 
     protected override async Task OnInitializedAsync()
@@ -272,13 +277,6 @@ else
             coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.Language_Level.Equals(languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
             FilterApplied = true;
         }
-         // Filtro por Status
-        if (!string.IsNullOrEmpty(status) && status.ToLower() != "clear")
-        {
-            coders = coders.Where(c => c.Status != null && c.Status.Equals(status, StringComparison.OrdinalIgnoreCase)).ToList();
-            FilterApplied = true;
-        }
-        
 
         totalCoders = coders.Count;
         pag = (int)Math.Ceiling((double)totalCoders / pageSize);
@@ -291,7 +289,6 @@ else
         searchText = "";
         skills = "";
         languageLevel = "";
-        status = "";
 
         coders = await coderService.GetCodersAsync();
         totalCoders = coders.Count;
@@ -320,16 +317,6 @@ else
             await FilterCoders();  // Aplica los filtros
         }
     }
-
-    private async Task CleanFilterStatus(ChangeEventArgs e)
-    {
-        if (e.Value?.ToString()== "clear")
-        {
-            status = "";
-            await FilterCoders();
-        }
-    }
-
 
     private void LoadCoders(int pageNumber)
     {

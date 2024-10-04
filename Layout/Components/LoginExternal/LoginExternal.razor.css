@@ -38,7 +38,7 @@
 }
 
 .image-container {
-    width: 50%;
+    width: 60%;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -65,7 +65,7 @@
 }
 
 .login-card {
-    background-color: #F9FAFC;
+    background-color: #f0f1f1;
     flex: 1;
     padding: 2rem;
     display: flex;
@@ -142,13 +142,13 @@
     }
 
     .login-card {
-        width: 50%; /* Ajusta el ancho del login para que ocupe la mitad del contenedor */
+        width: 40%; /* Ajusta el ancho del login para que ocupe la mitad del contenedor */
         padding: 1rem;
         box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
     }
 
     .image-container {
-        width: 50%; /* Ajusta el ancho de la imagen para que ocupe la otra mitad del contenedor */
+        width: 60%; /* Ajusta el ancho de la imagen para que ocupe la otra mitad del contenedor */
         height: 100%;
         display: flex;
         justify-content: center;
@@ -160,7 +160,7 @@
     .login-image-cel {
         display: none;
     }
-    
+
     .Ingresar{
         width: 300px;
     }
@@ -230,7 +230,7 @@
     --c-border: rgb(230, 85, 60);
     --c-text: rgb(230, 50, 50);
 }
-    
+
 
 @media (max-width: 480px) {
     .secondary-container {
