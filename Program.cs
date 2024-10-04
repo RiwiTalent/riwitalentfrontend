@@ -39,10 +39,13 @@ builder.Services.AddSweetAlert2();
 builder.Services.AddMudServices();
 builder.Services.AddBlazoredModal();
 
+
 //Security services
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider,CustomAuthStateProvider>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<TermsAndConditionsService>();
+
 
 
 await builder.Build().RunAsync();
