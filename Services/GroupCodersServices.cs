@@ -1,8 +1,8 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
-using riwi.Models;
+using RTFrontend.Models;
 
-namespace riwi.Services;
+namespace RTFrontend.Services;
 
 public class GroupCodersServices
 {
@@ -18,7 +18,7 @@ public class GroupCodersServices
 
     public async Task<CodersInGroup> GetCodersInGroupAsync(string key)
     {
-        var response = await _client.GetFromJsonAsync<CodersInGroup>($"https://backend-riwitalent-9pv2.onrender.com/riwitalent/groupdetails/{key}");
+        var response = await _client.GetFromJsonAsync<CodersInGroup>($"https://backend-RTFrontend.alent-9pv2.onrender.com/RTFrontend.alent/groupdetails/{key}");
         return response;
     }
     
@@ -26,13 +26,13 @@ public class GroupCodersServices
     public async Task AuthenticationExternalAsync(AuthExternalRequest login, string key)
     {
         var loginExternalResponse = await _client.PostAsJsonAsync<AuthExternalRequest>(
-            $"https://backend-riwitalent-9pv2.onrender.com/riwitalent/validationexternal",
+            $"https://backend-RTFrontend.alent-9pv2.onrender.com/RTFrontend.alent/validationexternal",
             login
         );
 
         if (loginExternalResponse.IsSuccessStatusCode)
         {
-            _navigation.NavigateTo($"/HomeExterno/{key}");
+            _navigation.NavigateTo($"/HomeClient/{key}");
         }
         else
         {

@@ -1,9 +1,10 @@
 @page "/GroupDetails/{groupId}"
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Components.Authorization;
-@using riwi.Services;
-@using riwi.Models;
+@using RTFrontend.Services;
+@using RTFrontend.Models;
 @inject GroupService GroupService; 
+
 @attribute [Authorize]
 
 <PageTitle>RiwiTalent: Detalles del Grupo</PageTitle>
@@ -17,7 +18,7 @@
     <Authorized>
         @if (_loading)
         {
-            <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7"></MudProgressLinear>
+            <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-8"></MudProgressLinear>
         }
         else
         {

@@ -1,9 +1,9 @@
 @page "/coders"
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Components.Authorization;
-@using riwi.Models;
-@using riwi.Layout.Components.Dialog
-@using riwi.Services.Implementations
+@using RTFrontend.Models;
+@using RTFrontend.Components.Dialog
+@using RTFrontend.Services.Implementations
 @attribute [Authorize]
 
 @inject ICoderService CoderService
@@ -15,7 +15,7 @@
 @if (!string.IsNullOrEmpty(errorMessage))
 {
     <!-- Muestra alerta si se produce un error -->
-    <MudAlert Severity="Severity.Error">@errorMessage</MudAlert>
+    <MudAlert Severity="Severity.Warning">@errorMessage</MudAlert>
 }
 <AuthorizeView>
     <Authorized>

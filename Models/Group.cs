@@ -1,4 +1,4 @@
-namespace riwi.Models;
+namespace RTFrontend.Models;
 
 public class Group
 {

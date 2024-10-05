@@ -1,11 +1,11 @@
-using CurrieTechnologies.Razor.SweetAlert2;
-
-namespace riwi.Services.Interfaces;
-
-public interface IAlertService
+namespace RTFrontend.Services.Interfaces
 {
-    Task DeleteRegister();
-    Task SaveChangesRegister();
-    Task NewRegister();
-    Task Warning();
+    public interface IAlertService
+    {
+        Task DeleteRegister();
+        Task SaveChangesRegister();
+        Task NewRegister();
+        Task Warning();
+    }
 }
+

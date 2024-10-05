@@ -1,9 +1,9 @@
 using CurrieTechnologies.Razor.SweetAlert2;
-using riwi.Services.Interfaces;
+using RTFrontend.Services.Interfaces;
 
-namespace riwi.Services
+namespace RTFrontend.Services.Implementations
 {
-    public class AlertService :IAlertService
+    public class AlertService : IAlertService
     {
         private readonly SweetAlertService Swal;
         public AlertService(SweetAlertService swal)

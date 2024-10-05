@@ -1,8 +1,11 @@
-namespace riwi.Services.Implementations;
-using riwi.Models;
+using RTFrontend.Models;
 
-public interface ICoderService
+namespace RTFrontend.Services.Interfaces
 {
-    Task<List<Coder>> GetCodersAsync();
-    Task<bool> UpdateCoderAsync(Coder coder);
+    public interface ICoderService
+    {
+        Task<List<Coder>> GetCodersAsync();
+        Task<bool> UpdateCoderAsync(Coder coder);
+    }
 }
+

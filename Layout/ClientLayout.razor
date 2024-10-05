@@ -1,20 +1,13 @@
 @namespace RTFrontend.Layout
 
+@using Blazored.SessionStorage
+@using Microsoft.AspNetCore.Components.Authorization
 @using RTFrontend.Theme
 @inherits LayoutComponentBase
+@inject AuthService AuthService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ISessionStorageService SessionStorageService
 @inject NavigationManager NavigationManager
-
-
-
-@* Required *@
-<MudThemeProvider />
-
-@* Needed for dialogs *@
-<MudDialogProvider />
-
-@* Needed for snackbars *@
-<MudSnackbarProvider />
-
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
 <MudLayout>
@@ -25,10 +18,8 @@
         <MudSpacer/>
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
     </MudAppBar>
-    <MudMainContent Fixed="true">
-        <MudContainer Fixed="true" Style="height: 100vh;" Class="d-flex justify-center align-center pa-0">
-            @Body
-        </MudContainer>
+    <MudMainContent Fixed="true" Style="height: 100vw;">
+        @Body
     </MudMainContent>
 </MudLayout>
 
@@ -62,6 +53,8 @@
         false => @Icons.Material.Outlined.WbSunny,
         true => Icons.Material.Outlined.DarkMode,
     };
+    
+    
 }
 
 <style>

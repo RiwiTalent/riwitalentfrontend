@@ -1,11 +1,8 @@
-using System.Net.Http.Json;
-using Microsoft.JSInterop;
-using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.SessionStorage;
-using riwi.Models;
+using RTFrontend.Models;
 
 
-namespace riwi.Services
+namespace RTFrontend.Services.Interfaces
 {
     public interface IAuthService
     {

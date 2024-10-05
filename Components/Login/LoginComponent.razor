@@ -1,7 +1,7 @@
-@namespace riwi.Layout.Components
-@using riwi.Models;
+@namespace RTFrontend.Components
+@using RTFrontend.Models;
 @using Microsoft.AspNetCore.Components.Authorization;
-@using riwi.Services;
+@using RTFrontend.Services;
 @inject AuthenticationStateProvider autenticacionProvider;
 @inject AuthService AuthService;
 @inject ISessionStorageService SessionStorage
@@ -11,22 +11,12 @@
 @inject SweetAlertService Swal;
 @inject AlertService AlertService;
 
-<head>
-    <link rel="stylesheet" href="css/LoginComponent.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-
-
-
-@*Integracion*@
-
 <div class="main-container">
     <div class="secondary-container">
         <div class="login-card">
             <div class="card-content">
                 <div class="card-content_contentainer-logo text-center mb-3">
-                    <img src="images/riwi.png" alt="Logo Riwi" class="riwi-logo"/>
+                    <img src="images/RTFrontend.png" alt="Logo Riwi" class="RTFrontend.logo"/>
 
                 </div>
                 <h5 class="texto1">Bienvenido de nuevo</h5>

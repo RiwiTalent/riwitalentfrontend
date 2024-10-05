@@ -1,6 +1,8 @@
-@using riwi.Services;
-@using riwi.Models;
-@inject CodersService CodersService;
+@namespace RTFrontend.Components
+
+@using RTFrontend.Services;
+@using RTFrontend.Models;
+@inject CoderService CoderService;
 @inject IModalService model;
 
 <head>
@@ -143,7 +145,7 @@ else
         //Llamado a la api
         try
         {
-            coders = await CodersService.GetCodersAsync();
+            coders = await CoderService.GetCodersAsync();
             totalCoders = coders.Count;
             pag = (int)Math.Ceiling((double)totalCoders / pageSize);
             Console.WriteLine(pag);
@@ -159,7 +161,7 @@ else
     {
         try
         {
-            coders = await CodersService.GetCodersAsync();
+            coders = await CoderService.GetCodersAsync();
         }
         catch (Exception ex)
         {
@@ -176,7 +178,7 @@ else
 
     private async Task FilterCoders()
     {
-        coders = await CodersService.GetCodersAsync();
+        coders = await CoderService.GetCodersAsync();
 
         // Filtrar por nombres o apellidos
         if (!string.IsNullOrEmpty(searchText))
@@ -215,7 +217,7 @@ else
         skills = "";
         languageLevel = "";
 
-        coders = await CodersService.GetCodersAsync();
+        coders = await CoderService.GetCodersAsync();
         totalCoders = coders.Count;
         pag = (int)Math.Ceiling((double)totalCoders / pageSize);
 

@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 
-namespace riwi.Services
+namespace RTFrontend.Services.Interfaces
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
@@ -13,7 +13,7 @@ namespace riwi.Services
             _jsRuntime = jsRuntime;
         }
 
-        public async Task ActualizarEstadoAutenticacion(string token)
+        public void ActualizarEstadoAutenticacion(string token)
         {
             // Aquí codificamos el token y especificamos que esperamos que el token es vacio
             var authenticatedUser = !string.IsNullOrEmpty(token)
@@ -22,21 +22,21 @@ namespace riwi.Services
 
             // Actualiza el estado de autenticación
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(authenticatedUser)));
+        }
+
+        // Obtiene el token desde la cookie llamando las funciones de js y puede verificarse si es autorizado o no
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        {
+            var token = await _jsRuntime.InvokeAsync<string>("getCookie", "authToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
 
-            // Obtiene el token desde la cookie llamando las funciones de js y puede verificarse si es autorizado o no
-            public override async Task<AuthenticationState> GetAuthenticationStateAsync()
-            {
-                var token = await _jsRuntime.InvokeAsync<string>("getCookie", "authToken");
-                if (string.IsNullOrEmpty(token))
-                {
-                    return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-                }
-
-                var identity = new System.Security.Claims.ClaimsIdentity();
-                var user = new System.Security.Claims.ClaimsPrincipal(identity);
-                
-                return new AuthenticationState(user);
+            var identity = new System.Security.Claims.ClaimsIdentity();
+            var user = new System.Security.Claims.ClaimsPrincipal(identity);
+            
+            return new AuthenticationState(user);
         }
 
         // Asignando parametros de la autenticacion de el usuario

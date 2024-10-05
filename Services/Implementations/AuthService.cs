@@ -1,16 +1,14 @@
 using System.Net.Http.Json;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.JSInterop;
-using riwi.Models;
+using RTFrontend.Models;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components;
+using RTFrontend.Services.Interfaces;
 
 
-namespace riwi.Services
+namespace RTFrontend.Services.Implementations
 {
     public class AuthService : IAuthService
     {
@@ -45,7 +43,7 @@ namespace riwi.Services
                 var token = await response.Content.ReadAsStringAsync();
                 await SaveTokenInCookies(token);
                 var authenticationExt = (CustomAuthStateProvider)_authenticationStateProvider;
-                await authenticationExt.ActualizarEstadoAutenticacion(token);
+                authenticationExt.ActualizarEstadoAutenticacion(token);
 
                 return true;
             }
@@ -102,7 +100,7 @@ namespace riwi.Services
 
             if (loginExternalResponse.IsSuccessStatusCode)
             {
-                _navigation.NavigateTo($"/HomeExterno/{key}");
+                _navigation.NavigateTo($"/HomeClient/{key}");
             }
             else
             {

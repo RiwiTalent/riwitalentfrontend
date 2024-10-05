@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
-namespace riwi.Services
+namespace RTFrontend.Services
 {
     public class TokenHandler : DelegatingHandler
     {

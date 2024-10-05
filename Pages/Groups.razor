@@ -1,14 +1,13 @@
 @page "/groups"
-@attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Components.Authorization;
-@using riwi.Models;
-@using riwi.Layout.Components.Avatar;
-@using riwi.Layout.Components.Dialog
-@using riwi.Services.Implementations
-
+@using RTFrontend.Models;
+@using RTFrontend.Components.Avatar;
+@using RTFrontend.Components.Dialog
 @inject IDialogService DialogService
 @inject IGroupService GroupServices
+
+@attribute [Authorize]
 
 
 <PageTitle>RiwiTalent: Gestiona y Comparte Grupos de Desarrolladores</PageTitle>

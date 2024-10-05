@@ -1,14 +1,18 @@
-@namespace riwi.Layout.Components
+@using CurrieTechnologies.Razor.SweetAlert2
 @using Microsoft.AspNetCore.Components.Authorization;
-@using riwi.Services;
+@using RTFrontend.Services;
 @inject AuthenticationStateProvider autenticacionProvider;
 @inject AuthService AuthService;
 @inject ISessionStorageService SessionStorage
 @using Blazored.SessionStorage
+@using RTFrontend.Services.Implementations
 @inject NavigationManager NavigationManager;
 @inject HttpClient HttpClient;
 @inject SweetAlertService Swal;
 @inject AlertService AlertService;
+@namespace RTFrontend.Components
+
+
 
 
 @*Integracion*@
@@ -19,7 +23,7 @@
                 <MudCard Class="pa-6 d-flex justify-center align-center rounded-lg">
                     <MudCardHeader>
                         <MudItem xs="12" Class="d-flex justify-center align-center">
-                            <MudImage Src="images/riwi.png" ObjectFit="ObjectFit.ScaleDown" Height="50" Alt="Logo Riwi"></MudImage>
+                            <MudImage Src="images/RTFrontend.png" ObjectFit="ObjectFit.ScaleDown" Height="50" Alt="Logo Riwi"></MudImage>
                         </MudItem>
                     </MudCardHeader>
                     <MudItem>

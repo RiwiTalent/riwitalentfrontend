@@ -1,16 +1,8 @@
-﻿@inherits LayoutComponentBase
-@using Microsoft.AspNetCore.Components.Authorization
-@using riwi.Services
-@using riwi.Theme
+﻿@namespace RTFrontend.Layout
 
-@using Blazored.SessionStorage;
-@inject AuthService AuthService
-@inject AuthenticationStateProvider autenticacionProvider
-@inject ISessionStorageService SessionStorage
-
-@inject NavigationManager navManager
-@inject NavigationManager NavigationManager
-@using riwi.Layout.Components.Avatar
+@inherits LayoutComponentBase
+@using RTFrontend.Theme
+@using RTFrontend.Components.Avatar
 
 @* Required *@
 <MudThemeProvider />
@@ -27,8 +19,8 @@
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
-        <NavLink class="nav-link riwi-image-content" href="/home" Match="NavLinkMatch.All">
-            <img class="riwi-image" src="images/riwi.png"/>
+        <NavLink class="nav-link RTFrontend.image-content" href="/home" Match="NavLinkMatch.All">
+            <MudImage Src="images/RTFrontend.png"></MudImage>
         </NavLink>
         <MudSpacer/>
 
@@ -86,8 +78,8 @@
 }
 
 <style>
-    .riwi-image {
+    .RTFrontend.image {
         width: 103px;
         height: 30px;
     }
-</style>
+</style> 
