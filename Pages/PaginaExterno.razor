@@ -31,7 +31,7 @@
 </MudForm>
 
 @code {
-    [Parameter] public Group? Group { get; set; } // Asegúrate de que sea nullable
+    [Parameter] public Group? Group { get; set; }
     [Parameter] public required string AssociateEmail { get; set; }
     [Parameter]
     public string? groupId { get; set; }
@@ -58,11 +58,14 @@
             Console.WriteLine("login successful!");
             // Mostrar modal y manejar autenticación
             var parameters = new ModalParameters();
+            parameters.Add("GroupId", groupId); // Pasar el ID del grupo
+            parameters.Add("AcceptedEmail", Group?.AssociateEmail ?? string.Empty); // Pasar el correo del asociado
+            parameters.Add("CreatorEmail", Group?.CreatedBy ?? string.Empty); // Pasar el correo del creador
             var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
             await modal.Result;
 
             // Redirigir o cargar otros datos
-            await LoadCodersAsync();
+            await OnInitializedAsync();
         }
         else
         {
@@ -73,21 +76,29 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Llamar a LoadCodersAsync cuando la página se inicialice
-        await LoadCodersAsync();
+        // Asegúrate de que estás obteniendo el groupId correctamente.
+        if (!string.IsNullOrEmpty(groupId))
+        {
+            await LoadGroupDetails(groupId);
+        }
+        else
+        {
+            Console.WriteLine("GroupId is null or empty.");
+        }
     }
 
-   private async Task LoadCodersAsync()
+    private async Task LoadGroupDetails(string groupId)
     {
         try
         {
-            Group = await _groupCodersServices.GetGroupInfoById(groupId);
+            var groupResponse = await _groupCodersServices.GetGroupInfoById(groupId);
 
-            if (Group != null)
+            if (groupResponse != null)
             {
-                Console.WriteLine($"ID: {Group?.Id}");
-                Console.WriteLine($"AssociateEmail: {Group?.AssociateEmail}");
-                Console.WriteLine($"CreatedBy: {Group?.CreatedBy}");
+                Group = groupResponse;
+                Console.WriteLine($"ID: {Group.Id}");
+                Console.WriteLine($"AssociateEmail: {Group.AssociateEmail}");
+                Console.WriteLine($"CreatedBy: {Group.CreatedBy}");
             }
             else
             {
@@ -99,5 +110,6 @@
             Console.WriteLine($"Error al obtener la información del grupo: {ex.Message}");
         }
     }
+
 
 }

@@ -46,10 +46,20 @@
 
         public async Task<Group> GetGroupInfoById(string groupId)
         {
-            // var response = await _httpClient.GetFromJsonAsync<Group>($"https://backend-riwitalent-9pv2.onrender.com/group-details/{groupId}");
             var response = await _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/group-details/{groupId}");
+
+            if (response != null)
+            {
+                Console.WriteLine("Details successfully fetched");
+            }
+            else
+            {
+                Console.WriteLine("Error fetching details");
+            }
+
             return response;
         }
+
 
 
 

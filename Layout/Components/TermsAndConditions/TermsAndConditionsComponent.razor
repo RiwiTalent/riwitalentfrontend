@@ -32,10 +32,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine($"Group recibido en el modal: {group?.Name ?? "null"}, GroupId: {GroupId}");
         group = await _groupCodersServices.GetGroupInfoById(GroupId);
+        Console.WriteLine($"Group recibido en el modal: {group?.Id ?? "null"}");
 
-        Console.WriteLine($"Group AssociateEmail: {group?.AssociateEmail}, CreatedBy: {group?.CreatedBy}");
+        Console.WriteLine($"AssociateEmail: {group?.AssociateEmail}, CreatedBy: {group?.CreatedBy}");
     }
 
     private async Task Aceptar()

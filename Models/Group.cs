@@ -9,5 +9,4 @@ public class Group
     public DateTime Created_At { get; set; }
     public string? CreatedBy { get; set; }
     public string? AssociateEmail { get; set; }
-    
 }
