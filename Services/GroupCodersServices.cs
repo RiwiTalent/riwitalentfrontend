@@ -23,12 +23,13 @@
         }
         
 
-        public async Task<bool> AuthenticationExternalAsync(AuthExternalRequest login, string key)
+        public async Task<bool> AuthenticationExternalAsync(AuthExternalRequest login)
         {
-            var loginExternalResponse = await _httpClient.PostAsJsonAsync<AuthExternalRequest>(
-                $"http://localhost:5113/validation-external",
-                login
-            );
+            var loginExternalResponse = await _httpClient.PostAsJsonAsync<AuthExternalRequest>
+                ($"http://localhost:5113/validation-external?Id={login.GroupId}&AssociateEmail={login.AssociateEmail}&Key={login.Key}",
+                login);
+
+
 
             if (loginExternalResponse.IsSuccessStatusCode)
             {

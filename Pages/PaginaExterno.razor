@@ -1,4 +1,4 @@
-@page "/{Name}/{Key}"
+@page "/{groupId}"
 @inject GroupCodersServices _groupCodersServices
 @using riwi.Models;
 @inject IModalService ModalService
@@ -11,7 +11,7 @@
         <label for="Password" class="input-icon-container">
             <img src="images/mail-filled.svg" alt="Icono de correo electronico" class="input-icon" />
         </label>
-        <input disabled="disabled" type="text" @bind="@Name" name="Email" id="text" class="input-field">
+        <input type="email" @bind="@AssociateEmail" name="Email" id="text" class="input-field">
     </p>
     <br>
     <p class="input-container form-group Login_contenedor_input">
@@ -19,7 +19,7 @@
         <label for="Password" class="input-icon-container">
             <img src="images/lock.svg" alt="Icono de contraseña" class="input-icon" />
         </label>
-        <input type="password" placeholder="Ingresa tu contraseña" @bind="@Login.Key" name="Password" id="Password" class="input-field" autocomplete="Password">
+        <input type="password" placeholder="Ingresa tu contraseña" @bind="@Key" name="Password" id="Password" class="input-field" autocomplete="Password">
         <label for="Password" class="eye-icon-container end-icon">
             <img src="images/eye-off.svg" alt="Icono para ocultar/mostrar contraseña" class="eye-icon" />
         </label>
@@ -32,39 +32,44 @@
 
 @code {
     [Parameter] public Group? Group { get; set; } // Asegúrate de que sea nullable
+    [Parameter] public required string AssociateEmail { get; set; }
+    [Parameter]
+    public string? groupId { get; set; }
     [Parameter] public required string Name { get; set; }
     [Parameter] public required string Key { get; set; }
     
-    public AuthExternalRequest Login { get; set; } = new();
+    public AuthExternalRequest login { get; set; } = new();
 
     private async Task IniciarSesion()
     {
-        Login.Name = Name; // Vincular el nombre al objeto de inicio de sesión
+        var login = new AuthExternalRequest
+        {
+            GroupId = groupId,
+            AssociateEmail = AssociateEmail,
+            Key = Key
+        };
 
-        // Autenticación externa
-        var authResult = await _groupCodersServices.AuthenticationExternalAsync(login: Login, key: Key);
-        await LoadCodersAsync();
-        // Mostrar el modal de términos y condiciones
-        var parameters = new ModalParameters();
-        parameters.Add("GroupId", Key); // Pasas el ID del grupo
-        parameters.Add("AcceptedEmail", Group?.AssociateEmail ?? string.Empty); // Pasas el correo del asociado
-        parameters.Add("CreatorEmail", Group?.CreatedBy ?? string.Empty); // Pasas el correo del creador
-
-
-
-        Console.WriteLine("Intentando mostrar el modal...");
-        var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
-        await modal.Result;
+        var authResult = await _groupCodersServices.AuthenticationExternalAsync(login);
+        Console.WriteLine(authResult);
+        Console.WriteLine($"Sending: GroupId={login.GroupId}, Email={login.AssociateEmail}, Key={login.Key}");
 
         if (authResult)
         {
-            // Aquí puedes manejar el flujo si la autenticación es exitosa
+            Console.WriteLine("login successful!");
+            // Mostrar modal y manejar autenticación
+            var parameters = new ModalParameters();
+            var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
+            await modal.Result;
+
+            // Redirigir o cargar otros datos
+            await LoadCodersAsync();
         }
         else
         {
             Console.WriteLine("Error en la autenticación.");
         }
     }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,7 +81,7 @@
     {
         try
         {
-            Group = await _groupCodersServices.GetGroupInfoById(Key);
+            Group = await _groupCodersServices.GetGroupInfoById(groupId);
 
             if (Group != null)
             {

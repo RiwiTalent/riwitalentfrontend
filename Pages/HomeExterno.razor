@@ -1,5 +1,5 @@
 @inject HttpClient _client
-@page "/HomeExterno/{Key}"
+@page "/HomeExterno/{groupId}"
 @using riwi.Models;
 @using riwi.Layout.Components.BannerCoders;
 @using riwi.Layout.Components.GroupCoder;
@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="css/CardComponent.css">
 </head>
 
-<!-- <GroupCodersComponent Key="@Key"></GroupCodersComponent>
-<GroupCodersComponent Key="@Key"></GroupCodersComponent> -->
+<!-- <GroupCodersComponent groupId="@groupId"></GroupCodersComponent>
+<GroupCodersComponent groupId="@groupId"></GroupCodersComponent> -->
 <MudMainContent />
 <BannerCodersComponent />
 <CardComponent />
 
 @code {
     [Parameter]
-    public string? Key { get; set; }
+    public string? groupId { get; set; }
 }

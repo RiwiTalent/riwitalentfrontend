@@ -18,7 +18,7 @@ namespace riwi.Services
         // Método para aceptar los términos y crear el registro en la base de datos
         public async Task<bool> AcceptTermsAsync(TermAndCondition newTerms)
         {
-            var response = await _client.PostAsJsonAsync($"http://localhost:5113/terms?IsActive={newTerms.IsActive}&Accepted={newTerms.Accepted}&Version=1&GroupId={newTerms.GroupId}&AcceptedEmail={newTerms.AcceptedEmail}&CreatorEmail={newTerms.CreatorEmail}", newTerms);
+            var response = await _client.PostAsJsonAsync($"http://localhost:5113/terms?10IsActive={newTerms.IsActive}&Accepted={newTerms.Accepted}&Version=1&GroupId={newTerms.GroupId}&AcceptedEmail={newTerms.AcceptedEmail}&CreatorEmail={newTerms.CreatorEmail}", newTerms);
 
             if (response.IsSuccessStatusCode)
             {
