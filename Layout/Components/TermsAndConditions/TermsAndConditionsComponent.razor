@@ -1,9 +1,9 @@
 @inject IModalService ModalService
 @using Blazored.Modal.Services
-@using Microsoft.AspNetCore.Components
 @inject GroupCodersServices _groupCodersServices
 @inject TermsAndConditionsService _termsAndConditionsService
 @inject NavigationManager NavigationManager
+@inject AlertServices _alertServices
 @using riwi.Models;
 @using riwi.Services;
 
@@ -20,22 +20,16 @@
 
 @code {
     [Parameter]
-    public string GroupId { get; set; }
-
-    [Parameter]
-    public string AcceptedEmail { get; set; }  // Agregar esta propiedad
-
-    [Parameter]
-    public string CreatorEmail { get; set; }  // Agregar esta propiedad
-
-    private Group? group;  // Variable para almacenar los detalles del grupo
+    public string? groupId { get; set; }
+    [Parameter] public string GroupId { get; set; }
+    [Parameter] public string AcceptedEmail { get; set; }
+    [Parameter] public string CreatorEmail { get; set; }
+    private Group? group;
 
     protected override async Task OnInitializedAsync()
     {
         group = await _groupCodersServices.GetGroupInfoById(GroupId);
         Console.WriteLine($"Group recibido en el modal: {group?.Id ?? "null"}");
-
-        Console.WriteLine($"AssociateEmail: {group?.AssociateEmail}, CreatedBy: {group?.CreatedBy}");
     }
 
     private async Task Aceptar()
@@ -46,31 +40,53 @@
             return;
         }
 
+        // Mostrar alerta de confirmación antes de guardar
+        await _alertServices.SaveChangesRegister(); // Se debe eliminar la asignación a result
+
+        // Crear el nuevo registro de términos
         var newTerms = new TermAndCondition
         {
             IsActive = true,
             Accepted = true,
             GroupId = group.Id,
-            AcceptedEmail = AcceptedEmail,  // Usar la propiedad correcta
-            CreatorEmail = CreatorEmail  // Usar la propiedad correcta
+            AcceptedEmail = AcceptedEmail,
+            CreatorEmail = CreatorEmail
         };
 
-        Console.WriteLine($"AcceptedEmail: {newTerms.AcceptedEmail}, CreatorEmail: {newTerms.CreatorEmail}");
-
         bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
-
         if (success)
         {
             NavigationManager.NavigateTo($"/HomeExterno/{GroupId}");
         }
         else
         {
-            Console.WriteLine("No se pudo aceptar los términos y condiciones.");
+            await _alertServices.Warning();
         }
     }
 
-    private void Cancelar()
+    private async Task Cancelar()
     {
-        Console.WriteLine("Cerrado Modal");
+        // Mostrar alerta de confirmación antes de eliminar
+        await _alertServices.DeleteRegister(); // Se debe eliminar la asignación a result
+
+        // Crear el nuevo registro de términos con Accepted = false
+        var newTerms = new TermAndCondition
+        {
+            IsActive = true,
+            Accepted = false,
+            GroupId = group.Id,
+            AcceptedEmail = AcceptedEmail,
+            CreatorEmail = CreatorEmail
+        };
+
+        bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
+        if (success)
+        {
+            @* NavigationManager.NavigateTo("/{groupId}"); // Redirigir a la página deseada *@
+        }
+        else
+        {
+            await _alertServices.Warning();
+        }
     }
 }
