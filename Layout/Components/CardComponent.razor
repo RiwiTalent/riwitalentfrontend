@@ -101,7 +101,14 @@
                                 <div class="cards__badges">
                                     @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
                                     {
-                                        <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
+                                        var skill = coder.Skills[i].Language_Programming;
+                                        var badgeColor = GetColor(skill);
+                                        var badgeIcon = GetIcon(skill);
+
+                                        <MudChip T="string" Style=@($"background-color: {badgeColor}; color: white; margin-right: 5px")>
+                                            <MudIcon Icon="@badgeIcon"/>@skill
+                                        </MudChip>
+                                        @* <div class="cards__badge">@coder.Skills[i].Language_Programming</div> *@
                                     }
                                 </div>
                             }
@@ -211,6 +218,9 @@ else
     private string? skills;
     private string? languageLevel;
     private bool FilterApplied = false;
+
+    //Badges
+    private List<Badge> badges = new List<Badge>();
     
 
     protected override async Task OnInitializedAsync()
@@ -223,11 +233,89 @@ else
             pag = (int)Math.Ceiling((double)totalCoders / pageSize);
             Console.WriteLine(pag);
             LoadCoders(currentPage);
+
+            foreach (var skill in coders)
+            {
+                for(int i = 0; i < skill.Skills.Count; i++)
+                {
+
+                    badges.Add(new Badge{
+                        Technology = skill.Skills[i].Language_Programming,
+                        Color = GetColor(skill.ToString()),
+                        Icon = GetIcon(skill.ToString())
+                    });
+                }
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error al obtener coders: {ex.Message}");
         }
+    }
+
+    private string GetColor(string skill)
+    {
+        return skill switch
+        {
+            //Technologies
+            "CSharp" => Colors.Purple.Default,
+            ".Net" => Colors.Purple.Darken3,
+            "Html" => Colors.Red.Default,
+            "Css" => Colors.Blue.Lighten2,
+            "Bootstrap" => Colors.Indigo.Darken2,
+            "JavaScript" => Colors.Yellow.Accent2,
+            "TypeScript" => Colors.Blue.Default,
+            "Node.js" => Colors.Green.Darken2,
+            "React" => Colors.Blue.Lighten2,
+            "Python" => Colors.Blue.Accent3,
+            "PHP" => Colors.Purple.Default,
+            "Java" => Colors.Brown.Default,
+            "Vue.js" => Colors.Green.Lighten1,
+            "Azure" => Colors.Blue.Default,
+            "Ruby" => Colors.Red.Darken1,
+            
+
+            //Databases
+            "MySQL" => Colors.Cyan.Darken3,
+            "SQL" => Colors.Cyan.Darken3,
+            "PostgresSQL" => Colors.Blue.Darken2,
+            "MongoDb" => Colors.Green.Accent4,
+            _ => Colors.Gray.Default,
+        };
+    }
+    private string GetIcon(string skill)
+    {
+        return skill switch
+        {
+            "Terraform" => "devicon-terraform-plain",
+            "Docker" => "devicon-docker-plain",
+            "Astro" => "devicon-astro-plain",
+            "CSharp" => "devicon-csharp-plain",
+            "React" => "devicon-react-original",
+            "Flutter" => "devicon-flutter-plain",
+            "Dart" => "devicon-dart-plain",
+            "Kotlin" => "devicon-kotlin-plain",
+            "Figma" => "devicon-figma-plain",
+            "TypeScript" => "devicon-typescript-plain",
+            "Ruby" => "devicon-ruby-plain",
+            "Java" => "devicon-java-plain",
+            "SpringBoot" => "devicon-spring-original",
+            "Kubernetes" => "devicon-kubernetes-plain",
+            ".Net" => "devicon-dotnetcore-plain",
+            "JavaScript" => "devicon-javascript-plain",
+            "PHP" => "devicon-php-plain",
+            "CSS" => "devicon-css-plain",
+            "Angular" => "devicon-angular-plain",
+            "TailwindCSS" => "devicon-tailwindcss-original",
+            "HTML" => "devicon-html5-plain",
+            "Python" => "devicon-python-plain",
+            "Azure" => "devicon-azure-plain",
+            "SQL" => "devicon-azuresqldatabase-plain",
+            "MySQL" => "devicon-mysql-original",
+            "MongoDb" => "devicon-mongodb-plain",
+            "PostgresSQL" => "devicon-postgresql-plain",
+            _ => Icons.Material.Rounded.Language
+        };
     }
 
     private async Task LoadCodersAsync()
