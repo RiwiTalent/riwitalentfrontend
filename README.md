@@ -6,7 +6,7 @@
 
 Riwi Talent es una plataforma virtual diseñada para la gestión de talentos tecnológicos conectandolos con empresas interesadas en conseguir talento, especialmente desarrolladores FrontEnd y BackEnd orientada a potenciar las habilidades técnicas, humanas e idiomáticas de nuestros coders.
 
-El proyecto de RTFrontend Talent esta orquestado bajo la arquitectura de servicios en donde esta separada la capa del negocio, la base de datos y el apartado del FrontEnd. En la parte del frontend se utiliza mudblazor para hacer interfaces minimalistas y esteticas utilizando syntaxis blazor y diseños del material design conectando todo ello a través de C# como la lógica por detras y haciendo de este el ecosistema primario.
+El proyecto de riwitalentfrontend Talent esta orquestado bajo la arquitectura de servicios en donde esta separada la capa del negocio, la base de datos y el apartado del FrontEnd. En la parte del frontend se utiliza mudblazor para hacer interfaces minimalistas y esteticas utilizando syntaxis blazor y diseños del material design conectando todo ello a través de C# como la lógica por detras y haciendo de este el ecosistema primario.
 
 > 💡 Para poder iniciar el proyecto es necesario tener instalado el [.NET Runtine](https://dotnet.microsoft.com/es-es/download)
 

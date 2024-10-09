@@ -1,7 +1,7 @@
 using System.Net.Http.Headers;
 using Microsoft.JSInterop;
 
-namespace RTFrontend.Services
+namespace riwitalentfrontend.Services
 {
     public class TokenHandler : DelegatingHandler
     {

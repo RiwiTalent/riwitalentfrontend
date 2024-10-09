@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace RTFrontend.Models
+namespace riwitalentfrontend.Models
 {
     public class User
     {

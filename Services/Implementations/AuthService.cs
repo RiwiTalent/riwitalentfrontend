@@ -1,14 +1,14 @@
 using System.Net.Http.Json;
 using Microsoft.JSInterop;
-using RTFrontend.Models;
+using riwitalentfrontend.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Text.Json;
 using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components;
-using RTFrontend.Services.Interfaces;
+using riwitalentfrontend.Services.Interfaces;
 
 
-namespace RTFrontend.Services.Implementations
+namespace riwitalentfrontend.Services.Implementations
 {
     public class AuthService : IAuthService
     {

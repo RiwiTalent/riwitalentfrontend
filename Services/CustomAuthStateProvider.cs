@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 
-namespace RTFrontend.Services.Interfaces
+namespace riwitalentfrontend.Services.Interfaces
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {

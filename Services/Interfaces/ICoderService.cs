@@ -1,6 +1,6 @@
-using RTFrontend.Models;
+using riwitalentfrontend.Models;
 
-namespace RTFrontend.Services.Interfaces
+namespace riwitalentfrontend.Services.Interfaces
 {
     public interface ICoderService
     {

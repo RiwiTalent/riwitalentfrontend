@@ -1,8 +1,7 @@
-﻿@namespace RTFrontend.Layout
+﻿@namespace riwitalentfrontend.Layout
 
 @inherits LayoutComponentBase
-@using RTFrontend.Theme
-@using RTFrontend.Components.Avatar
+@using riwitalentfrontend.Theme
 
 @* Required *@
 <MudThemeProvider />
@@ -18,16 +17,12 @@
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
 <MudLayout>
     <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
-        <NavLink class="nav-link RTFrontend.image-content" href="/home" Match="NavLinkMatch.All">
-            <MudImage Src="images/RTFrontend.png"></MudImage>
+        <MudIconButton Icon="@Icons.Material.Rounded.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle"/>
+        <NavLink class="nav-link riwitalentfrontend.image-content" href="/home" Match="NavLinkMatch.All">
+            <MudImage ObjectFit="ObjectFit.Contain" Fluid="true" Src="images/LogoRiwiLight.png"></MudImage>
         </NavLink>
         <MudSpacer/>
-
-
         <AvatarComponent TypeAvatar="Usuario" KeySesionStorage="userEmail"></AvatarComponent>
-
-
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="1">
@@ -78,7 +73,7 @@
 }
 
 <style>
-    .RTFrontend.image {
+    .riwitalentfrontend.image {
         width: 103px;
         height: 30px;
     }

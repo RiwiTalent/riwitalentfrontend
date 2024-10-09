@@ -1,4 +1,4 @@
-    namespace RTFrontend.Theme;
+    namespace riwitalentfrontend.Theme;
 
     public static class RiwiPalette
         {

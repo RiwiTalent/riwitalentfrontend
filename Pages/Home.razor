@@ -1,10 +1,7 @@
 @page "/home"
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.Authorization;
-@using RTFrontend.Components.BannerCoders
-
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@layout MainLayout
 
 <PageTitle>RiwiTalent: Conecta Empresas con los Mejores Coders</PageTitle>
 

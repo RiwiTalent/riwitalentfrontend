@@ -1,6 +1,6 @@
-@namespace RTFrontend.Layout
+@namespace riwitalentfrontend.Layout
 
-@using RTFrontend.Theme
+@using riwitalentfrontend.Theme
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 
@@ -18,9 +18,9 @@
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
 <MudLayout>
-    <MudAppBar>
-        <NavLink class="nav-link RTFrontend.image-content" href="/login-client" Match="NavLinkMatch.All">
-            <img class="RTFrontend.image" src="images/RTFrontend.png"/>
+    <MudAppBar Fixed="false" Elevation="1" Class="rounded-b-xl">
+        <NavLink Icon="@Icons.Material.Rounded.Menu" Match="NavLinkMatch.All">
+            <MudImage ObjectFit="ObjectFit.ScaleDown" Width="100" Fluid="true" Src="@(DarkLightModeImgLogo)"></MudImage>
         </NavLink>
         <MudSpacer/>
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
@@ -56,17 +56,15 @@
         _isDarkMode = !_isDarkMode;
     }
 
-    
-    public string DarkLightModeButtonIcon => _isDarkMode switch
+    private string DarkLightModeButtonIcon => _isDarkMode switch
     {
         false => @Icons.Material.Outlined.WbSunny,
         true => Icons.Material.Outlined.DarkMode,
     };
-}
 
-<style>
-    .RTFrontend.image {
-        width: 103px;
-        height: 30px;
-    }
-</style>
+    private string DarkLightModeImgLogo => _isDarkMode switch
+    {
+        false => "/images/IsologoRiwiLight.png",
+        true => "/images/IsologoRiwiDark.png",
+    };
+}

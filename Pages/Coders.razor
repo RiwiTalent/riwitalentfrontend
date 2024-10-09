@@ -1,14 +1,7 @@
 @page "/coders"
-@using Microsoft.AspNetCore.Authorization;
-@using Microsoft.AspNetCore.Components.Authorization;
-@using RTFrontend.Models;
-@using RTFrontend.Components.Dialog
-@using RTFrontend.Services.Implementations
 @attribute [Authorize]
-
 @inject ICoderService CoderService
 @inject IDialogService DialogService
-
 
 <PageTitle>RiwiTalent: Explora el Mejor Talento de Desarrolladores</PageTitle>
 

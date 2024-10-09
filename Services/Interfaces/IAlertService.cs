@@ -1,4 +1,4 @@
-namespace RTFrontend.Services.Interfaces
+namespace riwitalentfrontend.Services.Interfaces
 {
     public interface IAlertService
     {

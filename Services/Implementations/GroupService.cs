@@ -1,9 +1,9 @@
 using System.Net.Http.Json;
-using RTFrontend.Models;
-using RTFrontend.Models.DTOs;
-using RTFrontend.Services.Interfaces;
+using riwitalentfrontend.Models;
+using riwitalentfrontend.Models.DTOs;
+using riwitalentfrontend.Services.Interfaces;
 
-namespace RTFrontend.Services.Implementations
+namespace riwitalentfrontend.Services.Implementations
 {
     // Servicio para interactuar con la API de grupos
     public class GroupService  : IGroupService

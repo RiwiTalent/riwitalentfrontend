@@ -1,8 +1,8 @@
-@namespace RTFrontend.Layout
+@namespace riwitalentfrontend.Layout
 
 @using Blazored.SessionStorage
 @using Microsoft.AspNetCore.Components.Authorization
-@using RTFrontend.Theme
+@using riwitalentfrontend.Theme
 @inherits LayoutComponentBase
 @inject AuthService AuthService
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -12,8 +12,8 @@
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
 <MudLayout>
     <MudAppBar>
-        <NavLink class="nav-link RTFrontend.image-content" href="/login-client" Match="NavLinkMatch.All">
-            <img class="RTFrontend.image" src="images/RTFrontend.png"/>
+        <NavLink class="nav-link riwitalentfrontend.image-content" href="/login-client" Match="NavLinkMatch.All">
+            <img class="riwitalentfrontend.image" src="images/riwitalentfrontend.png"/>
         </NavLink>
         <MudSpacer/>
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
@@ -58,7 +58,7 @@
 }
 
 <style>
-    .RTFrontend.image {
+    .riwitalentfrontend.image {
         width: 103px;
         height: 30px;
     }

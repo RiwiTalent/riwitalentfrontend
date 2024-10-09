@@ -1,7 +1,7 @@
-using RTFrontend.Models;
-using RTFrontend.Models.DTOs;
+using riwitalentfrontend.Models;
+using riwitalentfrontend.Models.DTOs;
 
-namespace RTFrontend.Services.Interfaces
+namespace riwitalentfrontend.Services.Interfaces
 {
         public interface IGroupService
         {

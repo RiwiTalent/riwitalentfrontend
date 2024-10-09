@@ -1,4 +1,4 @@
-namespace RTFrontend.Models.DTOs;
+namespace riwitalentfrontend.Models.DTOs;
 
 public class GroupAddDto
 {

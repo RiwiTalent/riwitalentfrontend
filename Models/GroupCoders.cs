@@ -1,4 +1,4 @@
-namespace RTFrontend.Models;
+namespace riwitalentfrontend.Models;
 
 public class GroupCoders
 {

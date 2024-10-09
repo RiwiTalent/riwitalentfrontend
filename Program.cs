@@ -11,9 +11,9 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Blazored.SessionStorage;
 
 // Espacios de nombres de la aplicación
-using RTFrontend;
-using RTFrontend.Services.Implementations;
-using RTFrontend.Services.Interfaces;
+using riwitalentfrontend;
+using riwitalentfrontend.Services.Implementations;
+using riwitalentfrontend.Services.Interfaces;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

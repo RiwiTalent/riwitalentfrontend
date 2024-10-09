@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RTFrontend.Models;
+using riwitalentfrontend.Models;
 
-namespace RTFrontend.Models
+namespace riwitalentfrontend.Models
 {
     public class Coder
     {
