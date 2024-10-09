@@ -63,6 +63,40 @@
     </MudPaper>
 </MudPaper>
 
+@*Aqui se muestran los coders seleccionados*@
+<MudPaper Height="200px" Style="overflow:hidden; position:relative;">
+    <MudDrawerContainer>
+        <MudDrawer @bind-Open="@_open" Anchor="Anchor.End" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+            <MudNavMenu>
+                    <MudChipSet T="string" AllClosable OnClose="RemoveCoderFromGroup">
+                        @foreach (var selectedCoder in selectedCoders)
+                        {
+                            
+                            <MudChip Text="@($"{selectedCoder.FirstName} {selectedCoder.FirstLastName}")">
+                            <AvatarContent>
+                                <MudAvatar>
+                                    <MudImage Src="@selectedCoder.Photo"></MudImage>
+                                </MudAvatar>
+                            </AvatarContent>
+                            </MudChip> 
+                        }
+                    </MudChipSet>
+
+                    <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
+                        <MudTextField @bind-Value="groupId" Placeholder="ingresa aqui el id del grupo" />
+                    </MudPaper>
+
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCodersToGroupAsync">
+                        agregar coders
+                    </MudButton>
+                    
+            </MudNavMenu>
+        </MudDrawer>
+        <div class="d-flex justify-center align-center mud-height-full">
+            <MudButton OnClick="@ToggleDrawer" Color="Color.Primary">Toggle</MudButton>
+        </div>
+    </MudDrawerContainer>
+</MudPaper>
 
 
 
@@ -88,12 +122,19 @@
                 }
                 <MudCardContent>
                         <div class="cards__container">
+
+                        <MudContainer Class="d-flex justify-end flex-grow-1">
+                                <MudChipSet T="string" @bind-SelectedChips="selectedCoders" SelectionMode="SelectionMode.MultiSelection" CheckMark>
+                                    <MudChip Class="border-solid border-2 mud-b mud-border-white" Icon="@Icons.Material.Rounded.PersonAddAlt1" Variant="Variant.Text" Color="Color.Secondary"  @onclick="() => AddCoderToGroup(coder)">
+                                    </MudChip>
+                                </MudChipSet>
+                            </MudContainer>
                             <div class="cards__profile">
                                 <div class="cards__coder">
                                     <h6 class="">@coder.FirstName @coder.FirstLastName</h6>
                                     <p>@coder.Stack</p>
                                 </div>
-                                    <a><img src="images/group-add.svg" alt="icon"></a>
+                                    @* <a><img src="images/group-add.svg" alt="icon"></a> *@
                             </div>
                             @*badges*@
                             @if(coder.Skills != null)
@@ -138,64 +179,9 @@ else
 
 }
 
-@if (coders != null)
-{
-<div class="cardsCell">
-    <MudCarousel TData="Coder" Class="mud-carousel" AutoCycle="false" CycleInterval="0" VisibleItems="2" Style="width: 100% ; display: flex; justify-content: center;">
-        @foreach (var coder in paginatedCoders)
-        {
-        <MudCarouselItem>
-            <MudCard>
-                @if (coder.Photo != null)
-                {
-                <MudImage
-                    Src="@ImageNullOrEmpty(coder.Photo)"
-                    Alt="profile" />
-                }
-                else
-                {
-                <p>Cargando...</p>
-                }
-                <MudCardContent>
-                    <div class="cards__container">
-                        <div class="cards__profile">
-                            <div class="cards__coder">
-                                <h3>@coder.FirstName @coder.FirstLastName</h3>
-                                <p>@coder.Stack</p>
-                            </div>
-                            <a>
-                                <img src="images/group-add.svg" alt="icon" />
-                            </a>
-                        </div>
-                        @*badges*@
-                        @if (coder.Skills != null)
-                        {
-                        <div class="cards__badges">
-                            @for (int i = 0; i < coder.Skills.Count && i < 6; i++)
-                            {
-                            <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
-                            }
-                        </div>
-                        }
-                        else
-                        {
-                        <p>Contenido no disponible...</p>
-                        }
-                        @*Buttons*@
-                        <div class="cards__button--primary">
-                            <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>
-                        </div>
-                    </div>
-                </MudCardContent>
-            </MudCard>
-        </MudCarouselItem>
-        }
-    </MudCarousel>
-</div>
-}
 
 @code
-{    
+{
     public bool CheckBox1 { get; set; } = false;
     public bool CheckBox2 { get; set; } = false;
     public bool CheckBox3 { get; set; } = false;
@@ -218,9 +204,7 @@ else
     private string? skills;
     private string? languageLevel;
     private bool FilterApplied = false;
-
-    //Badges
-    private List<Badge> badges = new List<Badge>();
+    private string? status;
     
 
     protected override async Task OnInitializedAsync()
