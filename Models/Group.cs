@@ -6,8 +6,7 @@ public class Group
     public string? Name { get; set; }
     public string? Description { get; set; }
     public string? Status { get; set; }
+    public DateTime Created_At { get; set; }
     public string? CreatedBy { get; set; }
     public string? AssociateEmail { get; set; }
-    public DateTime Created_At { get; set; }
-    
 }

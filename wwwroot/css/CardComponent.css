@@ -169,9 +169,6 @@
 .cards__badges{
     display: grid;
     grid-template-columns: repeat(3, 1fr );
-    height: 50%;
-    gap: 7px;
-    align-items: baseline;
 }
 
 .cards__badge {
@@ -184,7 +181,7 @@
     padding: 4px 8px;
     font-family: 'ubuntu', 'Helvetica Neue';
     font-weight: bold;
-    font-size: 13px;
+    font-size: 11px;
 }
 
 .cards__badge {
@@ -538,9 +535,9 @@ p{
     margin: auto;
     width: 85%;
     height: 70px;
-    margin-top: 50px;
+    margin-top: 15px;
     display: grid;
-    grid-template-columns: calc(52% - 14px) 22% 26%;
+    grid-template-columns: calc(40% - 25px) 35% 25%;
     gap: 7px;
     padding: 10px;
 }
