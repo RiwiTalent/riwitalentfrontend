@@ -1,38 +1,39 @@
-﻿@namespace riwitalentfrontend.Layout
-
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+@using riwitalentfrontend.Services
 @using riwitalentfrontend.Theme
+@namespace riwitalentfrontend.Layout
+@using Blazored.SessionStorage;
+@inject AuthService AuthService
+@inject AuthenticationStateProvider autenticacionProvider
+@inject ISessionStorageService SessionStorage
 
-@* Required *@
-<MudThemeProvider />
-<MudPopoverProvider />
+@inject NavigationManager navManager
+@inject NavigationManager NavigationManager
+@using riwitalentfrontend.Components
 
-@* Needed for dialogs *@
-<MudDialogProvider />
 
-@* Needed for snackbars *@
-<MudSnackbarProvider />
-
-<head>
-    <link rel="stylesheet" href="css/Layout/MainLayout.css">
-</head>
 
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
 <MudLayout>
     <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Rounded.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle"/>
-        <NavLink class="nav-link riwitalentfrontend.image-content" href="/home" Match="NavLinkMatch.All">
-            <MudImage ObjectFit="ObjectFit.Contain" Fluid="true" Src="images/IsologoRiwiLight.png"></MudImage>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
+        <NavLink class="nav-link riwi-image-content" href="/home" Match="NavLinkMatch.All">
+            <img class="riwitalentfrontend-image" src="images/riwi.png"/>
         </NavLink>
         <MudSpacer/>
+
+
         <AvatarComponent TypeAvatar="Usuario" KeySesionStorage="userEmail"></AvatarComponent>
+
+
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="1">
         <NavMenu/>
     </MudDrawer>
-    <MudMainContent Fixed="true" Style="height: 100vw;">
+    <MudMainContent Class="-flex flex-grow-1">
         @Body
     </MudMainContent>
 </MudLayout>
@@ -77,8 +78,8 @@
 }
 
 <style>
-    .riwitalentfrontend.image {
+    .riwitalentfrontend-image {
         width: 103px;
         height: 30px;
     }
-</style> 
+</style>
