@@ -32,7 +32,7 @@ namespace riwitalentfrontend.Services.Implementations
         }
 
         // Obtiene el endpoint y recibe los parametros enviados desde el login verificandolos
-        public async Task<bool> Login(string email, string password)
+        public async Task<bool> Login(string? email, string? password)
         {
             var loginData = new { Email = email, Password = password };
             var response = await _httpClient.PostAsJsonAsync("https://backend-riwitalent-9pv2.onrender.com/login", loginData);

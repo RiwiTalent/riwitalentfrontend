@@ -1,16 +1,12 @@
 ﻿@namespace riwitalentfrontend.Layout
 
-@using Microsoft.AspNetCore.Components.Authorization
-@using riwitalentfrontend.Services
-@using riwitalentfrontend.Theme
-@inject AuthenticationStateProvider autenticacionProvider
-@inject AuthService authService
-@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AutenticacionProvider
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
 
-
-<MudNavMenu Rounded="true" Margin="Margin.Dense" Color="Color.Primary" Bordered="true" Class="pa-2">
-    <MudNavLink Href="/home" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.Home" >Dashboard</MudNavLink>
-    <MudNavLink Href="/coders" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.Code" >Coders</MudNavLink>
+<MudNavMenu Rounded="true" Color="Color.Primary" Bordered="true">
+    <MudNavLink Href="/home" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.Home">Dashboard</MudNavLink>
+    <MudNavLink Href="/coders" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.Code">Coders</MudNavLink>
     <MudNavLink href="/groups" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Groups">Grupos</MudNavLink>
     <!-- Llama a la función CerrarSesion cuando se hace clic -->
     <MudNavLink OnClick="Logout" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.Logout">Cerrar Sesión</MudNavLink>
@@ -33,10 +29,10 @@
         try
         {
             // Llamar a la función de Logout en AuthService
-            await authService.Logout();
+            await AuthService.Logout();
 
             // Redirigir a la página de inicio de sesión o cualquier otra ruta
-            navigationManager.NavigateTo("/", true);
+            NavigationManager.NavigateTo("/", true);
         }
         catch (Exception ex)
         {
@@ -44,25 +40,4 @@
             Console.WriteLine($"Error cerrando sesión: {ex.Message}");
         }
     }
-    private bool collapseNavMenu = true;
-
-    private Dictionary<int, string> iconColors = new Dictionary<int, string>
-    {
-        {1, RiwiPalette.Primary500},
-        {2, RiwiPalette.Primary500},
-        {3, RiwiPalette.Primary500}
-    };
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
-    private void HoverIcon(int iconId, bool isHovered)
-    {
-        iconColors[iconId] = isHovered ? RiwiPalette.Secondary500 : RiwiPalette.Primary500;
-    }
-
 }

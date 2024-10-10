@@ -6,7 +6,7 @@ namespace riwitalentfrontend.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<bool> Login(string email, string password);
+        Task<bool> Login(string? email, string? password);
         Task SaveTokenInCookies(string token);
         Task<string> GetToken();
         Task Logout();
