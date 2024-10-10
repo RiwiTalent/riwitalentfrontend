@@ -1,11 +1,19 @@
+@namespace riwitalentfrontend.Components
 @inject IModalService ModalService
 @using Blazored.Modal.Services
 @inject GroupCodersServices _groupCodersServices
 @inject TermsAndConditionsService _termsAndConditionsService
 @inject NavigationManager NavigationManager
 @inject AlertServices _alertServices
-@using riwi.Models;
-@using riwi.Services;
+@using riwitalentfrontend.Models;
+@using riwitalentfrontend.Services;
+
+
+<head>
+    <link rel="stylesheet" href="css/Components/TermsAndConditionsComponent.css">
+</head>
+
+
 
 <BlazoredModalTitle>
     Términos y Condiciones

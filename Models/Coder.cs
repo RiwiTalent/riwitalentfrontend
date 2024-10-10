@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using riwi.Models;
+using riwitalentfrontend.Models;
 
-namespace riwi.Models
+namespace riwitalentfrontend.Models
 {
     public class Coder
     {

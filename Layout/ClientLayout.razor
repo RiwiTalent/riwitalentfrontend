@@ -1,37 +1,23 @@
-﻿@namespace riwitalentfrontend.Layout
+@namespace riwitalentfrontend.Layout
 
-@inherits LayoutComponentBase
+@using Blazored.SessionStorage
+@using Microsoft.AspNetCore.Components.Authorization;
 @using riwitalentfrontend.Theme
-
-@* Required *@
-<MudThemeProvider />
-<MudPopoverProvider />
-
-@* Needed for dialogs *@
-<MudDialogProvider />
-
-@* Needed for snackbars *@
-<MudSnackbarProvider />
-
-<head>
-    <link rel="stylesheet" href="css/Layout/MainLayout.css">
-</head>
-
+@inherits LayoutComponentBase
+@inject AuthService AuthService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ISessionStorageService SessionStorageService
+@inject NavigationManager NavigationManager
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
 <MudLayout>
     <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Rounded.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle"/>
-        <NavLink class="nav-link riwitalentfrontend.image-content" href="/home" Match="NavLinkMatch.All">
-            <MudImage ObjectFit="ObjectFit.Contain" Fluid="true" Src="images/IsologoRiwiLight.png"></MudImage>
+        <NavLink class="nav-link riwitalentfrontend.image-content" href="/login-client" Match="NavLinkMatch.All">
+            <img class="riwitalentfrontend.image" src="images/riwi.png"/>
         </NavLink>
         <MudSpacer/>
-        <AvatarComponent TypeAvatar="Usuario" KeySesionStorage="userEmail"></AvatarComponent>
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="1">
-        <NavMenu/>
-    </MudDrawer>
     <MudMainContent Fixed="true" Style="height: 100vw;">
         @Body
     </MudMainContent>
@@ -56,11 +42,6 @@
         };
     }
 
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-
     private void DarkModeToggle()
     {
         _isDarkMode = !_isDarkMode;
@@ -81,4 +62,4 @@
         width: 103px;
         height: 30px;
     }
-</style> 
+</style>

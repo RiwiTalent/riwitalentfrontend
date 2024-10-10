@@ -2,13 +2,13 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
-using riwi.Models;
+using riwitalentfrontend.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Headers;
 using Blazored.SessionStorage;
 
 
-namespace riwi.Services
+namespace riwitalentfrontend.Services
 {
     public class AuthService
     {

@@ -1,6 +1,4 @@
-
-
-namespace RiwiTalent.Models
+namespace riwitalentfrontend.Models
 {
   public class CoderGroupDto
   {

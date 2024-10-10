@@ -1,10 +1,10 @@
 @page "/home"
 @using Microsoft.AspNetCore.Authorization
-@using riwi.Layout.Components
+@using riwitalentfrontend.Components
 @using Microsoft.AspNetCore.Components.Authorization;
-@using riwi.Layout.Components.BannerCoders
+@using riwitalentfrontend.Components
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@using riwi.Layout.Components.TermsAndConditions
+@using riwitalentfrontend.Components;
 
 @attribute [Authorize]
 
@@ -14,8 +14,8 @@
 
 <head>
     <link rel="stylesheet" href="css/home.css">
-    <link rel="stylesheet" href="css/PaginationComponent.css">
-    <link rel="stylesheet" href="css/CoderFilterComponent.css">
+    <link rel="stylesheet" href="css/Components/PaginationComponent.css">
+    <link rel="stylesheet" href="css/Components/CoderFilterComponent.css">
 </head>
 
 <AuthorizeView>

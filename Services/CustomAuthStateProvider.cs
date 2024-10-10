@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.JSInterop;
+using Microsoft.JSInterop; 
 
-namespace riwi.Services
+namespace riwitalentfrontend.Services
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {

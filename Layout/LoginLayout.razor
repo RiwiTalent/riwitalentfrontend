@@ -1,2 +1,70 @@
+@namespace riwitalentfrontend.Layout
+
+@using riwitalentfrontend.Theme
 @inherits LayoutComponentBase
-@Body
+@inject NavigationManager NavigationManager
+
+
+
+@* Required *@
+<MudThemeProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+
+<MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
+<MudLayout>
+    <MudAppBar Fixed="false" Elevation="1" Class="rounded-b-xl">
+        <NavLink Icon="@Icons.Material.Rounded.Menu" Match="NavLinkMatch.All">
+            <MudImage ObjectFit="ObjectFit.ScaleDown" Width="100" Fluid="true" Src="@(DarkLightModeImgLogo)"></MudImage>
+        </NavLink>
+        <MudSpacer/>
+        <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
+    </MudAppBar>
+    <MudMainContent Fixed="true">
+        <MudContainer Fixed="true" Style="height: 100vh;" Class="d-flex justify-center align-center pa-0">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+<CascadingBlazoredModal></CascadingBlazoredModal>
+
+@code {
+    private bool _drawerOpen = true;
+    private bool _isDarkMode = false;
+    private MudTheme? _theme = null;
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _theme = new()
+        {
+            PaletteLight = CustomMudTheme.PaletteLight,
+            PaletteDark = CustomMudTheme.PaletteDark,
+            LayoutProperties = new LayoutProperties()
+        };
+    }
+
+    private void DarkModeToggle()
+    {
+        _isDarkMode = !_isDarkMode;
+    }
+
+    private string DarkLightModeButtonIcon => _isDarkMode switch
+    {
+        false => @Icons.Material.Outlined.WbSunny,
+        true => Icons.Material.Outlined.DarkMode,
+    };
+
+    private string DarkLightModeImgLogo => _isDarkMode switch
+    {
+        false => "images/IsologoRiwiLight.png",
+        true => "images/IsologoRiwiDark.png",
+    };
+}

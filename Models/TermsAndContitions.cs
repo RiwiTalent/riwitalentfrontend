@@ -1,6 +1,6 @@
     using System;
 
-    namespace riwi.Models
+    namespace riwitalentfrontend.Models
     {
         public class TermAndCondition
         {

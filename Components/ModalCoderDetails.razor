@@ -1,6 +1,7 @@
+@namespace riwitalentfrontend.Components
 @inherits Blazored.Modal.BlazoredModal
-@using riwi.Models;
-@using riwi.Services;
+@using riwitalentfrontend.Models;
+@using riwitalentfrontend.Services;
 @inject CoderService coderService
 @inject IModalService model
 @inject SweetAlertService Swal;
@@ -8,7 +9,7 @@
 @inject NavigationManager NavigationManager
 
 <head>
-    <link rel="stylesheet" href="css/ModalCoderDetails.css">
+    <link rel="stylesheet" href="css/Components/ModalCoderDetails.css">
 </head>
 
 @if (Coder != null)

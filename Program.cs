@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using riwi;
+using riwitalentfrontend;
 using MudBlazor.Services;
-using riwi.Services;
+using riwitalentfrontend.Services;
 using Blazored.Modal;
 using Microsoft.AspNetCore.Components.Authorization;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Blazored.SessionStorage;
 using Microsoft.Extensions.DependencyInjection;
-using riwi.App;
+using riwitalentfrontend.App;
 
 
 

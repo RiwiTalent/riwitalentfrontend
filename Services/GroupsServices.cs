@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
-using riwi.Models;
+using riwitalentfrontend.Models;
 
-namespace riwi.Services
+namespace riwitalentfrontend.Services
 {
     // Servicio para interactuar con la API de grupos
     public class GroupsServices

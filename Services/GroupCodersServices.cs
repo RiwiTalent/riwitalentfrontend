@@ -1,8 +1,8 @@
     using System.Net.Http.Json;
     using Microsoft.AspNetCore.Components;
-    using riwi.Models;
+    using riwitalentfrontend.Models;
 
-    namespace riwi.Services;
+    namespace riwitalentfrontend.Services;
 
     public class GroupCodersServices
     {

@@ -1,10 +1,12 @@
+@page "/homeclient/{groupId}"
 @inject HttpClient _client
-@page "/HomeExterno/{groupId}"
-@using riwi.Models;
-@using riwi.Layout.Components.BannerCoders;
-@using riwi.Layout.Components.GroupCoder;
-@layout ExternalLayout
-@using riwi.Layout.Components;
+@using riwitalentfrontend.Models;
+@using riwitalentfrontend.Components;
+@using riwitalentfrontend.Components;
+@layout ClientLayout
+@using riwitalentfrontend.Layout;
+
+<PageTitle>RiwiTalent: Software de gestión talento Riwi</PageTitle>
 
 <head>
     <link rel="stylesheet" href="css/CardComponent.css">

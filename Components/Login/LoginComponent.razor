@@ -1,7 +1,7 @@
-@namespace riwi.Layout.Components
-@using riwi.Models;
+@namespace riwitalentfrontend.Components
+@using riwitalentfrontend.Models;
 @using Microsoft.AspNetCore.Components.Authorization;
-@using riwi.Services;
+@using riwitalentfrontend.Services;
 @inject AuthenticationStateProvider autenticacionProvider;
 @inject AuthService AuthService;
 @inject ISessionStorageService SessionStorage
@@ -10,9 +10,12 @@
 @inject HttpClient HttpClient;
 @inject SweetAlertService Swal;
 @inject AlertServices alertServices;
+@using CurrieTechnologies.Razor.SweetAlert2
 
+<head>
+    <link rel="stylesheet" href="css/Components/LoginComponent.css">
+</head>
 
-@*Integracion*@
 
 <div class="main-container">
     <div class="secondary-container">
@@ -55,26 +58,20 @@
             error!
         </button> *@
         <div class="image-container">
-            <img src="images/ExternalFondo.png" alt="Imagen de login" class="login-image"/>
-            <img src="images/ExternalFondo.png" alt="Imagen de login en celular" class="login-image-cel"/>
+            <img src="images/fondo1.png" alt="Imagen de login" class="login-image"/>
+            <img src="images/fondo2.jpeg" alt="Imagen de login en celular" class="login-image-cel"/>
+
         </div>
-    </div>
-    <div class="image-container2">
-        <img src="images/bg-10.svg" alt="Imagen de login en celular" class="login-image-grafico-cel"/>
+
+        <div class="image-container2">
+            <img src="images/bg-10.svg" alt="Imagen de login en celular" class="login-image-grafico-cel"/>
+        </div>
     </div>
 </div>
 
 @code {
-    private async Task SuccessSweetAlert()
-    {
-        await Swal.FireAsync(new SweetAlertOptions
-            {
-                Title = "Error!",
-                Text = "Do you want to continue",
-                Icon = SweetAlertIcon.Error,
-                ConfirmButtonText = "Cool"
-            });
-    }
+
+
     private string email;
     private string password;
     private string passwordInputType = "password"; // Inicialmente oculto
@@ -116,6 +113,17 @@
                 Timer = 1500
             });
         }
+    }
+
+    private async Task SuccessSweetAlert()
+    {
+        await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Error!",
+                Text = "Do you want to continue",
+                Icon = SweetAlertIcon.Error,
+                ConfirmButtonText = "Cool"
+            });
     }
 
 }

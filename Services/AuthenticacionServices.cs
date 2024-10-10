@@ -1,9 +1,9 @@
 using Blazored.SessionStorage;
-using riwi.Models;
+using riwitalentfrontend.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace riwi.Services
+namespace riwitalentfrontend.Services
 {
     public class AuthenticacionExtension : AuthenticationStateProvider
     {

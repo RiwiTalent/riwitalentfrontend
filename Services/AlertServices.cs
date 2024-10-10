@@ -1,6 +1,7 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 
-namespace riwi.Services
+
+namespace riwitalentfrontend.Services
 {
     public class AlertServices
     {

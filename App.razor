@@ -1,8 +1,8 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@using Microsoft.AspNetCore.Components.Authorization;
 @inject NavigationManager navManager
 @using Blazored.Modal;
 @using Blazored.Modal.Services;
-@namespace riwi.App
+@namespace riwitalentfrontend.App
 
 @* Required *@
 <MudThemeProvider />
@@ -10,7 +10,7 @@
 <MudDialogProvider />
 @* Needed for snackbars *@
 <MudSnackbarProvider />
-<MudPopoverProvider />
+<!-- <MudPopoverProvider /> -->
 
 <CascadingAuthenticationState>
     <CascadingBlazoredModal>

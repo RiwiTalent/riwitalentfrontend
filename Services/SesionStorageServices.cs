@@ -1,7 +1,7 @@
 using Blazored.SessionStorage;
 using System.Text.Json;
 
-namespace riwi.Services
+namespace riwitalentfrontend.Services
 {
     public static class SesionStorageExtension
     {

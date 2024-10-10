@@ -1,14 +1,13 @@
 using System.Net.Http.Json;
-using riwi.Models;
+using riwitalentfrontend.Models;
 using Microsoft.AspNetCore.Components;
 
-namespace riwi.Services
+namespace riwitalentfrontend.Services
 {
     public class TermsAndConditionsService
     {
         private readonly HttpClient _client;
         private readonly NavigationManager _navigation;
-
         public TermsAndConditionsService(HttpClient client, NavigationManager navigation)
         {
             _client = client;

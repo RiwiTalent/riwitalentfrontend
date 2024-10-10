@@ -1,15 +1,20 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
-@using riwi.Services
-@using riwi.Theme
+﻿@namespace riwitalentfrontend.Layout
+
+@using Microsoft.AspNetCore.Components.Authorization;
+@using riwitalentfrontend.Services
+@using riwitalentfrontend.Theme
 @inject AuthenticationStateProvider autenticacionProvider
-@inject riwi.Services.AuthService authService
+@inject AuthService authService
 @inject NavigationManager navigationManager
 
+<head>
+    <link rel="stylesheet" href="css/Layout/NavMenu.css">
+</head>
 
 <MudNavMenu Rounded="true" Margin="Margin.Dense" Color="Color.Primary" Bordered="true" Class="pa-2">
+    <MudNavLink Href="/home" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.Home" >Dashboard</MudNavLink>
     <MudNavLink Href="/coders" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.Code" >Coders</MudNavLink>
     <MudNavLink href="/groups" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Groups">Grupos</MudNavLink>
-    
     <!-- Llama a la función CerrarSesion cuando se hace clic -->
     <MudNavLink OnClick="Logout" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.Logout">Cerrar Sesión</MudNavLink>
 </MudNavMenu>

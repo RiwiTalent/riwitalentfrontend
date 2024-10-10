@@ -1,4 +1,4 @@
-namespace riwi.Models
+namespace riwitalentfrontend.Models
 {
     public class LanguageSkill
     {
