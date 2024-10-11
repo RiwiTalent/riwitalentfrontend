@@ -43,7 +43,7 @@ else
             var email = await SessionStorage.GetItemAsync<string>(KeySesionStorage); // KeySesionStorage debe ser "userEmail"
             Inicial = email.Length > 1 ? $"{email[0]}{email[1]}" : email[0].ToString();
             Inicial = $"{GroupCoders.Name[0]}{GroupCoders.Name[1]}";
-            Status = GroupCoders.isActive == false ? Color.Error : Color.Success;
+            Status = GroupCoders.IsActive == false ? Color.Error : Color.Success;
             if (!string.IsNullOrEmpty(email)) ;
         }
     }

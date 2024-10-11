@@ -1,4 +1,4 @@
-@inject GroupCodersServices _GroupCodersServices
+@inject GroupCodersServices GroupCodersServices
 @layout LoginLayout
 
 <PageTitle>RiwiTalent: Software de gestión talento Riwi</PageTitle>
@@ -49,7 +49,7 @@
 
         if (Login.Key != null)
         {
-            await _GroupCodersServices.AuthenticationExternalAsync(login: Login, key: Key);
+            await GroupCodersServices.AuthenticationExternalAsync(login: Login, key: Key);
         }
         
     }

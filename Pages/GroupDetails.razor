@@ -1,13 +1,15 @@
 @page "/GroupDetails/{groupId}"
-@attribute [Authorize]
+@layout MainLayout
+
+@* @attribute [Authorize] *@
 @inject GroupService GroupService
 
 <PageTitle>RiwiTalent: Detalles del Grupo</PageTitle>
 
-@if (!string.IsNullOrEmpty(errorMessage))
+@if (!string.IsNullOrEmpty(_errorMessage))
 {
     <!-- Muestra alerta si se produce un error -->
-    <MudAlert Severity="Severity.Error">@errorMessage</MudAlert>
+    <MudAlert Severity="Severity.Error">@_errorMessage</MudAlert>
 }
 <AuthorizeView>
     <Authorized>
@@ -28,8 +30,8 @@
                     <MudItem xs="4">
                         <MudCard Class="d-flex flex-column align-center justify-center mud-width-full rounded-lg pa-4">
                             <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary">A</MudAvatar>
-                            <MudText Typo="Typo.h6" Color="Color.Primary">@group.Name</MudText>
-                            <MudChip T="string" Color="@GetChipColor(group.Status)" Value="@group.Status"></MudChip>
+                            <MudText Typo="Typo.h6" Color="Color.Primary">@_group.Name</MudText>
+                            <MudChip T="string" Color="@GetChipColor(_group.Status)" Value="@_group.Status"></MudChip>
                         </MudCard>
                     </MudItem>
                     <MudItem xs="8">
@@ -46,13 +48,14 @@
                                         <!-- Nombre del Grupo -->
                                         <MudItem xs="12" sm="6">
                                             <MudText Typo="Typo.subtitle2"><b>Nombre</b></MudText>
-                                            <MudTextField T="string" @bind-Value="@group.Name" Placeholder="Ingresa el nombre del grupo" Variant="Variant.Outlined" FullWidth="true" Margin="Margin.Dense" AdornmentIcon="@Icons.Material.Rounded.PeopleOutline" Adornment="Adornment.Start" AdornmentColor="Color.Primary"></MudTextField>
+                                            <MudTextField T="string" @bind-Value="@_group.Name" Placeholder="Ingresa el nombre del grupo" Variant="Variant.Outlined" FullWidth="true" Margin="Margin.Dense" 
+                                                          AdornmentIcon="@Icons.Material.Rounded.PeopleOutline" Adornment="Adornment.Start" AdornmentColor="Color.Primary"></MudTextField>
                                         </MudItem>
 
                                         <!-- Descripción del Grupo -->
                                         <MudItem xs="12">
                                             <MudText Typo="Typo.subtitle2"><b>Descripción</b></MudText>
-                                            <MudTextField T="string" @bind-Value="@group.Description" Placeholder="Escribe una breve descripción del grupo" Variant="Variant.Outlined" FullWidth="true" Lines="3" Margin="Margin.Dense" AdornmentIcon="@Icons.Material.Rounded.TextSnippet" Adornment="Adornment.Start" AdornmentColor="Color.Primary"></MudTextField>
+                                            <MudTextField T="string" @bind-Value="@_group.Description" Placeholder="Escribe una breve descripción del grupo" Variant="Variant.Outlined" FullWidth="true" Lines="3" Margin="Margin.Dense"></MudTextField>
                                         </MudItem>
 
                                         <!-- Título: Credenciales -->
@@ -64,12 +67,14 @@
                                         <MudItem xs="12" sm="6">
                                             <MudText Typo="Typo.subtitle2"><b>Enlace público</b></MudText>
                                             <MudItem Class="d-flex flex-row align-center gap-2">
-                                                <MudTextField T="string" @bind-Value="group.ExternalKeys[0].url" Placeholder="Ingresa el enlace público del grupo" Variant="Variant.Outlined" Margin="Margin.Dense" FullWidth="true" AdornmentIcon="@Icons.Material.Rounded.InsertLink" Adornment="Adornment.Start" AdornmentColor="Color.Primary"></MudTextField>
+                                                <MudTextField T="string" @bind-Value="_group.ExternalKeys[0].Url" Placeholder="Ingresa el enlace público del grupo" Variant="Variant.Outlined" Margin="Margin.Dense" FullWidth="true" 
+                                                              AdornmentIcon="@Icons.Material.Rounded.InsertLink" Adornment="Adornment.Start" AdornmentColor="Color.Primary"></MudTextField>
                                                 <MudIconButton Icon="@Icons.Material.Rounded.Autorenew" Color="Color.Primary" Variant="Variant.Outlined"/>
                                             </MudItem>
                                             <MudItem>
                                                 <MudText Typo="Typo.subtitle2"><b>Pin de acceso</b></MudText>
-                                                <MudTextField T="string" @bind-Value="group.ExternalKeys[0].key" Placeholder="Ingresa la clave de acceso" InputType="InputType.Password" Variant="Variant.Outlined" FullWidth="true" Margin="Margin.Dense" Adornment="Adornment.End"  AdornmentIcon="@Icons.Material.Filled.Visibility" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver pin"></MudTextField>
+                                                <MudTextField T="string" @bind-Value="_group.ExternalKeys[0].Key" Placeholder="Ingresa la clave de acceso" InputType="InputType.Password" Variant="Variant.Outlined" FullWidth="true" Margin="Margin.Dense" 
+                                                              Adornment="Adornment.End"  AdornmentIcon="@Icons.Material.Filled.Visibility" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver pin"></MudTextField>
                                             </MudItem>
                                         </MudItem>
                                     </MudGrid>
@@ -89,15 +94,15 @@
 </AuthorizeView>
 
 @code {
-    private Group group; 
+    private Group _group; 
     private string _searchString;
     private bool _loading = true;
-    private string errorMessage;
-    private string rowsPerPageString = "Filas por página:";
-    private string infoFormat = "{first_item}-{last_item} de {all_items}";
+    private string _errorMessage;
+    private string _rowsPerPageString = "Filas por página:";
+    private string _infoFormat = "{first_item}-{last_item} de {all_items}";
 
     // Parámetro que recibe el Id del grupo desde la URL
-    [Parameter] public string groupId { get; set; }
+    [Parameter] public string GroupId { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -109,19 +114,19 @@
     {
         try
         {
-            group = await GroupService.GetGroupByIdAsync(groupId);
-            if (group != null)
+            _group = await GroupService.GetGroupByIdAsync(GroupId);
+            if (_group != null)
             {
-                Console.WriteLine($"Grupo obtenido: {group.Name}, Estado: {group.Status}");
+                Console.WriteLine($"Grupo obtenido: {_group.Name}, Estado: {_group.Status}");
             }
             else
             {
-                errorMessage = "No se encontró el grupo.";
+                _errorMessage = "No se encontró el grupo.";
             }
         }
         catch (Exception ex)
         {
-            errorMessage = $"Hubo un error al obtener los detalles del grupo: {ex.Message}";
+            _errorMessage = $"Hubo un error al obtener los detalles del grupo: {ex.Message}";
             Console.WriteLine($"Error: {ex.Message}");
         }
         finally
@@ -131,7 +136,7 @@
     }
 
     // Filtro de búsqueda
-    private Func<Models.Group, bool> _quickFilter => group =>
+    private Func<Models.Group, bool> QuickFilter => group =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
@@ -172,28 +177,28 @@
         GroupCoders groupCoders = new GroupCoders()
         {
             Name = name,
-            isActive = statusBool
+            IsActive = statusBool
         };
 
         return groupCoders;
     }
     
-    bool isShow;
-    InputType PasswordInput = InputType.Password;
-    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    bool _isShow;
+    InputType _passwordInput = InputType.Password;
+    string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
 
     void ButtonTestclick()
     {
-        @if (isShow)
+        @if (_isShow)
         {
-            isShow = false;
-            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-            PasswordInput = InputType.Password;
+            _isShow = false;
+            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            _passwordInput = InputType.Password;
         }
         else {
-            isShow = true;
-            PasswordInputIcon = Icons.Material.Filled.Visibility;
-            PasswordInput = InputType.Text;
+            _isShow = true;
+            _passwordInputIcon = Icons.Material.Filled.Visibility;
+            _passwordInput = InputType.Text;
         }
     }
 }

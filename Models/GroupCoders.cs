@@ -1,7 +1,11 @@
-namespace riwitalentfrontend.Models;
-
-public class GroupCoders
+namespace riwitalentfrontend.Models
 {
-    public string Name { get; set; } = "BlackBird";
-    public bool isActive { get; set; } = false;
+    public class GroupCoders
+    {
+        // Nombre del grupo de coders
+        public string Name { get; set; } = string.Empty;
+
+        // Indica si el grupo de coders está activo o no
+        public bool IsActive { get; set; } = false;
+    }
 }

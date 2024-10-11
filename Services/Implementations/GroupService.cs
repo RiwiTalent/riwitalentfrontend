@@ -28,7 +28,7 @@ namespace riwitalentfrontend.Services.Implementations
         {
             try
             {
-                return await  _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/groupDetails/{groupId}");
+                return await  _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/group-details/{groupId}");
             }
             catch (Exception ex)
             {
@@ -53,11 +53,11 @@ namespace riwitalentfrontend.Services.Implementations
         }
         
         // Lógica para crear un grupo desde la base de datos o API
-        public async Task<bool> AddGroupAsync(GroupAddDto _groupAddDto)
+        public async Task<bool> AddGroupAsync(GroupAddDto groupAddDto)
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/groups", _groupAddDto);
+                var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/groups", groupAddDto);
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -66,5 +66,6 @@ namespace riwitalentfrontend.Services.Implementations
                 return false;
             }
         }
+
     }
 }

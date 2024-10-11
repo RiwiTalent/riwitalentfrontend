@@ -1,8 +1,16 @@
-namespace riwitalentfrontend.Models.DTOs;
+using System.ComponentModel.DataAnnotations;
 
-public class GroupAddDto
+namespace riwitalentfrontend.Models.DTOs
 {
-    public string? Name { get; set; }
-    public string? Description { get; set; }
-    public string? AssociateEmail { get; set; }
+    public class GroupAddDto
+    {
+        // Nombre del grupo
+        public string Name { get; set; } = String.Empty;
+
+        // Descripción del grupo
+        public string Description { get; set; } = String.Empty;
+
+        // Correo electrónico del asociado al grupo
+        public string AssociateEmail { get; set; } = String.Empty;
+    }
 }

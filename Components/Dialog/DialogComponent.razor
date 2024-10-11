@@ -30,12 +30,12 @@
 
 @code {
     [CascadingParameter]
-    private MudDialogInstance MudDialog { get; set; }
+    private MudDialogInstance? MudDialog { get; set; }
     
     // Propiedades para los datos del grupo
-    private string GroupName { get; set; }
-    private string GroupDescription { get; set; }
-    private string AssociateEmail { get; set; }
+    private string GroupName { get; set; } = String.Empty;
+    private string GroupDescription { get; set; } = String.Empty;
+    private string AssociateEmail { get; set; } = String.Empty;
 
     [Parameter] // Parámetro para la página que invoque el modal
     public EventCallback<GroupAddDto> OnGroupCreated { get; set; }
@@ -49,12 +49,20 @@
             Description = GroupDescription,
             AssociateEmail = AssociateEmail
         };
-        
-        await OnGroupCreated.InvokeAsync(groupAddDto);
+        var success = await GroupService.AddGroupAsync(groupAddDto);
+
+        if (success)
+        {
+            MudDialog?.Close();
+        }
+        else
+        {
+            Console.WriteLine("Error al crear el grupo");
+        }
     }
     
     private void Cancel()
     {
-        MudDialog.Cancel();
+        MudDialog?.Cancel();
     }
 }

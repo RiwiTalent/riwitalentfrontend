@@ -1,11 +1,11 @@
 @using riwitalentfrontend.Models
 @using riwitalentfrontend.Services
-@inject GroupCodersServices _GroupCodersServices
+@inject GroupCodersServices GroupCodersServices
 @namespace riwitalentfrontend.Components.GroupCoder
 
 @if (ListOfCoders != null)
 {
-    @foreach (var coder in ListOfCoders.coders)
+    @foreach (var coder in ListOfCoders.Coders)
     {
         <MudPaper Elevation="1" Style="margin-bottom: 5px">
             <p>Id: @coder.Id</p>
@@ -35,7 +35,7 @@ else
 
     private async Task GetGroupCoders()
     {
-        var getGroupResponse = await _GroupCodersServices.GetCodersInGroupAsync(key: Key);
+        var getGroupResponse = await GroupCodersServices.GetCodersInGroupAsync(key: Key);
 
         if (getGroupResponse != null)
         {

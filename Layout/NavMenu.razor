@@ -13,16 +13,16 @@
 </MudNavMenu>
 
 <!-- Muestra la alerta de error si hay un mensaje -->
-@if (!string.IsNullOrEmpty(errorMessage))
+@if (!string.IsNullOrEmpty(ErrorMessage))
 {
     <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="my-2">
-        @errorMessage
+        @ErrorMessage
     </MudAlert>
 }
 
 @code
 {
-    public string errorMessage;
+    public string ErrorMessage;
     private async Task Logout()
     {
      
@@ -36,7 +36,7 @@
         }
         catch (Exception ex)
         {
-            errorMessage = "Hubo un error cerrando la sesión. Inténtalo nuevamente más tarde."; // Manejo de errores
+            ErrorMessage = "Hubo un error cerrando la sesión. Inténtalo nuevamente más tarde."; // Manejo de errores
             Console.WriteLine($"Error cerrando sesión: {ex.Message}");
         }
     }

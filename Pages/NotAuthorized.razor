@@ -1,6 +1,6 @@
 @page "/NotAuthorized"
 @layout LoginLayout
-@inject NavigationManager navManager
+@inject NavigationManager NavManager
 
 <PageTitle>Página no autorizada</PageTitle>
 
@@ -20,7 +20,7 @@
         if (firstRender)
         {
             await Task.Delay(3000);
-            navManager.NavigateTo("/");
+            NavManager.NavigateTo("/");
         }
     }
 }

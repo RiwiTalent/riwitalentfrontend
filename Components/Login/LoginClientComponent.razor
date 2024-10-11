@@ -1,6 +1,6 @@
 @namespace riwitalentfrontend.Components
 
-@inject AuthenticationStateProvider autenticacionProvider;
+@inject AuthenticationStateProvider AutenticacionProvider;
 @inject AuthService AuthService;
 @inject ISessionStorageService SessionStorage
 @using Blazored.SessionStorage
@@ -14,7 +14,7 @@
         <MudCard Class="pa-6 d-flex justify-center align-center rounded-lg">
             <MudCardHeader>
                 <MudItem Class="d-flex justify-center align-center">
-                    <LogoComponent IsDarkMode="@_isDarkMode" />
+                    <LogoComponent IsDarkMode="@IsDarkMode" />
                 </MudItem>
             </MudCardHeader>
             <MudItem>
@@ -24,7 +24,7 @@
             <MudCardContent Class="FullWidth" Style="width: 100%;">
                 <MudForm Spacing="2">
                     <MudTextField T="string" Label="Correo" @bind-value="_email" Variant="Variant.Outlined" InputType="InputType.Email"/>
-                    <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@PasswordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
+                    <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@_passwordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
                 </MudForm>
             </MudCardContent>
             <MudCardActions>
@@ -37,24 +37,24 @@
 @code {
     private string? _email;
     private string? _password;
-    private bool _isDarkMode { get; set; }
+    private bool IsDarkMode { get; set; }
 
-    bool isShow;
-    InputType PasswordInput = InputType.Password;
-    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    bool _isShow;
+    InputType _passwordInput = InputType.Password;
+    string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
 
     void ButtonTestclick()
     {
-        @if (isShow)
+        @if (_isShow)
         {
-            isShow = false;
-            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-            PasswordInput = InputType.Password;
+            _isShow = false;
+            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            _passwordInput = InputType.Password;
         }
         else {
-            isShow = true;
-            PasswordInputIcon = Icons.Material.Filled.Visibility;
-            PasswordInput = InputType.Text;
+            _isShow = true;
+            _passwordInputIcon = Icons.Material.Filled.Visibility;
+            _passwordInput = InputType.Text;
         }
     }
     

@@ -2,8 +2,8 @@
 
 <MudDialog>
     <DialogContent>
-        <MudTextField T="string" Label="Name" @bind-Value="name"></MudTextField>
-        <MudSelect T="string" Label="Favorite Coffee" @bind-Value="favoriteCoffee" AnchorOrigin="Origin.BottomCenter">
+        <MudTextField T="string" Label="Name" @bind-Value="_name"></MudTextField>
+        <MudSelect T="string" Label="Favorite Coffee" @bind-Value="_favoriteCoffee" AnchorOrigin="Origin.BottomCenter">
             <MudSelectItem Value="@("Cappuccino")" />
             <MudSelectItem Value="@("Cafe Latte")" />
             <MudSelectItem Value="@("Espresso")" />
@@ -19,12 +19,12 @@
 @code {
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
 
-    private string name;
-    private string favoriteCoffee;
+    private string _name;
+    private string _favoriteCoffee;
 
     private void Submit() 
     {
-        MudDialog.Close(DialogResult.Ok(new { Name = name, FavoriteCoffee = favoriteCoffee }));
+        MudDialog.Close(DialogResult.Ok(new { Name = _name, FavoriteCoffee = _favoriteCoffee }));
     }
 
     private void Cancel() => MudDialog.Cancel();

@@ -1,15 +1,17 @@
 @page "/groups"
-@attribute [Authorize]
+@using riwitalentfrontend.Models.DTOs
+@layout MainLayout
+
 @inject IDialogService DialogService
 @inject IGroupService GroupServices
 
 <PageTitle>RiwiTalent: Gestiona y Comparte Grupos de Desarrolladores</PageTitle>
 
-@if (!string.IsNullOrEmpty(errorMessage))
+@if (!string.IsNullOrEmpty(_errorMessage))
 {
-    <!-- Muestra alerta si se produce un error -->
-    <MudAlert Severity="Severity.Error">@errorMessage</MudAlert>
+    <MudAlert Severity="Severity.Error">@_errorMessage</MudAlert>
 }
+
 <AuthorizeView>
     <Authorized>
         @if (_loading)
@@ -18,37 +20,50 @@
         }
         else
         {
-            <!-- Total grupos -->
             <MudContainer Class="ma-3 w-full h-full">
-                <MudText Typo="Typo.h5"><b>@GroupsCount</b> Grupos encontrados</MudText>
+                <MudText Typo="Typo.h5"><b>@_groups.Count</b> Grupos encontrados</MudText>
             </MudContainer>
-            
+
             <MudContainer Class="ma-3 w-full h-full">
-                <!-- Grid de grupos -->
                 <MudDataGrid
                     Class="flex-grow-1 pa-5 rounded-lg"
                     LoadingProgressColor="Color.Info"
                     Hover="true"
                     Items="@_groups"
                     MultiSelection="true"
-                    QuickFilter="@_quickFilter">
+                    QuickFilter="@QuickFilter">
+                    
                     <ToolBarContent>
                         <MudGrid>
                             <MudItem xs="12" Class="d-flex flex-grow-1 gap-3 justify-space-between">
-                                <MudTextField Placeholder="Buscar aquí..." @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Search" AdornmentColor="Color.Primary"></MudTextField>
+                                <MudTextField Placeholder="Buscar aquí..."
+                                              @bind-Value="_searchString"
+                                              Immediate="true"
+                                              Variant="Variant.Outlined"
+                                              Adornment="Adornment.End"
+                                              AdornmentIcon="@Icons.Material.Rounded.Search"
+                                              AdornmentColor="Color.Primary" />
                                 <MudSpacer />
-                                <MudButton  Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.Tune">Filtros</MudButton>
-                                <MudButton OnClick="OpenDialogAsync" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.GroupAdd">Nuevo</MudButton>
+                                <MudButton Color="Color.Primary"
+                                           Variant="Variant.Outlined"
+                                           Size="Size.Medium"
+                                           StartIcon="@Icons.Material.Rounded.Tune">Filtros</MudButton>
+                                <MudButton OnClick="OpenDialogAsync"
+                                           Color="Color.Primary"
+                                           Variant="Variant.Filled"
+                                           Size="Size.Medium"
+                                           StartIcon="@Icons.Material.Rounded.GroupAdd">Nuevo</MudButton>
                             </MudItem>
                         </MudGrid>
                     </ToolBarContent>
+
                     <Columns>
-                        <SelectColumn T="Models.Group"/>
-                        <!-- <PropertyColumn Property="x => _groups.IndexOf(x) + 1" Title="Número" Filterable="false" /> -->
+                        <SelectColumn T="Models.Group" />
                         <PropertyColumn Property="x => x.Name" Title="Nombre del grupo">
                             <CellTemplate Context="group">
                                 <MudContainer Class="d-flex gap-2 align-center">
-                                    <AvatarComponent TypeAvatar="GrupoCoders" GroupCoders="GetGroupCoders(group.Item.Name, group.Item.Status)"></AvatarComponent>
+                                    <AvatarComponent TypeAvatar="GrupoCoders" 
+                                                     GroupCoders="GetGroupCoders(group.Item.Name, group.Item.Status)" />
                                     <MudContainer>
                                         <MudText><b>@group.Item.Name</b></MudText>
                                         <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.Description</MudText>
@@ -58,7 +73,7 @@
                         </PropertyColumn>
                         <PropertyColumn Property="x => x.Coders" Title="Coders">
                             <CellTemplate Context="group">
-                                <MudText>@(group.Item.Coders?.Count ?? 1)</MudText>
+                                <MudText>@(group.Item.Coders?.Count ?? 0)</MudText>
                             </CellTemplate>
                         </PropertyColumn>
                         <PropertyColumn Property="x => x.CreatedAt" Title="Fecha de creación">
@@ -69,7 +84,8 @@
                         <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
                             <CellTemplate Context="group">
                                 <MudStack Row>
-                                    <MudChip T="string" Color="@GetChipColor(group.Item.Status)" Variant="Variant.Filled" Size="Size.Small" Class="px-4">
+                                    <MudChip T="string" Color="@GetChipColor(group.Item.Status)"
+                                             Variant="Variant.Filled" Size="Size.Small" Class="px-4">
                                         @group.Item.Status
                                     </MudChip>
                                 </MudStack>
@@ -78,9 +94,16 @@
                         <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
                             <CellTemplate Context="group">
                                 <MudStack Row>
-                                    <!-- <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ModeEditOutline" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton> -->
-                                    <MudIconButton Href="@($"/GroupDetails/{group.Item.Id}")" Variant="Variant.Outlined" Icon="@Icons.Material.Outlined.RemoveRedEye" Color="Color.Warning" Size="Size.Small" Class="border-solid border-2 mud-border-warning pa-2"></MudIconButton>
-                                    <MudIconButton OnClick="() => DeleteGroup(group.Item.Id)" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.DeleteOutline" Color="Color.Error" Size="Size.Small" Class="border-solid border-2 mud-border-error pa-2"></MudIconButton>
+                                    <MudIconButton Href="@($"/GroupDetails/{group.Item.Id}")"
+                                                   Variant="Variant.Outlined"
+                                                   Icon="@Icons.Material.Outlined.RemoveRedEye"
+                                                   Color="Color.Warning"
+                                                   Size="Size.Small" />
+                                    <MudIconButton OnClick="() => DeleteGroup(group.Item.Id)"
+                                                   Variant="Variant.Outlined"
+                                                   Icon="@Icons.Material.Rounded.DeleteOutline"
+                                                   Color="Color.Error"
+                                                   Size="Size.Small" />
                                 </MudStack>
                             </CellTemplate>
                         </PropertyColumn>
@@ -89,8 +112,8 @@
                     <PagerContent>
                         <MudDataGridPager T="Group"
                                           PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
-                                          RowsPerPageString="@rowsPerPageString"
-                                          InfoFormat="@infoFormat"/>
+                                          RowsPerPageString="@_rowsPerPageString"
+                                          InfoFormat="@_infoFormat" />
                     </PagerContent>
                 </MudDataGrid>
             </MudContainer>
@@ -99,18 +122,13 @@
 </AuthorizeView>
 
 @code {
-    private List<Group> _groups; 
-    private string _searchString;
+    private List<Group> _groups = new();
+    private string _searchString = string.Empty;
     private bool _loading = true;
-    private int GroupsCount => _groups.Count;
-    private string errorMessage;
-    private string rowsPerPageString = "Filas por página:";
-    private string infoFormat = "{first_item}-{last_item} de {all_items}";
-    private string value { get; set; } = "Nothing selected";
-    private IEnumerable<string> options { get; set; }
-    private string[] states = { "Active", "Inactive", "Todos" };
-    private MudDialogInstance dialogInstance;
-    
+    private string _errorMessage = string.Empty;
+    private readonly string _rowsPerPageString = "Filas por página:";
+    private readonly string _infoFormat = "{first_item}-{last_item} de {all_items}";
+
     protected override async Task OnInitializedAsync()
     {
         await LoadGroupsAsync();
@@ -119,62 +137,54 @@
     private async Task LoadGroupsAsync()
     {
         _loading = true;
-        errorMessage = string.Empty; // Limpiar el mensaje de error previo
-    
+        _errorMessage = string.Empty;
+
         try
         {
-            // Intentar obtener los grupos
-            _groups = await GroupServices.GetGroupsAsync();
-
-            // Asegurarse de que no haya grupos nulos
-            _groups = _groups?.Where(g => g != null).ToList() ?? new List<Group>();
-
+            _groups = await GroupServices.GetGroupsAsync() ?? new List<Group>();
             Console.WriteLine($"Total grupos obtenidos: {_groups.Count}");
         }
-        catch (HttpRequestException httpEx) // Manejo específico de errores de red
+        catch (HttpRequestException httpEx)
         {
-            errorMessage = "Hubo un problema con la conexión a internet. Intente nuevamente más tarde.";
-            LogError(httpEx); // Método para loguear el error
+            _errorMessage = "Hubo un problema con la conexión a internet. Intente nuevamente más tarde.";
+            LogError(httpEx);
         }
-        catch (NullReferenceException nullEx) // Manejo de errores de referencia nula
+        catch (NullReferenceException nullEx)
         {
-            errorMessage = "Ocurrió un error inesperado. Intente más tarde.";
+            _errorMessage = "Ocurrió un error inesperado. Intente más tarde.";
             LogError(nullEx);
         }
-        catch (Exception ex) // Catch general para cualquier otra excepción
+        catch (Exception ex)
         {
-            errorMessage = "Hubo un error al cargar los grupos. Intente nuevamente más tarde.";
-            LogError(ex); // Loguear cualquier otro tipo de error
+            _errorMessage = "Hubo un error al cargar los grupos. Intente nuevamente más tarde.";
+            LogError(ex);
         }
         finally
         {
             _loading = false;
         }
     }
-    
-    // Método para loguear errores
+
     private void LogError(Exception ex)
     {
         Console.WriteLine($"Error al obtener grupos: {ex.Message}");
     }
 
-    // Filtro de búsqueda
-    private Func<Group, bool> _quickFilter => group =>
+    private Func<Group, bool> QuickFilter => group =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
 
         return MatchesSearchCriteria(group);
     };
-    
+
     private bool MatchesSearchCriteria(Group group)
     {
         return (group.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
                (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
                (group.CreatedAt.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
-    
-    // Método para asignar el color a chip del Status
+
     private Color GetChipColor(string? status)
     {
         return status switch
@@ -185,57 +195,41 @@
         };
     }
 
-    // Método para traer todos los coders
     public GroupCoders GetGroupCoders(string? name, string? status)
     {
-        bool statusBool;
-
-        if (status == "Active")
-        {
-            statusBool = true;
-        }
-        else
-        {
-            statusBool = false;
-        }
-        
-        GroupCoders groupCoders = new GroupCoders()
+        return new GroupCoders
         {
             Name = name,
-            isActive = statusBool
+            IsActive = status == "Active"
         };
-
-        return groupCoders;
     }
-    
+
     private async Task DeleteGroup(string groupId)
     {
-        var success = await GroupServices.DeleteGroupAsync(groupId);
-    
-        if (success)
+        if (await GroupServices.DeleteGroupAsync(groupId))
         {
-            // Actualiza la lista de grupos
             await LoadGroupsAsync();
         }
         else
         {
-            // Maneja el error (puedes mostrar un mensaje de error)
             Console.WriteLine("Error al eliminar el grupo.");
         }
     }
-    
+
     private async Task OpenDialogAsync()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
-
-        var dialog = await DialogService.ShowAsync<DialogComponent>("Crear Grupo", options);
-        var result = await dialog.Result;
-        if (!result.Canceled)
+        var parameters = new DialogParameters
         {
-            Console.WriteLine("Grupo creado exitosamente");
-        }
-        
-        StateHasChanged();
-    }
+            ["OnGroupCreated"] = EventCallback.Factory.Create<GroupAddDto>(this, async (GroupAddDto groups) => { await LoadGroupsAsync(); })
+        };
 
+        var dialog = await DialogService.ShowAsync<DialogComponent>("Crear Grupo", parameters, options);
+
+        if (!dialog.Result.IsCanceled)
+        {
+            // Recargar los grupos si es necesario
+            await LoadGroupsAsync();
+        }
+    }
 }
