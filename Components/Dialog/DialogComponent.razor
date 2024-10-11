@@ -1,32 +1,42 @@
 @namespace riwitalentfrontend.Components.Dialog
 
 @using Models.DTOs;
+@inject GroupService GroupService
 
 <MudDialog>
-    <DialogContent>
-        <!-- Nombre del Grupo -->
-        <MudItem>
-            <MudText Typo="Typo.subtitle2"><b>Nombre</b></MudText>
-            <MudTextField T="string" @bind-Value="GroupName"  Placeholder="Ingresa el nombre del grupo" Variant="Variant.Outlined" FullWidth="true" Margin="Margin.Dense" AdornmentIcon="@Icons.Material.Rounded.PeopleOutline" Adornment="Adornment.Start" AdornmentColor="Color.Primary"></MudTextField>
-        </MudItem>
+    <!-- Nombre del Grupo -->
+    <MudStack>
+        <MudText Typo="Typo.subtitle2"><b>Nombre</b></MudText>
+        <MudTextField T="string" @bind-Value="GroupName" Placeholder="Ingresa el nombre del grupo"
+                      Variant="Variant.Outlined" FullWidth="true" Margin="Margin.Dense"
+                      AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
+                      Adornment="Adornment.Start" AdornmentColor="Color.Primary"></MudTextField>
+    </MudStack>
 
-        <!-- Descripción del Grupo -->
-        <MudItem>
-            <MudText Typo="Typo.subtitle2"><b>Descripción</b></MudText>
-            <MudTextField T="string" @bind-Value="GroupDescription"  Placeholder="Escribe una breve descripción del grupo" Variant="Variant.Outlined" FullWidth="true" Lines="3" Margin="Margin.Dense"></MudTextField>
-        </MudItem>
+    <!-- Descripción del Grupo -->
+    <MudStack>
+        <MudText Typo="Typo.subtitle2"><b>Descripción</b></MudText>
+        <MudTextField T="string" @bind-Value="GroupDescription"
+                      Placeholder="Escribe una breve descripción del grupo"
+                      Variant="Variant.Outlined" FullWidth="true" Lines="3"
+                      Margin="Margin.Dense"></MudTextField>
+    </MudStack>
 
-        <!-- Email asociado -->
-        <MudItem>
-            <MudText Typo="Typo.subtitle2"><b>Correo asociado</b></MudText>
-            <MudTextField T="string" @bind-Value="AssociateEmail" InputType="InputType.Email"  Placeholder="Ingresa el correo electrónico que tendrá acceso al grupo" Variant="Variant.Outlined" FullWidth="true" Lines="3" Margin="Margin.Dense"></MudTextField>
-        </MudItem>
-    </DialogContent>
+    <!-- Email asociado -->
+    <MudStack>
+        <MudText Typo="Typo.subtitle2"><b>Correo asociado</b></MudText>
+        <MudTextField T="string" @bind-Value="AssociateEmail" InputType="InputType.Email"
+                      Placeholder="Ingresa el correo electrónico que tendrá acceso al grupo"
+                      Variant="Variant.Outlined" FullWidth="true" Lines="3"
+                      Margin="Margin.Dense"></MudTextField>
+    </MudStack>
+
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancelar</MudButton>
-        <MudButton OnClick="Submit" Color="Color.Primary">Crear</MudButton>
+        <MudButton OnClick="@Cancel">Cancelar</MudButton>
+        <MudButton OnClick="@Submit" Color="Color.Primary">Crear</MudButton>
     </DialogActions>
 </MudDialog>
+
 
 @code {
     [CascadingParameter]
