@@ -7,18 +7,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #F9FAFC;
-    /* Duplicado eliminado */
+    background-color: #F9FAFC; /* Duplicado eliminado */
     overflow: hidden;
 }
 
 .Login_contenedor_input {
-    margin: 0;
-    /* margin-top: -5px estaba en conflicto */
+    margin: 0; /* margin-top: -5px estaba en conflicto */
     max-width: 250px;
     min-width: 150px;
-    position: relative;
-    /* Para posicionar el icono */
+    position: relative; /* Para posicionar el icono */
 }
 
 .correo_span,
@@ -49,7 +46,7 @@
     background-color: #F9FAFC;
 }
 
-.card-content_contentainer-logo {
+.card-content_contentainer-logo{
     margin-bottom: 12px !important;
     display: flex;
     justify-content: center;
@@ -85,8 +82,7 @@
 }
 
 .texto2 {
-    color: #555;
-    /* color: #9A9A9A estaba duplicado */
+    color: #555; /* color: #9A9A9A estaba duplicado */
     font-size: 16px;
     text-align: center;
 }
@@ -123,7 +119,6 @@
 .login-image-cel {
     display: none;
 }
-
 .image-container2 {
     display: none;
 }
@@ -142,23 +137,18 @@
 
     .secondary-container {
         display: flex;
-        flex-direction: row;
-        /* Cambio a fila para alinear la imagen y el login lado a lado */
-        width: 100%;
-        /* Asegúrate de que ocupe el 100% del ancho disponible */
+        flex-direction: row; /* Cambio a fila para alinear la imagen y el login lado a lado */
+        width: 100%; /* Asegúrate de que ocupe el 100% del ancho disponible */
     }
 
     .login-card {
-        width: 50%;
-        /* Ajusta el ancho del login para que ocupe la mitad del contenedor */
+        width: 50%; /* Ajusta el ancho del login para que ocupe la mitad del contenedor */
         padding: 1rem;
-        box-sizing: border-box;
-        /* Asegura que el padding no afecte el ancho total */
+        box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
     }
 
     .image-container {
-        width: 50%;
-        /* Ajusta el ancho de la imagen para que ocupe la otra mitad del contenedor */
+        width: 50%; /* Ajusta el ancho de la imagen para que ocupe la otra mitad del contenedor */
         height: 100%;
         display: flex;
         justify-content: center;
@@ -170,8 +160,8 @@
     .login-image-cel {
         display: none;
     }
-
-    .Ingresar {
+    
+    .Ingresar{
         width: 300px;
     }
 }
@@ -191,8 +181,7 @@
 
 .input-field {
     padding: 0.5em 3em;
-    padding-left: 40px;
-    /* Aumenta el espacio a la izquierda para el icono */
+    padding-left: 40px; /* Aumenta el espacio a la izquierda para el icono */
     border-radius: 10px;
     border: 1px solid var(--c-border, #D9D9D9);
     color: var(--c-text);
@@ -203,19 +192,17 @@
 
 .input-icon-container {
     position: absolute;
-    left: 6px;
-    /* Ajusta la posición del icono */
+    left: 6px; /* Ajusta la posición del icono */
     top: 70%;
     transform: translateY(-50%);
 }
 
 .input-icon {
-    width: 30px;
-    /* Tamaño del icono */
+    width: 30px; /* Tamaño del icono */
     height: 30px;
 }
 
-.eye-icon {
+.eye-icon{
     height: 20px;
     width: 20px;
 }
@@ -234,7 +221,7 @@
     left: auto;
 }
 
-.input-field:not(:placeholder-shown)+.input-label {
+.input-field:not(:placeholder-shown) + .input-label {
     transform: translateY(-220%);
     opacity: 1;
 }
@@ -243,7 +230,7 @@
     --c-border: rgb(230, 85, 60);
     --c-text: rgb(230, 50, 50);
 }
-
+    
 
 @media (max-width: 480px) {
     .secondary-container {
@@ -267,7 +254,7 @@
         z-index: 1;
     }
 
-    .login-image {
+    .login-image{
         display: none;
     }
 
@@ -327,7 +314,7 @@
         height: 300px;
     }
 
-    .login-image-grafico-cel {
+    .login-image-grafico-cel{
         width: 100%;
         height: 100%;
     }

@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 
-namespace riwitalentfrontend.Services.Interfaces
+namespace riwitalentfrontend.Services
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
@@ -13,7 +13,7 @@ namespace riwitalentfrontend.Services.Interfaces
             _jsRuntime = jsRuntime;
         }
 
-        public void ActualizarEstadoAutenticacion(string token)
+        public async Task ActualizarEstadoAutenticacion(string token)
         {
             // Aquí codificamos el token y especificamos que esperamos que el token es vacio
             var authenticatedUser = !string.IsNullOrEmpty(token)
@@ -35,7 +35,7 @@ namespace riwitalentfrontend.Services.Interfaces
 
             var identity = new System.Security.Claims.ClaimsIdentity();
             var user = new System.Security.Claims.ClaimsPrincipal(identity);
-            
+
             return new AuthenticationState(user);
         }
 

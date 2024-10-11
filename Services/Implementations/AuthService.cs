@@ -1,38 +1,33 @@
 using System.Net.Http.Json;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using riwitalentfrontend.Models;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Text.Json;
+using System.Net.Http.Headers;
 using Blazored.SessionStorage;
-using Microsoft.AspNetCore.Components;
-using riwitalentfrontend.Services.Interfaces;
 
 
-namespace riwitalentfrontend.Services.Implementations
+namespace riwitalentfrontend.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService
     {
         private readonly HttpClient _httpClient;
         private readonly IJSRuntime _jsRuntime;
         private AuthenticationStateProvider _authenticationStateProvider;
         private readonly ISessionStorageService _sessionStorage;
-        private readonly NavigationManager _navigation;
 
         // Constructor corregido sin la coma final
-        public AuthService(HttpClient httpClient, IJSRuntime jsRuntime,
-            AuthenticationStateProvider authenticationStateProvider, ISessionStorageService sessionStorage,
-            NavigationManager navigation)
+        public AuthService(HttpClient httpClient, IJSRuntime jsRuntime, AuthenticationStateProvider authenticationStateProvider, ISessionStorageService sessionStorage)
         {
             _httpClient = httpClient;
             _jsRuntime = jsRuntime;
             _authenticationStateProvider = authenticationStateProvider;
             _sessionStorage = sessionStorage;
-            _navigation = navigation;
-
         }
 
         // Obtiene el endpoint y recibe los parametros enviados desde el login verificandolos
-        public async Task<bool> Login(string? email, string? password)
+        public async Task<bool> Login(string email, string password)
         {
             var loginData = new { Email = email, Password = password };
             var response = await _httpClient.PostAsJsonAsync("https://backend-riwitalent-9pv2.onrender.com/login", loginData);
@@ -43,15 +38,15 @@ namespace riwitalentfrontend.Services.Implementations
                 var token = await response.Content.ReadAsStringAsync();
                 await SaveTokenInCookies(token);
                 var authenticationExt = (CustomAuthStateProvider)_authenticationStateProvider;
-                authenticationExt.ActualizarEstadoAutenticacion(token);
+                await authenticationExt.ActualizarEstadoAutenticacion(token);
 
                 return true;
             }
             return false;
         }
-        
+
         // Funcion para guardar cookies llamando la funcion de js y asignando el token
-        public async Task SaveTokenInCookies(string token)
+        private async Task SaveTokenInCookies(string token)
         {
             await _jsRuntime.InvokeVoidAsync("setTokenInCookies", token);
         }
@@ -68,44 +63,8 @@ namespace riwitalentfrontend.Services.Implementations
         {
             await _jsRuntime.InvokeVoidAsync("deleteTokenFromCookies");
 
-              // Eliminar el correo del SessionStorage
+            // Eliminar el correo del SessionStorage
             await _sessionStorage.RemoveItemAsync("userEmail");
-        }
-        
-        public async Task SaveStorage<T>(ISessionStorageService sessionStorageService, string key, T item)where T:class
-        {
-            var itemJson = JsonSerializer.Serialize(item);
-            await sessionStorageService.SetItemAsStringAsync(key, itemJson);
-        }
-
-        public async Task<T?> GetStorage<T>(ISessionStorageService sessionStorageService, string key)where T:class
-        {
-            var itemJson = await sessionStorageService.GetItemAsStringAsync(key);
-
-            if (itemJson != null)
-            {
-                var item = JsonSerializer.Deserialize<T>(itemJson);
-                return item;
-            }else{
-                return null;
-            }
-        }
-
-        public async Task AuthenticationExternalAsync(AuthExternalRequest login, string key)
-        {
-            var loginExternalResponse = await _httpClient.PostAsJsonAsync<AuthExternalRequest>(
-                $"https://backend-riwitalent-9pv2.onrender.com/riwitalent/validationexternal",
-                login
-            );
-
-            if (loginExternalResponse.IsSuccessStatusCode)
-            {
-                _navigation.NavigateTo($"/HomeClient/{key}");
-            }
-            else
-            {
-                Console.WriteLine($"Error: {loginExternalResponse.StatusCode}");
-            }
         }
     }
 }

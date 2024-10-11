@@ -14,6 +14,7 @@ using Blazored.SessionStorage;
 using riwitalentfrontend;
 using riwitalentfrontend.Services.Implementations;
 using riwitalentfrontend.Services.Interfaces;
+using riwitalentfrontend.Services;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -23,17 +24,18 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // Configurar HttpClient
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://backend-riwitalent-9pv2.onrender.com/riwitalent/") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://backend-riwitalent-9pv2.onrender.com/") });
 
 // Servicios personalizados
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<ICoderService, CoderService>();
 builder.Services.AddTransient<CoderService>();
+builder.Services.AddTransient<GroupService>();
 
 // Configuración del HttpClient para servicios específicos
 builder.Services.AddHttpClient<GroupService>(client =>
 {
-    client.BaseAddress = new Uri("https://backend-riwitalent-9pv2.onrender.com/riwitalent/");
+    client.BaseAddress = new Uri("https://backend-riwitalent-9pv2.onrender.com/");
 });
 
 // Servicios de estado y almacenamiento
@@ -45,12 +47,11 @@ builder.Services.AddBlazoredModal();
 
 // Servicios de seguridad y autenticación
 builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<AuthenticationStateProvider,CustomAuthStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddScoped<AuthService>();
 
 // SweetAlert2 para alertas
 builder.Services.AddScoped<AlertService>();
 builder.Services.AddSweetAlert2();
 
-// Construir y ejecutar la aplicación
 await builder.Build().RunAsync();

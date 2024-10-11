@@ -17,6 +17,12 @@ namespace riwitalentfrontend.Models
         // Fecha de creación del grupo
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        // Email del creador del grupo
+        public string? CreatedBy { get; set; }
+
+        // Email de la empresa asociada al grupo
+        public string? AssociateEmail { get; set; }
+
         // Lista de claves externas asociadas al grupo
         public List<ExternalKey> ExternalKeys { get; set; } = new List<ExternalKey>();
 
