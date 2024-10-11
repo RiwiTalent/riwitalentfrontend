@@ -1,13 +1,10 @@
 @namespace riwitalentfrontend.Layout
 
-@using riwitalentfrontend.Theme
 @inherits LayoutComponentBase
-@inject NavigationManager NavigationManager
-
-
 
 @* Required *@
 <MudThemeProvider />
+<MudPopoverProvider />
 
 @* Needed for dialogs *@
 <MudDialogProvider />
@@ -18,17 +15,16 @@
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
 <MudLayout>
-    <MudAppBar Fixed="false" Elevation="1" Class="rounded-b-xl">
+    
+    <MudAppBar Elevation="1" Class="rounded-b-lg">
         <NavLink Icon="@Icons.Material.Rounded.Menu" Match="NavLinkMatch.All">
             <MudImage ObjectFit="ObjectFit.ScaleDown" Width="100" Fluid="true" Src="@(DarkLightModeImgLogo)"></MudImage>
         </NavLink>
         <MudSpacer/>
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
     </MudAppBar>
-    <MudMainContent Fixed="true">
-        <MudContainer Fixed="true" Style="height: 100vh;" Class="d-flex justify-center align-center pa-0">
-            @Body
-        </MudContainer>
+    <MudMainContent Style="height: 100vh" Class="d-flex justify-center align-center">
+        @Body
     </MudMainContent>
 </MudLayout>
 
@@ -51,20 +47,25 @@
         };
     }
 
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
     private void DarkModeToggle()
     {
         _isDarkMode = !_isDarkMode;
     }
-
-    private string DarkLightModeButtonIcon => _isDarkMode switch
+    
+    public string DarkLightModeButtonIcon => _isDarkMode switch
     {
         false => @Icons.Material.Outlined.WbSunny,
         true => Icons.Material.Outlined.DarkMode,
     };
-
+    
     private string DarkLightModeImgLogo => _isDarkMode switch
     {
-        false => "images/IsologoRiwiLight.png",
-        true => "images/IsologoRiwiDark.png",
+        false => "/images/IsologoRiwiLight.png",
+        true => "/images/IsologoRiwiDark.png",
     };
 }

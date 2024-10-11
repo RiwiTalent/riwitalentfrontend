@@ -1,39 +1,34 @@
-﻿@inherits LayoutComponentBase
-@using Microsoft.AspNetCore.Components.Authorization
-@using riwitalentfrontend.Services
-@using riwitalentfrontend.Theme
 @namespace riwitalentfrontend.Layout
-@using Blazored.SessionStorage;
-@inject AuthService AuthService
-@inject AuthenticationStateProvider autenticacionProvider
-@inject ISessionStorageService SessionStorage
 
-@inject NavigationManager navManager
-@inject NavigationManager NavigationManager
-@using riwitalentfrontend.Components
+@inherits LayoutComponentBase
 
+@* Required *@
+<MudThemeProvider />
+<MudPopoverProvider />
 
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
 
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
 <MudLayout>
-    <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
-        <NavLink class="nav-link riwi-image-content" href="/home" Match="NavLinkMatch.All">
-            <img class="riwitalentfrontend-image" src="images/riwi.png"/>
+    
+    <MudAppBar Elevation="1" Class="rounded-br-lg">
+        <MudIconButton Icon="@Icons.Material.Rounded.Menu" Color="Color.Primary" Edge="Edge.Start" OnClick="@(DrawerToggle)"/>
+        <NavLink Icon="@Icons.Material.Rounded.Menu" href="/home" Match="NavLinkMatch.All">
+            <MudImage ObjectFit="ObjectFit.ScaleDown" Width="100" Fluid="true" Src="@(DarkLightModeImgLogo)"></MudImage>
         </NavLink>
         <MudSpacer/>
-
-
         <AvatarComponent TypeAvatar="Usuario" KeySesionStorage="userEmail"></AvatarComponent>
-
-
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="1">
+    <MudDrawer @bind-Open="_drawerOpen" Variant="DrawerVariant.Mini" Overlay="false" ClipMode="DrawerClipMode.Always" Elevation="1" Class="rounded-lg ma-2">
         <NavMenu/>
     </MudDrawer>
-    <MudMainContent Class="-flex flex-grow-1">
+    <MudMainContent Style="height: 100vw;">
         @Body
     </MudMainContent>
 </MudLayout>
@@ -66,7 +61,6 @@
     {
         _isDarkMode = !_isDarkMode;
     }
-
     
     public string DarkLightModeButtonIcon => _isDarkMode switch
     {
@@ -74,12 +68,9 @@
         true => Icons.Material.Outlined.DarkMode,
     };
     
-    
+    private string DarkLightModeImgLogo => _isDarkMode switch
+    {
+        false => "/images/IsologoRiwiLight.png",
+        true => "/images/IsologoRiwiDark.png",
+    };
 }
-
-<style>
-    .riwitalentfrontend-image {
-        width: 103px;
-        height: 30px;
-    }
-</style>

@@ -21,9 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="src\web.config" />
-    <_ContentIncludedByDefault Remove="src\wwwroot\sample-data\weather.json" />
-    <_ContentIncludedByDefault Remove="src\wwwroot\_framework\blazor.boot.json" />
+    <Folder Include="Components\Avatar\" />
+    <Folder Include="Components\BannerCoders\" />
+    <Folder Include="Components\Dialog\" />
+    <Folder Include="Components\GroupCoder\" />
+    <Folder Include="Components\Login\" />
   </ItemGroup>
 
 </Project>

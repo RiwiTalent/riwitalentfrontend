@@ -1,10 +1,9 @@
 @namespace riwitalentfrontend.Components
 @inject IModalService ModalService
 @using Blazored.Modal.Services
-@inject GroupCodersServices _groupCodersServices
 @inject TermsAndConditionsService _termsAndConditionsService
 @inject NavigationManager NavigationManager
-@inject AlertServices _alertServices
+@inject AlertService AlertService;
 @using riwitalentfrontend.Models;
 @using riwitalentfrontend.Services;
 
@@ -36,7 +35,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        group = await _groupCodersServices.GetGroupInfoById(GroupId);
+        group = await _groupCodersServices .GetGroupInfoById(GroupId);
         Console.WriteLine($"Group recibido en el modal: {group?.Id ?? "null"}");
     }
 
@@ -49,7 +48,7 @@
         }
 
         // Mostrar alerta de confirmación antes de guardar
-        await _alertServices.SaveChangesRegister(); // Se debe eliminar la asignación a result
+        await AlertService.SaveChangesRegister(); // Se debe eliminar la asignación a result
 
         // Crear el nuevo registro de términos
         var newTerms = new TermAndCondition
@@ -68,14 +67,14 @@
         }
         else
         {
-            await _alertServices.Warning();
+            await AlertService.Warning();
         }
     }
 
     private async Task Cancelar()
     {
         // Mostrar alerta de confirmación antes de eliminar
-        await _alertServices.DeleteRegister(); // Se debe eliminar la asignación a result
+        await AlertService.DeleteRegister(); // Se debe eliminar la asignación a result
 
         // Crear el nuevo registro de términos con Accepted = false
         var newTerms = new TermAndCondition
@@ -94,7 +93,7 @@
         }
         else
         {
-            await _alertServices.Warning();
+            await AlertService.Warning();
         }
     }
 }

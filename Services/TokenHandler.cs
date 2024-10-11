@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
 namespace riwitalentfrontend.Services
@@ -16,7 +12,7 @@ namespace riwitalentfrontend.Services
             _jsRuntime = jsRuntime;
         }
 
-        // Esta funcion sirve para establecer el token como cabecera de la autenticacion
+        // Este metodo sirve para establecer el token como cabecera de la autenticacion
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             // Obtener el token de las cookies

@@ -1,8 +1,8 @@
-    using System.Net.Http.Json;
-    using Microsoft.AspNetCore.Components;
-    using riwitalentfrontend.Models;
+using System.Net.Http.Json;
+using Microsoft.AspNetCore.Components;
+using riwitalentfrontend.Models;
 
-    namespace riwitalentfrontend.Services;
+namespace riwitalentfrontend.Services;
 
     public class GroupCodersServices
     {
@@ -16,24 +16,23 @@
 
         }
 
-        public async Task<CodersInGroup> GetCodersInGroupAsync(string key)
-        {
-            var response = await _httpClient.GetFromJsonAsync<CodersInGroup>($"https://backend-riwitalent-9pv2.onrender.com/groupdetails/{key}");
-            return response;
-        }
-        
+    public async Task<CodersInGroup> GetCodersInGroupAsync(string key)
+    {
+        var response = await _httpClient.GetFromJsonAsync<CodersInGroup>($"https://backend-riwitalentfrontend.alent-9pv2.onrender.com/riwitalentfrontend.alent/groupdetails/{key}");
+        return response;
+    }
+    
 
-        public async Task<bool> AuthenticationExternalAsync(AuthExternalRequest login)
-        {
-            var loginExternalResponse = await _httpClient.PostAsJsonAsync<AuthExternalRequest>
-                ($"http://localhost:5113/validation-external?Id={login.GroupId}&AssociateEmail={login.AssociateEmail}&Key={login.Key}",
-                login);
-
-
+    public async Task AuthenticationExternalAsync(AuthExternalRequest login, string key)
+    {
+        var loginExternalResponse = await _httpClient.PostAsJsonAsync<AuthExternalRequest>(
+            $"https://backend-riwitalentfrontend.alent-9pv2.onrender.com/riwitalentfrontend.alent/validationexternal",
+            login
+        );
 
             if (loginExternalResponse.IsSuccessStatusCode)
             {
-                // _navigation.NavigateTo($"/HomeExterno/{key}");
+                _navigation.NavigateTo($"/HomeClient/{key}");
                 return true; 
             }
             else

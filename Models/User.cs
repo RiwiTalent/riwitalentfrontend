@@ -4,13 +4,13 @@ namespace riwitalentfrontend.Models
 {
     public class User
     {
-        /* public string? Name { get; set; } */
-/*         [Required(ErrorMessage = "El email es obligatorio")]
-        [EmailAddress(ErrorMessage = "Formato de email no válido")] */
-        public string? Email { get; set; }
+        // Correo electrónico del usuario
+        [Required(ErrorMessage = "El correo es obligatorio.")]
+        [EmailAddress(ErrorMessage = "Formato de correo inválido.")]
+        public string Email { get; set; } = string.Empty;
 
-        /* [Required(ErrorMessage = "La contraseña es obligatoria")]
-        [StringLength(100, MinimumLength = 8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres")] */
-        public string? Password { get; set; }
+        // Contraseña del usuario
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        public string Password { get; set; } = string.Empty;
     }
 }

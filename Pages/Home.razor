@@ -1,16 +1,10 @@
 @page "/home"
-@using Microsoft.AspNetCore.Authorization
-@using riwitalentfrontend.Components
-@using Microsoft.AspNetCore.Components.Authorization;
-@using riwitalentfrontend.Components
+@layout MainLayout
+
+@* @attribute [Authorize] *@
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@using riwitalentfrontend.Components;
 
-@attribute [Authorize]
-
-
-
-<PageTitle>Coders</PageTitle>
+<PageTitle>RiwiTalent: Conecta Empresas con los Mejores Coders</PageTitle>
 
 <head>
     <link rel="stylesheet" href="css/home.css">

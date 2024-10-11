@@ -1,109 +1,84 @@
 @namespace riwitalentfrontend.Components
-@using riwitalentfrontend.Models;
-@using Microsoft.AspNetCore.Components.Authorization;
-@using riwitalentfrontend.Services;
-@inject AuthenticationStateProvider autenticacionProvider;
+
+@inject AuthenticationStateProvider AutenticacionProvider;
 @inject AuthService AuthService;
 @inject ISessionStorageService SessionStorage
 @using Blazored.SessionStorage
 @inject NavigationManager NavigationManager;
 @inject HttpClient HttpClient;
 @inject SweetAlertService Swal;
-@inject AlertServices alertServices;
-@using CurrieTechnologies.Razor.SweetAlert2
+@inject AlertService AlertService;
 
-<head>
-    <link rel="stylesheet" href="css/Components/LoginComponent.css">
-</head>
-
-
-<div class="main-container">
-    <div class="secondary-container">
-        <div class="login-card">
-            <div class="card-content">
-                <div class="card-content_contentainer-logo text-center mb-3">
-                    <img src="images/riwi.png" alt="Logo Riwi" class="riwitalentfrontend-logo"/>
-
-                </div>
-                <h5 class="texto1">Bienvenido de nuevo</h5>
-                <p class="texto2">Ingresa con tu cuenta para continuar</p>
-                <MudForm Style="display: flex; align-items: center " Valid="IniciarSesion">
-                    <br>
-                    <p class="input-container form-group Login_contenedor_input">
-                        <span class="correo_span">Correo</span>
-                        <label for="Password" class="input-icon-container">
-                            <img src="images/mail-filled.svg" alt="Icono de correo electronico" class="input-icon"/>
-                        </label>
-                        <input type="text" placeholder="Ingresa tu correo electronico" @bind-value="email" name="Email" id="text" class="input-field" autocomplete="Email">
-                    </p>
-                    <br>
-                    <p class="input-container form-group Login_contenedor_input">
-                        <span class="Password_span">Contraseña</span>
-                        <label for="Password" class="input-icon-container">
-                            <img src="images/lock.svg" alt="Icono de contraseña" class="input-icon"/>
-                        </label>
-                        <input type="@passwordInputType" placeholder="Ingresa tu contraseña" @bind-value="password" name="Password" id="Password" class="input-field" autocomplete="Password">
-                        <label for="Password" class="eye-icon-container end-icon" @onclick="TogglePasswordVisibility">
-                            <img src="images/eye-off.svg" alt="Icono para ocultar/mostrar contraseña" class="eye-icon"/>
-                        </label>
-                    </p>
-
-                    <div class="button-container">
-                        <button type="button" class="btn mt-3 Ingresar" @onclick="Login">Ingresar</button>
-                    </div>
+<MudGrid Class="pa-0 ma-0">
+    <MudContainer Class="d-flex justify-center align-center pa-2 flex-grow-1">
+        <MudCard Class="pa-6 d-flex justify-center align-center rounded-lg">
+            <MudCardHeader>
+                <MudItem Class="d-flex justify-center align-center">
+                    <LogoComponent IsDarkMode="@IsDarkMode" />
+                </MudItem>
+            </MudCardHeader>
+            <MudItem>
+                <MudText Align="Align.Center" Typo="Typo.h5"><b>¡Bienvenido/a de nuevo!</b></MudText>
+                <MudText Align="Align.Center" Typo="Typo.subtitle1">Ingresa con tu cuenta para continuar</MudText>
+            </MudItem>
+            <MudCardContent Class="FullWidth" Style="width: 100%;">
+                <MudForm Spacing="2">
+                    <MudTextField T="string" Label="Correo" @bind-value="_email" Variant="Variant.Outlined" InputType="InputType.Email"/>
+                    <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@_passwordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
                 </MudForm>
-            </div>
-        </div>
-        @* <button class="btn btn-primary" @onclick="SuccessSweetAlert">
-            error!
-        </button> *@
-        <div class="image-container">
-            <img src="images/fondo1.png" alt="Imagen de login" class="login-image"/>
-            <img src="images/fondo2.jpeg" alt="Imagen de login en celular" class="login-image-cel"/>
-
-        </div>
-
-        <div class="image-container2">
-            <img src="images/bg-10.svg" alt="Imagen de login en celular" class="login-image-grafico-cel"/>
-        </div>
-    </div>
-</div>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="Login">Continuar</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudContainer>
+</MudGrid>
 
 @code {
+    private string? _email;
+    private string? _password;
+    private bool IsDarkMode { get; set; }
 
+    bool _isShow;
+    InputType _passwordInput = InputType.Password;
+    string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
 
-    private string email;
-    private string password;
-    private string passwordInputType = "password"; // Inicialmente oculto
-
-    private void TogglePasswordVisibility()
+    void ButtonTestclick()
     {
-        passwordInputType = passwordInputType == "password" ? "text" : "password"; // Alterna el tipo de input
+        @if (_isShow)
+        {
+            _isShow = false;
+            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            _passwordInput = InputType.Password;
+        }
+        else {
+            _isShow = true;
+            _passwordInputIcon = Icons.Material.Filled.Visibility;
+            _passwordInput = InputType.Text;
+        }
     }
-
+    
     private async Task Login()
     {
-
-        var succes = await AuthService.Login(email, password);
-
-
+        var succes = await AuthService.Login(_email, _password);
+        
         if (succes)
         {
-
-             // Guardar el correo en SessionStorage
-            await SessionStorage.SetItemAsync("userEmail", email); // Cambia "userEmail" por la clave que desees usar
+            // Guardar el correo en SessionStorage
+            await SessionStorage.SetItemAsync("userEmail", _email);
 
             NavigationManager.NavigateTo("/home");
             await Swal.FireAsync(new SweetAlertOptions
-            {
-                Title = "Bienvenido!",
+            {   
+                Title = "¡Bienvenido",
+                Position = "center",
                 Icon = SweetAlertIcon.Success,
+                ShowConfirmButton = false ,
                 Timer = 1500
-            });            
+            });
         }
         else
         {
-            Console.WriteLine("No funciona");
             await Swal.FireAsync(new SweetAlertOptions
             {
                 Title = "Correo o contraseña incorrectos!",
@@ -114,17 +89,4 @@
             });
         }
     }
-
-    private async Task SuccessSweetAlert()
-    {
-        await Swal.FireAsync(new SweetAlertOptions
-            {
-                Title = "Error!",
-                Text = "Do you want to continue",
-                Icon = SweetAlertIcon.Error,
-                ConfirmButtonText = "Cool"
-            });
-    }
-
 }
-

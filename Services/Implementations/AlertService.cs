@@ -1,18 +1,19 @@
 using CurrieTechnologies.Razor.SweetAlert2;
+using riwitalentfrontend.Services.Interfaces;
 
 
 namespace riwitalentfrontend.Services
 {
-    public class AlertServices
+    public class AlertService : IAlertService
     {
-        private readonly SweetAlertService Swal;
-        public AlertServices(SweetAlertService swal)
+        private readonly SweetAlertService _swal;
+        public AlertService(SweetAlertService swal)
         {
-            Swal = swal;
+            _swal = swal;
         }
 
         public async Task DeleteRegister(){
-            var result = await Swal.FireAsync(new SweetAlertOptions
+            var result = await _swal.FireAsync(new SweetAlertOptions
             {
                 Icon = SweetAlertIcon.Warning,
                 Title = "¿Estás seguro/a de que deseas eliminar este registro?",
@@ -26,7 +27,7 @@ namespace riwitalentfrontend.Services
 
             if (result.IsConfirmed)
             {
-                await Swal.FireAsync(new SweetAlertOptions
+                await _swal.FireAsync(new SweetAlertOptions
                 {
                     Title = "Los datos se han eliminado exitosamente",
                     Icon = SweetAlertIcon.Success,
@@ -36,7 +37,7 @@ namespace riwitalentfrontend.Services
         }
 
         public async Task SaveChangesRegister(){
-            var result = await Swal.FireAsync(new SweetAlertOptions
+            var result = await _swal.FireAsync(new SweetAlertOptions
             {
                 Icon = SweetAlertIcon.Success,
                 Title = "¿Estás seguro/a de que deseas guardar los cambios de este registro?",
@@ -50,7 +51,7 @@ namespace riwitalentfrontend.Services
 
             if (result.IsConfirmed)
             {
-                await Swal.FireAsync(new SweetAlertOptions
+                await _swal.FireAsync(new SweetAlertOptions
                 {
                     Title = "Los datos se han guardado exitosamente",
                     Icon = SweetAlertIcon.Success,
@@ -61,7 +62,7 @@ namespace riwitalentfrontend.Services
         
         public async Task NewRegister()
         {
-            var result = await Swal.FireAsync(new SweetAlertOptions
+            var result = await _swal.FireAsync(new SweetAlertOptions
             {
                 Icon = SweetAlertIcon.Success,
                 Title = "¿Estás seguro/a de que deseas crear este nuevo registro?",
@@ -75,7 +76,7 @@ namespace riwitalentfrontend.Services
 
             if (result.IsConfirmed)
             {
-                await Swal.FireAsync(new SweetAlertOptions
+                await _swal.FireAsync(new SweetAlertOptions
                 {
                     Title = "Registro Creado Exitosamente",
                     Icon = SweetAlertIcon.Success,
@@ -86,7 +87,7 @@ namespace riwitalentfrontend.Services
         
         public async Task Warning()
         {
-            await Swal.FireAsync(new SweetAlertOptions
+            await _swal.FireAsync(new SweetAlertOptions
                 {   
                     Title = "¡Ups, lo sentimos ocurrió un error!",
                     Icon = SweetAlertIcon.Warning,

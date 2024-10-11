@@ -1,14 +1,7 @@
-@page "/loginclient/{groupId}"
-@layout ClientLayout
+@page "/LoginClient"
+@layout LoginLayout
 
 <PageTitle>Riwi: Portal de Acceso para Empresas</PageTitle>
 
 <!-- Componente login -->
 <LoginClientComponent/>
-
-
-@code {
-    [Parameter]
-    public string? groupId { get; set; }
-
-}

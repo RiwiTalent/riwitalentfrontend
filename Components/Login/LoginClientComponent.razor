@@ -1,7 +1,6 @@
-@using CurrieTechnologies.Razor.SweetAlert2
-@using Microsoft.AspNetCore.Components.Authorization;
-@using riwitalentfrontend.Services;
-@inject AuthenticationStateProvider autenticacionProvider;
+@namespace riwitalentfrontend.Components
+
+@inject AuthenticationStateProvider AutenticacionProvider;
 @inject AuthService AuthService;
 @inject GroupCodersServices _groupCodersServices
 @inject ISessionStorageService SessionStorage
@@ -10,14 +9,7 @@
 @inject NavigationManager NavigationManager;
 @inject HttpClient HttpClient;
 @inject SweetAlertService Swal;
-@using riwitalentfrontend.Models;
-@namespace riwitalentfrontend.Components
-
-
-<head>
-    <link rel="stylesheet" href="css/Components/LoginClientComponent.css">
-</head>
-
+@inject AlertService AlertService;
 
 <MudGrid Class="pa-0 ma-0">
     <MudItem Class="d-flex justify-center align-center">
@@ -66,22 +58,22 @@
 
     public AuthExternalRequest login { get; set; } = new();
 
-    bool isShow;
-    InputType PasswordInput = InputType.Password;
-    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    bool _isShow;
+    InputType _passwordInput = InputType.Password;
+    string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
 
     void ButtonTestclick()
     {
-        @if (isShow)
+        @if (_isShow)
         {
-            isShow = false;
-            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-            PasswordInput = InputType.Password;
+            _isShow = false;
+            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            _passwordInput = InputType.Password;
         }
         else {
-            isShow = true;
-            PasswordInputIcon = Icons.Material.Filled.Visibility;
-            PasswordInput = InputType.Text;
+            _isShow = true;
+            _passwordInputIcon = Icons.Material.Filled.Visibility;
+            _passwordInput = InputType.Text;
         }
     }
     
@@ -157,15 +149,6 @@
     }
 
 
-    private async Task SuccessSweetAlert()
-    {
-        await Swal.FireAsync(new SweetAlertOptions
-            {
-                Title = "Error!",
-                Text = "Do you want to continue",
-                Icon = SweetAlertIcon.Error,
-                ConfirmButtonText = "Cool"
-            });
-    }
 
 }
+

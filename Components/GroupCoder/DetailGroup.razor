@@ -1,18 +1,19 @@
-@using riwitalentfrontend.Services;
-@using riwitalentfrontend.Components;
+@namespace riwitalentfrontend.Components.DetailGroup
+
+@using riwitalentfrontend.Components
 @using riwitalentfrontend.Models;
-@inject CoderService coderService;
-@inject IModalService model;
+@inject CoderService CoderService;
+@inject IModalService Model;
+@using riwitalentfrontend.Components
 
 <head>
-    <link rel="stylesheet" href="css/Components/CardComponent.css">
-
+    <link rel="stylesheet" href="css/CardComponent.css">
 </head>
 
 <MudPaper Class="container-filter" Elevation="1">
     <MudPaper Elevation="0" Class="d-flex align-center">
         @* <MudText Class="text-resultado" Typo="Typo.h6">@coders.Count Coders</MudText> *@
-        <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Grupos</MudText>
+        <MudText Class="text-resultado" Typo="Typo.h6">@_totalCoders Grupos</MudText>
     </MudPaper>
 
     <MudButton OnClick="CleanFilters" Class=""> Limpiar </MudButton>
@@ -20,11 +21,11 @@
     <MudButton Color="Color.Primary" OnClick="FilterCoders" Class=""> Filtrar </MudButton>
 
     <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
-        <MudTextField StartIcon="@Icons.Material.Filled.Delete" @bind-Value="searchText" Placeholder="Buscar aquí..." Class="search" Immediate="true" TextChanged="FilterCoders" />
+        <MudTextField Adornment="@Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Delete" @bind-Value="_searchText" Placeholder="Buscar aquí..." Class="search" Immediate="true" TextChanged="FilterCoders" />
     </MudPaper>
 
     <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select">
-        <InputSelect @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
+        <InputSelect @bind-Value="_skills" Class="search-container" @onchange="CleanFilterSkill">
             <option value="">Tecnologia</option>
             <option value="JavaScript">JavaScript</option>
             <option value="C#">C#</option>
@@ -36,7 +37,7 @@
             <option value="clear">Limpiar Filtro</option> <!-- Opción para limpiar -->
         </InputSelect>
 
-        <InputSelect @bind-Value="languageLevel" Class="search-container" @onchange="CleanFilterEnglishLevel">
+        <InputSelect @bind-Value="_languageLevel" Class="search-container" @onchange="CleanFilterEnglishLevel">
             <option value="">Nivel inglés</option>
             <option value="A1">A1</option>
             <option value="A2">A2</option>
@@ -52,16 +53,15 @@
 
 
 
-@if(coders != null)
+@if(_coders != null)
 {
     <div class="cards">
-        @foreach (var coder in paginatedCoders)
+        @foreach (var coder in _paginatedCoders)
         {
             <MudCard>
                 @if (coder.Photo != null)
                 {
-                    <MudImage Fluid="true"
-                    ObjetctFit="Cover" Src="@ImageNullOrEmpty(coder.Photo)" Alt="Mony the dog" Width="250" Height="300"/>
+                    <MudImage Fluid="true" Src="@ImageNullOrEmpty(coder.Photo)" Alt="Mony the dog" Width="250" Height="300"/>
 
                     @* <MudImage class=""
                             Src="@ImageNullOrEmpty(coder.Photo)" 
@@ -78,7 +78,7 @@
                                 <div class="cards__coder">
                                     <h6 class="">@coder.FirstName @coder.FirstLastName</h6>
                                     <p>@coder.Stack
-                                        @coder.LanguageSkills.Language_Level
+                                        @coder.LanguageSkills.LanguageLevel
                                     </p>
                                 </div>
                                     <a><img src="images/group-add.svg" alt="icon"></a>
@@ -89,7 +89,7 @@
                                 <div class="cards__badges">
                                     @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
                                     {
-                                        <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
+                                        <div class="cards__badge">@coder.Skills[i].LanguageProgramming</div>
                                     }
                                 </div>
                             }
@@ -109,7 +109,7 @@
 
     <div class="container-pagination">
         <div class="container-box">
-            <MudPagination Variant="Variant.Filled" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize" TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
+            <MudPagination Variant="Variant.Filled" ShowPreviousButton="false" ShowNextButton="false" Count="@_pag" PageSize="@_pageSize" TotalItems="@_totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
         </div>
     </div>
 }
@@ -123,23 +123,23 @@ else
 {    
 
     public string ButtonDetails = "Detalle";
-    private List<Coder>? coders;
+    private List<Coder>? _coders;
 
     //pagination
-    private List<Coder>? paginatedCoders;
-    private int totalCoders;
-    private int currentPage = 1;
-    private int pageSize = 8;
-    private int pag;
+    private List<Coder>? _paginatedCoders;
+    private int _totalCoders;
+    private int _currentPage = 1;
+    private int _pageSize = 8;
+    private int _pag;
 
     //filtrado
-    private List<Coder>? filterCoder;
+    private List<Coder>? _filterCoder;
 
     // Filtros
-    private string? searchText;
-    private string? skills;
-    private string? languageLevel;
-    private bool FilterApplied = false;
+    private string? _searchText;
+    private string? _skills;
+    private string? _languageLevel;
+    private bool _filterApplied = false;
     
 
     protected override async Task OnInitializedAsync()
@@ -147,11 +147,11 @@ else
         //Llamado a la api
         try
         {
-            coders = await coderService.GetCodersAsync();
-            totalCoders = coders.Count;
-            pag = (int)Math.Ceiling((double)totalCoders / pageSize);
-            Console.WriteLine(pag);
-            LoadCoders(currentPage);
+            _coders = await CoderService.GetCodersAsync();
+            _totalCoders = _coders.Count;
+            _pag = (int)Math.Ceiling((double)_totalCoders / _pageSize);
+            Console.WriteLine(_pag);
+            LoadCoders(_currentPage);
         }
         catch (Exception ex)
         {
@@ -163,7 +163,7 @@ else
     {
         try
         {
-            coders = await coderService.GetCodersAsync();
+            _coders = await CoderService.GetCodersAsync();
         }
         catch (Exception ex)
         {
@@ -173,58 +173,58 @@ else
 
     private void OnPageChanged(int pageNumber)
     {
-        currentPage = pageNumber;
-        LoadCoders(currentPage);
+        _currentPage = pageNumber;
+        LoadCoders(_currentPage);
     }
     
 
     private async Task FilterCoders()
     {
-        coders = await coderService.GetCodersAsync();
+        _coders = await CoderService.GetCodersAsync();
 
         // Filtrar por nombres o apellidos
-        if (!string.IsNullOrEmpty(searchText))
+        if (!string.IsNullOrEmpty(_searchText))
         {
-            var searchTerms = searchText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            coders = coders.Where(c =>
+            var searchTerms = _searchText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            _coders = _coders.Where(c =>
             {
                 var fullName = $"{c.FirstName} {c.SecondName} {c.FirstLastName} {c.SecondLastName}".ToLower();
                 return searchTerms.All(term => fullName.Contains(term.ToLower()));
             }).ToList();
-            FilterApplied = true;
+            _filterApplied = true;
         }
 
         // Filtro de Skills
-        if (!string.IsNullOrEmpty(skills))
+        if (!string.IsNullOrEmpty(_skills))
         {
-            coders = coders.Where(c => c.Skills.Any(s => s.Language_Programming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
+            _coders = _coders.Where(c => c.Skills.Any(s => s.LanguageProgramming.Contains(_skills, StringComparison.OrdinalIgnoreCase))).ToList();
         }
 
         // Filtro de Nivel de Lenguaje
-        if (!string.IsNullOrEmpty(languageLevel))
+        if (!string.IsNullOrEmpty(_languageLevel))
         {
-            coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.Language_Level.Equals(languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
-            FilterApplied = true;
+            _coders = _coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.LanguageLevel.Equals(_languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
+            _filterApplied = true;
         }
 
-        totalCoders = coders.Count;
-        pag = (int)Math.Ceiling((double)totalCoders / pageSize);
-        LoadCoders(currentPage);
+        _totalCoders = _coders.Count;
+        _pag = (int)Math.Ceiling((double)_totalCoders / _pageSize);
+        LoadCoders(_currentPage);
         StateHasChanged();
     }
 
     private async Task CleanFilters()
     {
-        searchText = "";
-        skills = "";
-        languageLevel = "";
+        _searchText = "";
+        _skills = "";
+        _languageLevel = "";
 
-        coders = await coderService.GetCodersAsync();
-        totalCoders = coders.Count;
-        pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+        _coders = await CoderService.GetCodersAsync();
+        _totalCoders = _coders.Count;
+        _pag = (int)Math.Ceiling((double)_totalCoders / _pageSize);
 
-        currentPage = 1;
-        LoadCoders(currentPage);
+        _currentPage = 1;
+        LoadCoders(_currentPage);
         StateHasChanged();
     }
 
@@ -232,7 +232,7 @@ else
     {
         if (e.Value?.ToString() == "clear")
         {
-            skills = "";  // Resetea el valor de skills
+            _skills = "";  // Resetea el valor de skills
             await FilterCoders();  // Aplica los filtros
         }
         
@@ -242,29 +242,29 @@ else
     {
         if (e.Value?.ToString() == "clear")
         {
-            languageLevel = "";  // Resetea el valor de languageLevel
+            _languageLevel = "";  // Resetea el valor de languageLevel
             await FilterCoders();  // Aplica los filtros
         }
     }
 
     private void LoadCoders(int pageNumber)
     {
-        paginatedCoders = coders
-            ?.Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
+        _paginatedCoders = _coders
+            ?.Skip((pageNumber - 1) * _pageSize)
+            .Take(_pageSize)
             .ToList();
     }
 
     //Funcionalidad ver detalles
     private async Task ShowDetails(string id)
     {
-        var coder = coders.FirstOrDefault(c => c.Id == id);
+        var coder = _coders.FirstOrDefault(c => c.Id == id);
         if (coder != null)
         {
             var parameters = new ModalParameters();
             parameters.Add(nameof(ModalCoderDetails.Coder), coder);
 
-            var modal = model.Show<ModalCoderDetails>("", parameters);
+            var modal = Model.Show<ModalCoderDetails>("", parameters);
             await modal.Result;
         }
     }

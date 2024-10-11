@@ -102,7 +102,7 @@
                                 <div class="cards__badges">
                                     @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
                                     {
-                                        var skill = coder.Skills[i].Language_Programming;
+                                        var skill = coder.Skills[i].LanguageProgramming;
                                         var badgeColor = GetColor(skill);
                                         var badgeIcon = GetIcon(skill);
 
@@ -174,7 +174,7 @@ else
                         <div class="cards__badges">
                             @for (int i = 0; i < coder.Skills.Count && i < 6; i++)
                             {
-                            <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
+                            <div class="cards__badge">@coder.Skills[i].LanguageProgramming</div>
                             }
                         </div>
                         }
@@ -241,7 +241,7 @@ else
                 {
 
                     badges.Add(new Badge{
-                        Technology = skill.Skills[i].Language_Programming,
+                        Technology = skill.Skills[i].LanguageProgramming,
                         Color = GetColor(skill.ToString()),
                         Icon = GetIcon(skill.ToString())
                     });
@@ -357,13 +357,13 @@ else
         // Filtro de Skills
         if (!string.IsNullOrEmpty(skills))
         {
-            coders = coders.Where(c => c.Skills.Any(s => s.Language_Programming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
+            coders = coders.Where(c => c.Skills.Any(s => s.LanguageProgramming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
         }
 
         // Filtro de Nivel de Lenguaje
         if (!string.IsNullOrEmpty(languageLevel))
         {
-            coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.Language_Level.Equals(languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
+            coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.LanguageLevel.Equals(languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
             FilterApplied = true;
         }
 

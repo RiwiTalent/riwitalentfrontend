@@ -1,8 +1,10 @@
-@page "/{groupId}"
-@inject GroupCodersServices _groupCodersServices
-@using riwitalentfrontend.Models;
-@inject IModalService ModalService
-@layout ClientLayout
+@inject GroupCodersServices GroupCodersServices
+@layout LoginLayout
+
+<PageTitle>RiwiTalent: Software de gestión talento Riwi</PageTitle>
+
+@* <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7" />
+            <p>cargando...></p> *@
 
 <MudForm Style="display: flex; align-items: center " Valid="IniciarSesion">
     <br>

@@ -11,8 +11,10 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/app.css" />
-    <!-- <link rel="stylesheet" href="riwitalentfrontend.styles.css" /> -->
+    <link rel="stylesheet" href="riwitalentfrontend.styles.css" />
     <link rel="stylesheet" href="_content/MudBlazor/MudBlazor.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
@@ -24,9 +26,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet" />
     
+    
 </head>
 
 <body>
+    <!-- Blazor Application Container -->
+    <div id="app">
+    </div>
     <!-- Blazor Application Container -->
     <div id="app">
     </div>
@@ -37,11 +43,22 @@
         <a href="" class="reload">Recargar</a>
         <a class="dismiss">🗙</a>
     </div>
+    <!-- Blazor Error UI -->
+    <div id="blazor-error-ui">
+        Se ha producido un error no controlado.
+        <a href="" class="reload">Recargar</a>
+        <a class="dismiss">🗙</a>
+    </div>
 
     <!-- Scripts -->
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <!-- Scripts -->
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 
+    <!-- SweetAlert2 Script -->
+    <script src="_content/CurrieTechnologies.Razor.SweetAlert2/sweetAlert2.min.js"></script>
     <!-- SweetAlert2 Script -->
     <script src="_content/CurrieTechnologies.Razor.SweetAlert2/sweetAlert2.min.js"></script>
     <script src="js/tokenManager.js"></script>

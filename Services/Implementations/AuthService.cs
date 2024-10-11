@@ -44,7 +44,7 @@ namespace riwitalentfrontend.Services
             }
             return false;
         }
-        
+
         // Funcion para guardar cookies llamando la funcion de js y asignando el token
         private async Task SaveTokenInCookies(string token)
         {
@@ -63,7 +63,7 @@ namespace riwitalentfrontend.Services
         {
             await _jsRuntime.InvokeVoidAsync("deleteTokenFromCookies");
 
-              // Eliminar el correo del SessionStorage
+            // Eliminar el correo del SessionStorage
             await _sessionStorage.RemoveItemAsync("userEmail");
         }
     }
