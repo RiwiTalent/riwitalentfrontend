@@ -6,6 +6,6 @@ namespace riwitalentfrontend.Models
         public string Language { get; set; } = string.Empty;
 
         // Nivel de habilidad en el idioma (ej. Básico, Intermedio, Avanzado)
-        public string LanguageLevel { get; set; } = string.Empty;
+        public string Language_Level { get; set; } = string.Empty;
     }
 }

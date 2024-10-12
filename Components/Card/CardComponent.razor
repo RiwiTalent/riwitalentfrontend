@@ -1,8 +1,13 @@
-@inject CoderService coderService;
+@using riwitalentfrontend.Services;
+@using riwitalentfrontend.Components
+@using riwitalentfrontend.Models;
+@inject ICoderService coderService;
 @inject IModalService model;
 @namespace riwitalentfrontend.Components
 
-
+<!-- <head>
+    <link rel="stylesheet" href="css/Components/CardComponent.css">
+</head> -->
 
 <MudContainer Class="d-flex" Style="margin: 15px auto auto auto ; padding: 0; width: 85%;">
     <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Coders</MudText>
@@ -41,7 +46,7 @@
             <option value="clear">Limpiar Filtro</option>
         </InputSelect>
 
-        <InputSelect @bind-Value="languageLevel" Class="search-container" @onchange="CleanFilterEnglishLevel">
+        <InputSelect @bind-Value="Language_Level" Class="search-container" @onchange="CleanFilterEnglishLevel">
             <option value="">Nivel inglés</option>
             <option value="A1">A1</option>
             <option value="A2">A2</option>
@@ -98,7 +103,7 @@
                                 <div class="cards__badges">
                                     @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
                                     {
-                                        var skill = coder.Skills[i].LanguageProgramming;
+                                        var skill = coder.Skills[i].Language_Programming;
                                         var badgeColor = GetColor(skill);
                                         var badgeIcon = GetIcon(skill);
 
@@ -170,7 +175,7 @@ else
                         <div class="cards__badges">
                             @for (int i = 0; i < coder.Skills.Count && i < 6; i++)
                             {
-                            <div class="cards__badge">@coder.Skills[i].LanguageProgramming</div>
+                            <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
                             }
                         </div>
                         }
@@ -213,7 +218,7 @@ else
     // Filtros
     private string? searchText;
     private string? skills;
-    private string? languageLevel;
+    private string? Language_Level;
     private bool FilterApplied = false;
 
     //Badges
@@ -237,7 +242,7 @@ else
                 {
 
                     badges.Add(new Badge{
-                        Technology = skill.Skills[i].LanguageProgramming,
+                        Technology = skill.Skills[i].Language_Programming,
                         Color = GetColor(skill.ToString()),
                         Icon = GetIcon(skill.ToString())
                     });
@@ -353,13 +358,13 @@ else
         // Filtro de Skills
         if (!string.IsNullOrEmpty(skills))
         {
-            coders = coders.Where(c => c.Skills.Any(s => s.LanguageProgramming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
+            coders = coders.Where(c => c.Skills.Any(s => s.Language_Programming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
         }
 
         // Filtro de Nivel de Lenguaje
-        if (!string.IsNullOrEmpty(languageLevel))
+        if (!string.IsNullOrEmpty(Language_Level))
         {
-            coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.LanguageLevel.Equals(languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
+            coders = coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.Language_Level.Equals(Language_Level, StringComparison.OrdinalIgnoreCase)).ToList();
             FilterApplied = true;
         }
 
@@ -373,7 +378,7 @@ else
     {
         searchText = "";
         skills = "";
-        languageLevel = "";
+        Language_Level = "";
 
         coders = await coderService.GetCodersAsync();
         totalCoders = coders.Count;
@@ -398,7 +403,7 @@ else
     {
         if (e.Value?.ToString() == "clear")
         {
-            languageLevel = "";  // Resetea el valor de languageLevel
+            Language_Level = "";  // Resetea el valor de Language_Level
             await FilterCoders();  // Aplica los filtros
         }
     }

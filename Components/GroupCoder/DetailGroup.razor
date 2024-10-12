@@ -37,7 +37,7 @@
             <option value="clear">Limpiar Filtro</option> <!-- Opción para limpiar -->
         </InputSelect>
 
-        <InputSelect @bind-Value="_languageLevel" Class="search-container" @onchange="CleanFilterEnglishLevel">
+        <InputSelect @bind-Value="_Language_Level" Class="search-container" @onchange="CleanFilterEnglishLevel">
             <option value="">Nivel inglés</option>
             <option value="A1">A1</option>
             <option value="A2">A2</option>
@@ -78,7 +78,7 @@
                                 <div class="cards__coder">
                                     <h6 class="">@coder.FirstName @coder.FirstLastName</h6>
                                     <p>@coder.Stack
-                                        @coder.LanguageSkills.LanguageLevel
+                                        @coder.LanguageSkills.Language_Level
                                     </p>
                                 </div>
                                     <a><img src="images/group-add.svg" alt="icon"></a>
@@ -89,7 +89,7 @@
                                 <div class="cards__badges">
                                     @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
                                     {
-                                        <div class="cards__badge">@coder.Skills[i].LanguageProgramming</div>
+                                        <div class="cards__badge">@coder.Skills[i].Language_Programming</div>
                                     }
                                 </div>
                             }
@@ -138,7 +138,7 @@ else
     // Filtros
     private string? _searchText;
     private string? _skills;
-    private string? _languageLevel;
+    private string? _Language_Level;
     private bool _filterApplied = false;
     
 
@@ -197,13 +197,13 @@ else
         // Filtro de Skills
         if (!string.IsNullOrEmpty(_skills))
         {
-            _coders = _coders.Where(c => c.Skills.Any(s => s.LanguageProgramming.Contains(_skills, StringComparison.OrdinalIgnoreCase))).ToList();
+            _coders = _coders.Where(c => c.Skills.Any(s => s.Language_Programming.Contains(_skills, StringComparison.OrdinalIgnoreCase))).ToList();
         }
 
         // Filtro de Nivel de Lenguaje
-        if (!string.IsNullOrEmpty(_languageLevel))
+        if (!string.IsNullOrEmpty(_Language_Level))
         {
-            _coders = _coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.LanguageLevel.Equals(_languageLevel, StringComparison.OrdinalIgnoreCase)).ToList();
+            _coders = _coders.Where(c => c.LanguageSkills != null && c.LanguageSkills.Language_Level.Equals(_Language_Level, StringComparison.OrdinalIgnoreCase)).ToList();
             _filterApplied = true;
         }
 
@@ -217,7 +217,7 @@ else
     {
         _searchText = "";
         _skills = "";
-        _languageLevel = "";
+        _Language_Level = "";
 
         _coders = await CoderService.GetCodersAsync();
         _totalCoders = _coders.Count;
@@ -242,7 +242,7 @@ else
     {
         if (e.Value?.ToString() == "clear")
         {
-            _languageLevel = "";  // Resetea el valor de languageLevel
+            _Language_Level = "";  // Resetea el valor de Language_Level
             await FilterCoders();  // Aplica los filtros
         }
     }
