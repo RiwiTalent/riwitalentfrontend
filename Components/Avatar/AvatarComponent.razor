@@ -1,7 +1,9 @@
-@namespace riwitalentfrontend.Components.Avatar
+@namespace riwitalentfrontend.Components
+@using riwitalentfrontend.Models;
 @using Blazored.SessionStorage
-@using riwitalentfrontend.Models
-@inject ISessionStorageService SessionStorage
+@inject IGroupService GroupService
+@inject ISessionStorageService _sessionStorage
+
 
 
 
@@ -40,11 +42,23 @@ else
         if (TypeAvatar == "Usuario")
         {
             // Cambia esto para obtener un string directamente
-            var email = await SessionStorage.GetItemAsync<string>(KeySesionStorage); // KeySesionStorage debe ser "userEmail"
-            Inicial = email.Length > 1 ? $"{email[0]}{email[1]}" : email[0].ToString();
+            var email = await _sessionStorage.GetItemAsync<string>(KeySesionStorage); // KeySesionStorage debe ser "userEmail"
+            
+            if (!string.IsNullOrEmpty(email))
+            {
+                Inicial = email.Length > 1 ? $"{email[0]}{email[1]}" : email[0].ToString();
+                Console.WriteLine($"Email recuperado: {email}");
+                Console.WriteLine($"Inicial: {Inicial}");
+            }
+            else
+            {
+                Console.WriteLine("El usuario no se encontró en el Session Storage.");
+            }
+        }
+        else if (TypeAvatar == "GrupoCoders" && GroupCoders != null)
+        {
             Inicial = $"{GroupCoders.Name[0]}{GroupCoders.Name[1]}";
             Status = GroupCoders.IsActive == false ? Color.Error : Color.Success;
-            if (!string.IsNullOrEmpty(email)) ;
         }
     }
 

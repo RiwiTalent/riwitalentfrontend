@@ -1,8 +1,14 @@
 @page "/GroupDetails/{groupId}"
 @layout MainLayout
+@inject IGroupService GroupService
+@using riwitalentfrontend.Models;
+@using riwitalentfrontend.Models.DTOs;
+@using riwitalentfrontend.Services.Interfaces;
+@using riwitalentfrontend.Services.Implementations;
+
 
 @* @attribute [Authorize] *@
-@inject GroupService GroupService
+
 
 <PageTitle>RiwiTalent: Detalles del Grupo</PageTitle>
 

@@ -3,6 +3,8 @@ using riwitalentfrontend.Models;
 using riwitalentfrontend.Models.DTOs;
 using riwitalentfrontend.Services.Interfaces;
 
+
+
 namespace riwitalentfrontend.Services.Implementations
 {
     // Servicio para interactuar con la API de grupos
@@ -26,15 +28,21 @@ namespace riwitalentfrontend.Services.Implementations
         // Lógica para obtener el grupo por Id desde la base de datos o API
         public async Task<Group> GetGroupByIdAsync(string groupId)
         {
-            try
+             var response = await _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/group-details/{groupId}");
+
+            if (response != null)
             {
-                return await  _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/group-details/{groupId}");
+                Console.WriteLine("Details successfully fetched");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error al obtener grupo por Id: {ex.Message}");
-                return null;
+                Console.WriteLine($"Error al obtener grupo por Id");
             }
+
+            return response;
+
+        
+
         }
         
         // Lógica para obtener el grupo por Id desde la base de datos o API
@@ -66,6 +74,8 @@ namespace riwitalentfrontend.Services.Implementations
                 return false;
             }
         }
+
+         
 
     }
 }

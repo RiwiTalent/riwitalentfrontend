@@ -1,6 +1,8 @@
 using riwitalentfrontend.Models;
 using riwitalentfrontend.Models.DTOs;
 
+
+
 namespace riwitalentfrontend.Services.Interfaces
 {
         public interface IGroupService
@@ -9,6 +11,5 @@ namespace riwitalentfrontend.Services.Interfaces
                 Task<Group> GetGroupByIdAsync(string groupId);
                 Task<bool> DeleteGroupAsync(string groupId);
                 Task<bool> AddGroupAsync(GroupAddDto groupAddDto);
-
         }
 }

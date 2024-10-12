@@ -1,16 +1,17 @@
-using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using riwitalentfrontend.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Headers;
 using Blazored.SessionStorage;
+using riwitalentfrontend.Services.Interfaces;
 
 
-namespace riwitalentfrontend.Services
+namespace riwitalentfrontend.Services.Implementations
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly HttpClient _httpClient;
         private readonly IJSRuntime _jsRuntime;
@@ -46,7 +47,7 @@ namespace riwitalentfrontend.Services
         }
 
         // Funcion para guardar cookies llamando la funcion de js y asignando el token
-        private async Task SaveTokenInCookies(string token)
+        public async Task SaveTokenInCookies(string token)
         {
             await _jsRuntime.InvokeVoidAsync("setTokenInCookies", token);
         }
@@ -65,6 +66,26 @@ namespace riwitalentfrontend.Services
 
             // Eliminar el correo del SessionStorage
             await _sessionStorage.RemoveItemAsync("userEmail");
+        }
+
+        public async Task<bool> AuthenticationExternalAsync(AuthExternalRequest login)
+        {
+            var loginExternalResponse = await _httpClient.PostAsJsonAsync<AuthExternalRequest>
+                ($"http://localhost:5113/validation-external?Id={login.GroupId}&AssociateEmail={login.AssociateEmail}&Key={login.Key}",
+                login);
+
+
+
+            if (loginExternalResponse.IsSuccessStatusCode)
+            {
+                // _navigation.NavigateTo($"/HomeExterno/{key}");
+                return true; 
+            }
+            else
+            {
+                Console.WriteLine($"Error: {loginExternalResponse.StatusCode}");
+                return false; 
+            }
         }
     }
 }

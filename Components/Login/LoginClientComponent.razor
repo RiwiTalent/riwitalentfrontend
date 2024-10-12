@@ -1,15 +1,14 @@
 @namespace riwitalentfrontend.Components
 
-@inject AuthenticationStateProvider AutenticacionProvider;
-@inject AuthService AuthService;
-@inject GroupCodersServices _groupCodersServices
+@inject IAuthService AuthService;
+@inject GroupService GroupService
 @inject ISessionStorageService SessionStorage
-@inject IModalService ModalService
-@using Blazored.SessionStorage
 @inject NavigationManager NavigationManager;
 @inject HttpClient HttpClient;
 @inject SweetAlertService Swal;
 @inject AlertService AlertService;
+@inject IModalService ModalService
+@using Blazored.SessionStorage
 
 <MudGrid Class="pa-0 ma-0">
     <MudItem Class="d-flex justify-center align-center">
@@ -30,7 +29,7 @@
                         <MudForm Spacing="2">
                             <MudTextField T="string" Label="Correo" @bind-value="email" @bind="@AssociateEmail" Variant="Variant.Outlined" InputType="InputType.Email"/>
 
-                            <MudTextField T="string" Label="Contraseña" @bind="@Key" Variant="Variant.Outlined" InputType="@PasswordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
+                            <MudTextField T="string" Label="Contraseña" @bind="@Key" Variant="Variant.Outlined" InputType="InputType.Password" IconSize="Size.Small" Adornment="Adornment.End" OnAdornmentClick="ButtonTestclick" AdornmentIcon="Icons.Material.Filled.RemoveRedEye" AdornmentAriaLabel="Ver Contraseña"/>
                         </MudForm>
 
                     </MudCardContent>
@@ -46,6 +45,8 @@
 </MudGrid>
 
 @code {
+
+
     [Parameter] public Group? Group { get; set; }
     [Parameter] public required string AssociateEmail { get; set; }
     [Parameter]
@@ -56,11 +57,16 @@
     private string password;
     private string passwordInputType = "password"; // Inicialmente oculto
 
-    public AuthExternalRequest login { get; set; } = new();
+    private bool IsDarkMode { get; set; }
 
     bool _isShow;
     InputType _passwordInput = InputType.Password;
     string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+
+    public AuthExternalRequest login { get; set; } = new();
+
+
 
     void ButtonTestclick()
     {
@@ -76,6 +82,7 @@
             _passwordInput = InputType.Text;
         }
     }
+
     
     private async Task IniciarSesion()
     {
@@ -86,11 +93,11 @@
             Key = Key
         };
 
-        var authResult = await _groupCodersServices.AuthenticationExternalAsync(login);
+        var authResult = AuthService.AuthenticationExternalAsync(login);
         Console.WriteLine(authResult);
         Console.WriteLine($"Sending: GroupId={login.GroupId}, Email={login.AssociateEmail}, Key={login.Key}");
 
-        if (authResult)
+        if (authResult != null)
         {
             Console.WriteLine("login successful!");
             // Mostrar modal y manejar autenticación
@@ -128,7 +135,7 @@
     {
         try
         {
-            var groupResponse = await _groupCodersServices.GetGroupInfoById(groupId);
+            var groupResponse = await GroupService.GetGroupByIdAsync(groupId);
 
             if (groupResponse != null)
             {

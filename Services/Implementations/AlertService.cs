@@ -1,8 +1,8 @@
 using CurrieTechnologies.Razor.SweetAlert2;
+
 using riwitalentfrontend.Services.Interfaces;
 
-
-namespace riwitalentfrontend.Services
+namespace riwitalentfrontend.Services.Implementations
 {
     public class AlertService : IAlertService
     {

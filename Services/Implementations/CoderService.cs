@@ -1,8 +1,10 @@
 using System.Net.Http.Json;
-using riwitalentfrontend.Models;
 using riwitalentfrontend.Services.Interfaces;
+using riwitalentfrontend.Models;
 
-namespace riwitalentfrontend.Services
+
+
+namespace riwitalentfrontend.Services.Implementations
 {
     // Servicio para interactuar con la API de coders
     public class CoderService : ICoderService

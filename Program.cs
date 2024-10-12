@@ -29,6 +29,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 // Servicios personalizados
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<ICoderService, CoderService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddTransient<CoderService>();
 builder.Services.AddTransient<GroupService>();
 

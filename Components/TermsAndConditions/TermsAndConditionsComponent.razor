@@ -1,11 +1,14 @@
 @namespace riwitalentfrontend.Components
 @inject IModalService ModalService
 @using Blazored.Modal.Services
+@inject IGroupService GroupService
 @inject TermsAndConditionsService _termsAndConditionsService
 @inject NavigationManager NavigationManager
 @inject AlertService AlertService;
 @using riwitalentfrontend.Models;
-@using riwitalentfrontend.Services;
+@using riwitalentfrontend.Models.DTOs;
+@using riwitalentfrontend.Services.Interfaces;
+@using riwitalentfrontend.Services.Implementations;
 
 
 <head>
@@ -35,7 +38,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        group = await _groupCodersServices .GetGroupInfoById(GroupId);
+        group = await GroupService.GetGroupByIdAsync(GroupId);
         Console.WriteLine($"Group recibido en el modal: {group?.Id ?? "null"}");
     }
 

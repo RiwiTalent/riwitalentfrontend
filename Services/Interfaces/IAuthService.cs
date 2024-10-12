@@ -11,10 +11,10 @@ namespace riwitalentfrontend.Services.Interfaces
         Task SaveTokenInCookies(string token);
         Task<string> GetToken();
         Task Logout();
-        Task SaveStorage<T>( ISessionStorageService sessionStorageService, string key, T item) where T : class;
-        Task<T?> GetStorage<T>( ISessionStorageService sessionStorageService, string key) where T : class;
-        Task AuthenticationExternalAsync(AuthExternalRequest login, string key);
-        Task ActualizarEstadoAutenticacion(User? sesionUsuario);
-        Task<AuthenticationState> AuthenticationStateAsync();
+        // Task SaveStorage<T>( ISessionStorageService sessionStorageService, string key, T item) where T : class;
+        // Task<T?> GetStorage<T>( ISessionStorageService sessionStorageService, string key) where T : class;
+        Task<bool> AuthenticationExternalAsync(AuthExternalRequest login);
+        // Task ActualizarEstadoAutenticacion(User? sesionUsuario);
+        // Task<AuthenticationState> AuthenticationStateAsync();
     }
 }
