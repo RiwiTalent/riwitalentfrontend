@@ -123,7 +123,7 @@
 }
 
 .cards__coder h6 {
-    color: var(--Colors-Base-White, #FFF);
+    color: var(#FFF);
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
     font-style: normal;
@@ -133,7 +133,7 @@
 }
 
 .cards__coder p {
-    color: var(--Colors-Base-White, #FFF);
+    color: var(#FFF);
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     font-style: normal;
