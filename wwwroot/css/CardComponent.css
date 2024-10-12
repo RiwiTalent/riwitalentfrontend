@@ -539,7 +539,7 @@ p{
     display: grid;
     grid-template-columns: calc(40% - 25px) 35% 25%;
     gap: 7px;
-    padding: 10px;
+    padding: 25px;
 }
 
 
