@@ -107,8 +107,8 @@
                                         var badgeColor = GetColor(skill);
                                         var badgeIcon = GetIcon(skill);
 
-                                        <MudChip T="string" Style=@($"background-color: {badgeColor}; color: white; margin-right: 5px")>
-                                            <MudIcon Icon="@badgeIcon"/>@skill
+                                        <MudChip T="string" Style=@($"background-color: {badgeColor}; color: white")>
+                                            <i class="@badgeIcon"></i>@skill
                                         </MudChip>
                                         @* <div class="cards__badge">@coder.Skills[i].Language_Programming</div> *@
                                     }
@@ -259,64 +259,76 @@ else
     {
         return skill switch
         {
-            //Technologies
-            "CSharp" => Colors.Purple.Default,
-            ".Net" => Colors.Purple.Darken3,
-            "Html" => Colors.Red.Default,
-            "Css" => Colors.Blue.Lighten2,
-            "Bootstrap" => Colors.Indigo.Darken2,
-            "JavaScript" => Colors.Yellow.Accent2,
-            "TypeScript" => Colors.Blue.Default,
-            "Node.js" => Colors.Green.Darken2,
-            "React" => Colors.Blue.Lighten2,
-            "Python" => Colors.Blue.Accent3,
-            "PHP" => Colors.Purple.Default,
-            "Java" => Colors.Brown.Default,
-            "Vue.js" => Colors.Green.Lighten1,
-            "Azure" => Colors.Blue.Default,
-            "Ruby" => Colors.Red.Darken1,
+            // Technologies
+            "CSharp" => "#239120",        
+            ".Net" => "#512BD4",          
+            "HTML" => "#FF0000",          
+            "CSS" => "#0000FF",           
+            "Bootstrap" => "#7952B3",    
+            "JavaScript" => "#F7DF1E",    
+            "TypeScript" => "#3178C6",    
+            "Node.js" => "#339933",       
+            "React" => "#61DAFB",         
+            "Python" => "#3776AB",        
+            "PHP" => "#777BB4",           
+            "Java" => "#007396",          
+            "Vue.js" => "#41B883",        
+            "Azure" => "#0078D4",         
+            "Ruby" => "#CC342D",          
+            "Docker" => "#2496ED",
+            "SpringBoot" => "#6DB33F",
+            "Kubernetes" => "#326CE5",
+            "Angular" => "#DD0031",
+            "NextJS" => "#000000",
+            "Flutter" => "#02569B",
+            "Dart" => "#00BFFF",
+            "Kotlin" => "#F44336",
+            "Figma" => "#F24E1E",
+            "VueJS" => "#42b883",
+            "TailwindCSS" => "#38b2ac",
+            "Astro" => "#FF5C7C",
+            "AWS" => "#FF9900",
             
-
-            //Databases
-            "MySQL" => Colors.Cyan.Darken3,
-            "SQL" => Colors.Cyan.Darken3,
-            "PostgresSQL" => Colors.Blue.Darken2,
-            "MongoDb" => Colors.Green.Accent4,
-            _ => Colors.Gray.Default,
+            // Databases
+            "MySQL" => "#4479A1",         
+            "SQL" => "#CC2927",           
+            "PostgresSQL" => "#336791",   
+            "MongoDb" => "#47A248",       
+            _ => "#9E9E9E", 
         };
     }
     private string GetIcon(string skill)
     {
         return skill switch
         {
-            "Terraform" => "devicon-terraform-plain",
-            "Docker" => "devicon-docker-plain",
-            "Astro" => "devicon-astro-plain",
-            "CSharp" => "devicon-csharp-plain",
-            "React" => "devicon-react-original",
-            "Flutter" => "devicon-flutter-plain",
-            "Dart" => "devicon-dart-plain",
-            "Kotlin" => "devicon-kotlin-plain",
-            "Figma" => "devicon-figma-plain",
-            "TypeScript" => "devicon-typescript-plain",
-            "Ruby" => "devicon-ruby-plain",
-            "Java" => "devicon-java-plain",
-            "SpringBoot" => "devicon-spring-original",
-            "Kubernetes" => "devicon-kubernetes-plain",
-            ".Net" => "devicon-dotnetcore-plain",
-            "JavaScript" => "devicon-javascript-plain",
-            "PHP" => "devicon-php-plain",
-            "CSS" => "devicon-css-plain",
-            "Angular" => "devicon-angular-plain",
-            "TailwindCSS" => "devicon-tailwindcss-original",
-            "HTML" => "devicon-html5-plain",
-            "Python" => "devicon-python-plain",
-            "Azure" => "devicon-azure-plain",
-            "SQL" => "devicon-azuresqldatabase-plain",
-            "MySQL" => "devicon-mysql-original",
-            "MongoDb" => "devicon-mongodb-plain",
-            "PostgresSQL" => "devicon-postgresql-plain",
-            _ => Icons.Material.Rounded.Language
+            "Terraform" => "simple-icons:terraform",
+            "Docker" => "simple-icons:docker",
+            "Astro" => "simple-icons:astro",
+            "CSharp" => "simple-icons:csharp",
+            "React" => "simple-icons:react",
+            "Flutter" => "simple-icons:flutter",
+            "Dart" => "simple-icons:dart",
+            "Kotlin" => "simple-icons:kotlin",
+            "Figma" => "simple-icons:figma",
+            "TypeScript" => "simple-icons:typescript",
+            "Ruby" => "simple-icons:ruby",
+            "Java" => "simple-icons:java",
+            "SpringBoot" => "simple-icons:spring",
+            "Kubernetes" => "simple-icons:kubernetes",
+            ".Net" => "simple-icons:.net",
+            "JavaScript" => "simple-icons:javascript",
+            "PHP" => "simple-icons:php",
+            "CSS" => "simple-icons:css3",
+            "Angular" => "simple-icons:angular",
+            "TailwindCSS" => "simple-icons:tailwindcss",
+            "HTML" => "simple-icons:html5",
+            "Python" => "simple-icons:python",
+            "Azure" => "simple-icons:azure",
+            "SQL" => "simple-icons:mysql", 
+            "MySQL" => "simple-icons:mysql",
+            "MongoDb" => "simple-icons:mongodb",
+            "PostgresSQL" => "simple-icons:postgresql",
+            _ => "simple-icons:coder"
         };
     }
 
