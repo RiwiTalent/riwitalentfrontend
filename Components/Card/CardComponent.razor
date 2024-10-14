@@ -5,9 +5,7 @@
 @inject IModalService model;
 @namespace riwitalentfrontend.Components
 
-<!-- <head>
-    <link rel="stylesheet" href="css/Components/CardComponent.css">
-</head> -->
+
 
 <MudContainer Class="d-flex" Style="margin: 15px auto auto auto ; padding: 0; width: 85%;">
     <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Coders</MudText>
@@ -67,13 +65,12 @@
 
 
 
-
 @if(coders != null)
 {
     <div class="cards">
         @foreach (var coder in paginatedCoders)
         {
-            <MudCard>
+            <MudCard style="height:300px" class="relative rounded-lg overflow-hidden mud-card">
                 @if (coder.Photo != null)
                 {
                     <MudImage Fluid="true"
@@ -88,7 +85,7 @@
                 {
                     <p>Cargando...</p>
                 }
-                <MudCardContent>
+                <MudCardContent class="d-flex justify-space-between relative  mud-card-content">
                         <div class="cards__container">
                             <div class="cards__profile">
                                 <div class="cards__coder">
@@ -130,7 +127,7 @@
 
     <div class="container-pagination">
         <div class="container-box">
-            <MudPagination Variant="Variant.Filled" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize" TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
+            <MudPagination class="mud-pagination mud-pagination-item mud-button" Variant="Variant.Filled" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize" TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
         </div>
     </div>
 }
