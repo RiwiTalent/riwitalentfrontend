@@ -46,60 +46,53 @@
     </MudDrawerContainer>
 </MudPaper>
 
+<ToolBarContent Class="d-flex container-filter align-center mt-13 gap-1" Elevation="1" >
+    <MudGrid>
+        <MudItem xs="12" Class="d-flex flex-grow-1 gap-3 justify-space-between">
 
+            <MudTextField Placeholder="Buscar aquí..." @bind-Value="searchText" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Search" AdornmentColor="Color.Primary">
+            </MudTextField>
 
-<MudPaper Class="container-filter" Elevation="1">
-    <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px;">
-        <MudTextField StartIcon="@Icons.Material.Filled.Delete"
-                      @bind-Value="searchText"
-                      Placeholder="Buscar aquí..."
-                      Class="search"
-                      Immediate="true"
-                      TextChanged="FilterCoders"/>
-    </MudPaper>
+            <MudSelect T="string" Label="Tecnología" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" MultiSelection="true" @bind-Value="skills"  @onchange="CleanFilterSkill" @bind-SelectedValues="tecnologies">
+                @foreach (var technology in technologies)
+                {
+                    <MudSelectItem T="string" Value="@technology.Name">@technology.Name</MudSelectItem>
+                }
+            </MudSelect>
 
+            <!-- <MudSelect T="string" Label="Estado" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
+                <MudSelectItem Value="\"JavaScript\"">JavaScript</MudSelectItem>
+                <MudSelectItem Value="\"CSharp\"">CSharp</MudSelectItem>
+            </MudSelect> -->
 
+            <!-- <MudSelect T="string" Label="Tecnología" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
+                <MudSelectItem Value="\"JavaScript\"">JavaScript</MudSelectItem>
+                <MudSelectItem Value="\"CSharp\"">CSharp</MudSelectItem>
+                <MudSelectItem Value="\"Python\"">Python</MudSelectItem>
+                <MudSelectItem Value="\"Java\"">Java</MudSelectItem>
+                <MudSelectItem Value="\"Ruby\"">Ruby</MudSelectItem>
+                <MudSelectItem Value="\"PHP\"">PHP</MudSelectItem>
+                <MudSelectItem Value="\"React\"">React</MudSelectItem>
+                <MudSelectItem Value="\"clear\"">Limpiar Filtro</MudSelectItem>
+            </MudSelect> -->
 
-    <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select" Style="padding: 0; gap: 5px">
+            <!-- <MudSelect T="string" Label="Nivel inglés" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" @bind-Value="Language_Level" Class="search-container" @onchange="CleanFilterEnglishLevel">
+                <MudSelectItem Value="\"A1\"">A1</MudSelectItem>
+                <MudSelectItem Value="\"A2\"">A2</MudSelectItem>
+                <MudSelectItem Value="\"B1\"">B1</MudSelectItem>
+                <MudSelectItem Value="\"B2\"">B2</MudSelectItem>
+                <MudSelectItem Value="\"C1\"">C1</MudSelectItem>
+                <MudSelectItem Value="\"C2\"">C2</MudSelectItem>
+                <MudSelectItem Value="\"clear\"">Limpiar Filtro</MudSelectItem>
+            </MudSelect> -->
 
-        <InputSelect @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
-            <option value="">Estado</option>
-            <option value="JavaScript">JavaScript</option>
-            <option value="CSharp">CSharp</option>
-        </InputSelect>
+           
+            <MudButton OnClick="CleanFilters" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" StartIcon="@Icons.Material.Outlined.FilterAltOff">Limpiar Filtros</MudButton>
 
-        <InputSelect @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
-            <option value="">Tecnología</option>
-            <option value="JavaScript">JavaScript</option>
-            <option value="CSharp">CSharp</option>
-            <option value="Python">Python</option>
-            <option value="Java">Java</option>
-            <option value="Ruby">Ruby</option>
-            <option value="PHP">PHP</option>
-            <option value="React">React</option>
-            <option value="clear">Limpiar Filtro</option>
-        </InputSelect>
-
-        <InputSelect @bind-Value="Language_Level" Class="search-container" @onchange="CleanFilterEnglishLevel">
-            <option value="">Nivel inglés</option>
-            <option value="A1">A1</option>
-            <option value="A2">A2</option>
-            <option value="B1">B1</option>
-            <option value="B2">B2</option>
-            <option value="C1">C1</option>
-            <option value="C2">C2</option>
-            <option value="clear">Limpiar Filtro</option>
-        </InputSelect>
-    </MudPaper>
-
-    <MudPaper Elevation="0" Class="d-flex align-center justify-space-between" Style="padding: 10px;">
-        <div>
-            <MudButton OnClick="CleanFilters" Class="mr-2"> Limpiar </MudButton>
-            <MudButton Color="Color.Primary" OnClick="FilterCoders"> Filtrar </MudButton>
-        </div>
-    </MudPaper>
-</MudPaper>
-
+            <MudButton OnClick="FilterCoders" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.Tune">Filtrar</MudButton>
+        </MudItem>
+    </MudGrid>
+</ToolBarContent>
 
 
 @if(coders != null)
@@ -235,6 +228,16 @@ else
 
 @code
 {    
+    // Filter bar
+
+    private bool _sortNameByLength;
+    private bool _loading = true;
+    // Technolies list select
+     private string value { get; set; } = "Nothing selected";
+    private IEnumerable<string> tecnologies { get; set; } = new HashSet<string>();
+    private List<Technology> technologies = new List<Technology>();
+
+
     // Lista de programadores seleccionados
     private string groupId;
     private List<Coder> selectedCoders = new(); 
@@ -275,7 +278,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        //Llamado a la api
+        //Llamado a las apis
         try
         {
             coders = await coderService.GetCodersAsync();
@@ -296,10 +299,20 @@ else
                     });
                 }
             }
+            
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error al obtener coders: {ex.Message}");
+        }
+
+        try
+        {
+            technologies = await TechnologiesService.GetTechnologiesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener las Tecnologìas: {ex.Message}");
         }
     }
       private void ToggleDrawer()
@@ -487,7 +500,15 @@ else
         // Filtro de Skills
         if (!string.IsNullOrEmpty(skills))
         {
-            coders = coders.Where(c => c.Skills.Any(s => s.Language_Programming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
+            // Separar las skills por coma, suponiendo que la entrada es "skill1,skill2,skill3"
+            var skillList = skills.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                .Select(s => s.Trim())
+                                .ToList();
+
+            // Filtrar los coders que tienen todas las skills en la lista
+            coders = coders.Where(c => skillList.All(skill => 
+                c.Skills.Any(s => s.Language_Programming.Contains(skill, StringComparison.OrdinalIgnoreCase))
+            )).ToList();
         }
 
         // Filtro de Nivel de Lenguaje
