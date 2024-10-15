@@ -533,13 +533,13 @@ p{
 
 .container-filter{
     margin: auto;
-    width: 85%;
+    width: 96%;
     height: 70px;
     margin-top: 15px;
     display: grid;
     grid-template-columns: calc(40% - 25px) 35% 25%;
     gap: 7px;
-    padding: 25px;
+    padding: 8px;
 }
 
 
