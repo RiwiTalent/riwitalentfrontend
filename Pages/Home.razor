@@ -1,4 +1,4 @@
-@page "/home"
+@page "/home/{groupId}"
 @layout MainLayout
 
 @* @attribute [Authorize] *@
@@ -20,3 +20,8 @@
         <CardComponent />
     </Authorized>
 </AuthorizeView>
+
+@code {
+    [Parameter]
+    public string? groupId { get; set; }
+}

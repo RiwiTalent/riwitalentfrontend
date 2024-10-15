@@ -44,6 +44,24 @@ namespace riwitalentfrontend.Services.Implementations
         
 
         }
+
+        public async Task<bool> Update(Group group)
+        {
+            var url = "http://localhost:5113/groups"; // Asegúrate de que esta URL sea correcta
+            try
+            {
+                var jsonContent = JsonContent.Create(group);
+                var response = await _httpClient.PutAsync(url, jsonContent);
+                return response.IsSuccessStatusCode;
+            }
+            catch (HttpRequestException ex)
+            {
+                // Maneja la excepción (puedes registrar el error o mostrar un mensaje)
+                Console.WriteLine($"Error al actualizar el grupo: {ex.Message}");
+                return false; // Devuelve false en caso de error
+            }
+        }
+
         
         // Lógica para obtener el grupo por Id desde la base de datos o API
         public async Task<bool> DeleteGroupAsync(string groupId)

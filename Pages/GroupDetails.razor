@@ -1,10 +1,14 @@
 @page "/GroupDetails/{groupId}"
 @layout MainLayout
 @inject IGroupService GroupService
+@inject SweetAlertService Swal;
+@inject AlertService AlertService;
 @using riwitalentfrontend.Models;
 @using riwitalentfrontend.Models.DTOs;
 @using riwitalentfrontend.Services.Interfaces;
 @using riwitalentfrontend.Services.Implementations;
+@inject NavigationManager NavigationManager
+
 
 
 @* @attribute [Authorize] *@
@@ -27,6 +31,26 @@
         {
             <MudContainer Class="ma-3 w-full h-full">
                 <!-- Botón y Agregar -->
+
+                @if (!isEditMode)
+                {
+                    <MudButton StartIcon="@Icons.Material.Outlined.Edit" 
+                                class="content_left-container_top__edit" 
+                                Variant="Variant.Filled" 
+                                OnClick="EnableEditMode">
+                        Editar
+                    </MudButton>
+                }
+                else
+                {
+                    <MudButton StartIcon="@Icons.Material.Outlined.Save" 
+                                class="content_left-container_top__save" 
+                                Variant="Variant.Filled" 
+                                OnClick="UpdateGroup">
+                        Guardar
+                    </MudButton>
+                }
+
                 <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 py-3 px-0">
                     <MudIconButton Href="/groups" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
                 </MudContainer>
@@ -93,13 +117,25 @@
 
             <!-- Total coders -->
             <MudContainer Class="ma-3 w-full h-full">
-                <MudText Typo="Typo.h5"><b>43</b> Grupos encontrados</MudText>
+                <MudText Typo="Typo.h5"><b>43</b> Coders encontrados</MudText>
             </MudContainer>
+
+         
+            <MudButton StartIcon="@Icons.Material.Outlined.Edit" 
+                        class="content_left-container_top__edit" 
+                        Variant="Variant.Filled" 
+                        OnClick="AddCodersToGroup">
+                Agregar Coders
+            </MudButton>
+      
         }
     </Authorized>
 </AuthorizeView>
 
 @code {
+    [Parameter]
+    public string? groupId { get; set; }
+
     private Group _group; 
     private string _searchString;
     private bool _loading = true;
@@ -107,20 +143,83 @@
     private string _rowsPerPageString = "Filas por página:";
     private string _infoFormat = "{first_item}-{last_item} de {all_items}";
 
-    // Parámetro que recibe el Id del grupo desde la URL
-    [Parameter] public string GroupId { get; set; }
 
+     private bool isEditMode = false;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadGroupDetailsAsync();
     }
 
+    private void EnableEditMode()
+    {
+        isEditMode = true;
+        Console.WriteLine($"isEditMode: {isEditMode}");
+
+        StateHasChanged(); 
+    }
+
+
+
+    private async Task UpdateGroup()
+    {
+        // Mostrar alerta de confirmación
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Icon = SweetAlertIcon.Success,
+            Title = "¿Estás seguro/a de que deseas guardar los cambios de este registro?",
+            Text = "Esta acción actualizará la información y no podrá recuperarse.",
+            ShowCancelButton = true,
+            ConfirmButtonColor = "#5ACCA4",
+            ConfirmButtonText = "Si, Confirmar",
+            CancelButtonColor = "#fff",
+            CancelButtonText = "<button style='color:#5ACCA4; background-color:#fff'>No, Cancelar</button>"
+        });
+
+        // Si el usuario confirma, proceder con la actualización
+        if (result.IsConfirmed)
+        {
+            // Llamada al servicio para actualizar el _group
+            var response = await GroupService.Update(_group);
+
+            if (response)
+            {
+                // Cambiar de vuelta al modo de visualización
+                isEditMode = false;
+
+                // Mostrar mensaje de éxito
+                await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Los datos se han guardado exitosamente",
+                    Icon = SweetAlertIcon.Success,
+                    ShowConfirmButton = false 
+                });
+
+                // Navegar a otra página si es necesario
+                NavigationManager.NavigateTo("/GroupDetails/{groupId}");
+            }
+            else
+            {
+                Console.WriteLine("Error al actualizar el grupo");
+            }
+        }
+        else
+        {
+            // Aquí puedes manejar la lógica si el usuario cancela, si es necesario
+            Console.WriteLine("Actualización cancelada");
+        }
+    }
+
+    private async Task AddCodersToGroup()
+    {
+        NavigationManager.NavigateTo("/home/{groupId}");
+    }
+
     private async Task LoadGroupDetailsAsync()
     {
         try
         {
-            _group = await GroupService.GetGroupByIdAsync(GroupId);
+            _group = await GroupService.GetGroupByIdAsync(groupId);
             if (_group != null)
             {
                 Console.WriteLine($"Grupo obtenido: {_group.Name}, Estado: {_group.Status}");

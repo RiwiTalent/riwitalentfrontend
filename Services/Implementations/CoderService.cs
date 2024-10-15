@@ -24,7 +24,7 @@ namespace riwitalentfrontend.Services.Implementations
 
          public async Task<bool> UpdateCoderAsync(Coder coder)
         {
-            var url = $"https://backend-riwitalent-9pv2.onrender.com/updatecoder?Id={coder.Id}&FirstName={coder.FirstName}&Secon    dName={coder.SecondName}&FirstLastName={coder.FirstLastName}&SecondLastName={coder.SecondLastName}&Email={coder.Email}&Age={coder.Age}";
+            var url = $"https://backend-riwitalent-9pv2.onrender.com/updatecoder?Id={coder.Id}&FirstName={coder.FirstName}&SecondName={coder.SecondName}&FirstLastName={coder.FirstLastName}&SecondLastName={coder.SecondLastName}&Email={coder.Email}&Age={coder.Age}";
             
             var response = await _httpClient.PutAsync(url, null);
             return response.IsSuccessStatusCode;
