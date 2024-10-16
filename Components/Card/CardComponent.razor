@@ -11,40 +11,7 @@
     <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Coders</MudText>
 </MudContainer>
 
-@*Aqui se muestran los coders seleccionados*@
-<MudPaper Height="200px" Style="overflow:hidden; position:relative;">
-    <MudDrawerContainer>
-        <MudDrawer @bind-Open="@_open" Anchor="Anchor.End" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
-            <MudNavMenu>
-                    <MudChipSet T="string" AllClosable OnClose="RemoveCoderFromGroup">
-                        @foreach (var selectedCoder in selectedCoders)
-                        {
-                            
-                            <MudChip Text="@($"{selectedCoder.FirstName} {selectedCoder.FirstLastName}")">
-                            <AvatarContent>
-                                <MudAvatar>
-                                    <MudImage Src="@selectedCoder.Photo"></MudImage>
-                                </MudAvatar>
-                            </AvatarContent>
-                            </MudChip> 
-                        }
-                    </MudChipSet>
 
-                    <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
-                        <MudTextField @bind-Value="groupId" Placeholder="ingresa aqui el id del grupo" />
-                    </MudPaper>
-
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCodersToGroupAsync">
-                        agregar coders
-                    </MudButton>
-                    
-            </MudNavMenu>
-        </MudDrawer>
-        <div class="d-flex justify-center align-center mud-height-full">
-            <MudButton OnClick="@ToggleDrawer" Color="Color.Primary">Toggle</MudButton>
-        </div>
-    </MudDrawerContainer>
-</MudPaper>
 
 <ToolBarContent Class="d-flex container-filter align-center mt-13 gap-1" Elevation="1" >
     <MudGrid>
@@ -94,6 +61,40 @@
     </MudGrid>
 </ToolBarContent>
 
+@*Aqui se muestran los coders seleccionados*@
+<MudPaper Height="200px" class="fixed" Style="overflow:hidden;">
+    <MudDrawerContainer>
+        <MudDrawer @bind-Open="@_open" Anchor="Anchor.End" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+            <MudNavMenu>
+                    <MudChipSet T="string" AllClosable OnClose="RemoveCoderFromGroup">
+                        @foreach (var selectedCoder in selectedCoders)
+                        {
+                            
+                            <MudChip Text="@($"{selectedCoder.FirstName} {selectedCoder.FirstLastName}")">
+                            <AvatarContent>
+                                <MudAvatar>
+                                    <MudImage Src="@selectedCoder.Photo"></MudImage>
+                                </MudAvatar>
+                            </AvatarContent>
+                            </MudChip> 
+                        }
+                    </MudChipSet>
+
+                    <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
+                        <MudTextField @bind-Value="groupId" Placeholder="ingresa aqui el id del grupo" />
+                    </MudPaper>
+
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCodersToGroupAsync">
+                        agregar coders
+                    </MudButton>
+                    
+            </MudNavMenu>
+        </MudDrawer>
+        <div class="d-flex justify-center align-center mud-height-full">
+            <MudButton OnClick="@ToggleDrawer" Color="Color.Primary">L</MudButton>
+        </div>
+    </MudDrawerContainer>
+</MudPaper>
 
 @if(coders != null)
 {

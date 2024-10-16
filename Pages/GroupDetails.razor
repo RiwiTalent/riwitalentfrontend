@@ -196,7 +196,7 @@
                 });
 
                 // Navegar a otra página si es necesario
-                NavigationManager.NavigateTo("/GroupDetails/{groupId}");
+                NavigationManager.NavigateTo($"/GroupDetails/{groupId}");
             }
             else
             {
@@ -212,7 +212,7 @@
 
     private async Task AddCodersToGroup()
     {
-        NavigationManager.NavigateTo("/home/{groupId}");
+        NavigationManager.NavigateTo($"/home/{groupId}");
     }
 
     private async Task LoadGroupDetailsAsync()

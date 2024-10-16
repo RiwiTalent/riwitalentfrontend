@@ -28,7 +28,7 @@ namespace riwitalentfrontend.Services.Implementations
         // Lógica para obtener el grupo por Id desde la base de datos o API
         public async Task<Group> GetGroupByIdAsync(string groupId)
         {
-             var response = await _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/group-details/{groupId}");
+             var response = await _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/groups/{groupId}/details");
 
             if (response != null)
             {
@@ -47,6 +47,7 @@ namespace riwitalentfrontend.Services.Implementations
 
         public async Task<bool> Update(Group group)
         {
+            
             var url = "http://localhost:5113/groups"; // Asegúrate de que esta URL sea correcta
             try
             {

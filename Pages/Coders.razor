@@ -20,7 +20,7 @@
         }
         else
         {
-            <!-- Total coders -->
+
             <MudContainer Class="ma-3 w-full h-full">
                 <MudText Typo="Typo.h5"><b>@CoderCount</b> Coders encontrados</MudText>
             </MudContainer>
@@ -28,14 +28,20 @@
                 
                 
                 
-                
-                <MudChipSet @bind-SelectedValues="_selectedSkills" SelectionMode="SelectionMode.MultiSelection" CheckMark="true" Variant="Variant.Text" Color="Color.Default"  SelectedColor="Color.Primary">
+                                
+                <MudChipSet @bind-SelectedValues="_selectedSkills" 
+                            SelectionMode="SelectionMode.MultiSelection" 
+                            CheckMark="true" 
+                            Variant="Variant.Text" 
+                            Color="Color.Default"  
+                            SelectedColor="Color.Primary">
                     @foreach (var skill in _skillsList)
                     {
                         <MudChip T="string" Value="skill">@skill</MudChip>
                     }
-
                 </MudChipSet>
+
+
                 <div class="d-flex flex-column align-center">
                     @if (_selectedSkills.Any())
                     {
@@ -47,7 +53,7 @@
                     }
                 </div>
 
-                <!-- Grid de coders -->
+
                 <MudDataGrid T="Coder"
                              Class="flex-grow-1 pa-2 rounded-lg"
                              LoadingProgressColor="Color.Info"
@@ -81,7 +87,7 @@
                                     </MudContainer>
                                 </MudContainer>
                             </CellTemplate>
-                        </PropertyColumn> <!-- Eliminar el "/>" extra aquí -->
+                        </PropertyColumn>
                         <PropertyColumn Property="x => x.CreatedAt" Title="Fecha de creación"/>
                         <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
                             <CellTemplate Context="coder">
@@ -220,25 +226,56 @@
         return skillsList;
     }
 
-    
-    // Filtro de busqueda
+
+
+    // Filter at real tiem
+
     private Func<Coder, bool> QuickFilter => x =>
     {
-        if (string.IsNullOrWhiteSpace(_searchString))
+
+        if (string.IsNullOrWhiteSpace(_searchString) && !_selectedSkills.Any())
             return true;
 
-        return MatchesSearchCriteria(x);
+
+        var matchesSearch = MatchesSearchCriteria(x);
+
+        
+        var matchesSkills = !_selectedSkills.Any() || 
+                            (x.Skills != null && 
+                            x.Skills.Any(s => _selectedSkills.Contains(s.Language_Programming)));
+
+        Console.WriteLine("MatchesSkills:");
+        Console.WriteLine(matchesSkills);
+
+ 
+        return matchesSearch && matchesSkills;
     };
+
 
     private bool MatchesSearchCriteria(Coder coder)
     {
-        return (coder.FirstName != null && coder.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.SecondName != null && coder.SecondName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.SecondLastName != null && coder.SecondLastName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.Email != null && coder.Email.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.Status != null && coder.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.CreatedAt != null && coder.CreatedAt.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+        // Verificar si el coder es nulo
+        if (coder == null)
+        {
+            return false;
+        }
+
+        // Si la cadena de búsqueda está vacía, siempre devuelve verdadero
+        if (string.IsNullOrEmpty(_searchString))
+        {
+            return true; // Permitir que los coders se muestren si no hay criterio de búsqueda
+        }
+
+        // Check if any property contains the search string
+        return (!string.IsNullOrEmpty(coder.FirstName) && coder.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+            (!string.IsNullOrEmpty(coder.SecondName) && coder.SecondName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+            (!string.IsNullOrEmpty(coder.SecondLastName) && coder.SecondLastName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+            (!string.IsNullOrEmpty(coder.Email) && coder.Email.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+            (!string.IsNullOrEmpty(coder.Status) && coder.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+            (coder.CreatedAt != null && coder.CreatedAt.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
+
+
 
     // Condicional para colores de los Chip de Status
     private Color GetChipColor(string? status)

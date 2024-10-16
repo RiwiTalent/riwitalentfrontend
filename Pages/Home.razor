@@ -1,4 +1,5 @@
 @page "/home/{groupId}"
+@inject IGroupService GroupService
 @layout MainLayout
 
 @* @attribute [Authorize] *@
@@ -22,6 +23,7 @@
 </AuthorizeView>
 
 @code {
+    [Parameter] public Group? Group { get; set; }
     [Parameter]
     public string? groupId { get; set; }
 }
