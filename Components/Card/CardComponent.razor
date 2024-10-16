@@ -61,40 +61,6 @@
     </MudGrid>
 </ToolBarContent>
 
-@*Aqui se muestran los coders seleccionados*@
-<MudPaper Height="200px" class="fixed" Style="overflow:hidden;">
-    <MudDrawerContainer>
-        <MudDrawer @bind-Open="@_open" Anchor="Anchor.End" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
-            <MudNavMenu>
-                    <MudChipSet T="string" AllClosable OnClose="RemoveCoderFromGroup">
-                        @foreach (var selectedCoder in selectedCoders)
-                        {
-                            
-                            <MudChip Text="@($"{selectedCoder.FirstName} {selectedCoder.FirstLastName}")">
-                            <AvatarContent>
-                                <MudAvatar>
-                                    <MudImage Src="@selectedCoder.Photo"></MudImage>
-                                </MudAvatar>
-                            </AvatarContent>
-                            </MudChip> 
-                        }
-                    </MudChipSet>
-
-                    <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px">
-                        <MudTextField @bind-Value="groupId" Placeholder="ingresa aqui el id del grupo" />
-                    </MudPaper>
-
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCodersToGroupAsync">
-                        agregar coders
-                    </MudButton>
-                    
-            </MudNavMenu>
-        </MudDrawer>
-        <div class="d-flex justify-center align-center mud-height-full">
-            <MudButton OnClick="@ToggleDrawer" Color="Color.Primary">L</MudButton>
-        </div>
-    </MudDrawerContainer>
-</MudPaper>
 
 @if(coders != null)
 {
@@ -122,10 +88,11 @@
                                 </div>
                                     <MudContainer Class="d-flex justify-end flex-grow-1">
 
-                                        <MudChipSet T="string" @bind-SelectedChips="selectedCoders" SelectionMode="SelectionMode.MultiSelection" CheckMark>
-                                            <MudChip Style="color:white;" Class="border-solid border-2 mud-b mud-border-white" Icon="@Icons.Material.Rounded.PersonAddAlt1" Variant="Variant.Text" @onclick="()=> AddCoderToGroup(coder)">
-                                            </MudChip>
-                                        </MudChipSet>
+                                <MudChipSet T="string" @bind-SelectedChips="SelectedCoders" SelectionMode="SelectionMode.MultiSelection" CheckMark>
+                                    <MudChip Style="color:white;" Class="border-solid border-2 mud-b mud-border-white" Icon="@Icons.Material.Rounded.PersonAddAlt1" Variant="Variant.Text" @onclick="() => AddCoderToGroup(coder)">
+                                    </MudChip>
+                                </MudChipSet>
+
                                     </MudContainer>
                             </div>
                             @*badges*@
@@ -141,7 +108,7 @@
                                         <MudChip T="string" Style=@($"background-color: {badgeColor}; color: white")>
                                             <i class="@badgeIcon"></i>@skill
                                         </MudChip>
-                                        @* <div class="cards__badge">@coder.Skills[i].Language_Programming</div> *@
+
                                     }
                                 </div>
                             }
@@ -228,7 +195,14 @@ else
 }
 
 @code
-{    
+{   
+    //SelectedCoders Component
+    [Parameter]
+    public List<Coder> SelectedCoders { get; set; } = new List<Coder>(); // Parámetro para recibir los coders seleccionados
+
+    [Parameter]
+    public EventCallback<Coder> OnCoderAdded { get; set; } // Callback para notificar cuando se añade un coder
+
     // Filter bar
 
     private bool _sortNameByLength;
@@ -237,20 +211,6 @@ else
      private string value { get; set; } = "Nothing selected";
     private IEnumerable<string> tecnologies { get; set; } = new HashSet<string>();
     private List<Technology> technologies = new List<Technology>();
-
-
-    // Lista de programadores seleccionados
-    private string groupId;
-    private List<Coder> selectedCoders = new(); 
-    private bool _open = false;
-    private int _i = 1;
-    private List<string> _values = new();
-    public void Add() => _values.Add("Value " + (_i++));
-
-
-    public bool CheckBox1 { get; set; } = false;
-    public bool CheckBox2 { get; set; } = false;
-    public bool CheckBox3 { get; set; } = false;
 
     public string ButtonDetails = "Detalle";
     private List<Coder>? coders;
@@ -316,75 +276,15 @@ else
             Console.WriteLine($"Error al obtener las Tecnologìas: {ex.Message}");
         }
     }
-      private void ToggleDrawer()
+
+    private void AddCoderToGroup(Coder coder)
     {
-        _open = !_open;
-    } 
-
-    public void AddCoderToGroup(Coder coder)
-    { 
-        if (!selectedCoders.Contains(coder))
+        if (!SelectedCoders.Contains(coder))
         {
-            selectedCoders.Add(coder); // Agregar el coder a la lista de seleccionados
+            SelectedCoders.Add(coder); // Agregar coder a la lista seleccionada
+            OnCoderAdded.InvokeAsync(coder); // Invocar el evento
         }
-    }    // Método para eliminar un programador del grupo cuando se cierra un chip
-
-
-     public void RemoveCoderFromGroup(MudChip<string> chip)
-    {
-        var coderToRemove = selectedCoders.FirstOrDefault(c => $"{c.FirstName} {c.FirstLastName}" == chip.Text);
-        if (coderToRemove != null)
-        {
-            selectedCoders.Remove(coderToRemove); // Eliminar el coder de la lista de seleccionados
-        }
-    }    // Método Add que ya tienes (puedes adaptarlo si es necesario)
-
-
-    private async Task AddCodersToGroupAsync()
-
-    { 
-        Console.WriteLine("agragando coders a grupo");
-        if (string.IsNullOrEmpty(groupId) || selectedCoders.Count == 0)
-        {
-            // Verificar si hay ID de grupo o programadores seleccionados
-            Console.WriteLine("Debes ingresar un ID de grupo y seleccionar coders.");
-            return;
-        }
-
-        // Preparar la data a enviar al backend
-        var data = new
-        {
-            GroupId = groupId,
-            CoderList = selectedCoders.Select(c => c.Id).ToList() // Cambiado a CoderList s
-        };
-
-
-        try
-        {
-            // Realizar la llamada HTTP POST al backend
-            Console.WriteLine("llamada HTTP POST al backend");
-            Console.WriteLine(selectedCoders);
-
-                var response = await Http.PostAsJsonAsync("http://localhost:5113/coders/grouped", data);
-                
-                if (response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("Coders agregados correctamente al grupo.");
-                    
-                }
-                else
-                {
-                    Console.WriteLine($"Error al agregar los coders: {response.StatusCode}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ocurrió un error: {ex.Message}");
-            }
-        }
-    
-
-
+    }
 
     private string GetColor(string skill)
     {

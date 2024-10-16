@@ -1,6 +1,7 @@
 @page "/home/{groupId}"
 @inject IGroupService GroupService
 @layout MainLayout
+@inject HttpClient Http
 
 @* @attribute [Authorize] *@
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -18,7 +19,10 @@
         </MudText>
         
         <BannerCodersComponent />
-        <CardComponent />
+        <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" />
+        
+
+        <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" /> 
     </Authorized>
 </AuthorizeView>
 
@@ -26,4 +30,51 @@
     [Parameter] public Group? Group { get; set; }
     [Parameter]
     public string? groupId { get; set; }
+
+    private List<Coder> _selectedCoders = new List<Coder>();
+
+    private void AddCoderHandler(Coder coder)
+    {
+        Console.WriteLine($"Coder agregado: {coder.FirstName} {coder.FirstLastName}");
+        // Aquí puedes manejar cualquier lógica adicional cuando se agrega un coder
+    }
+
+     private async Task AddCodersToGroupAsync()
+    {
+        if (string.IsNullOrEmpty(groupId) || _selectedCoders.Count == 0)
+        {
+            Console.WriteLine("Debes ingresar un ID de grupo y seleccionar coders.");
+            return;
+        }
+
+        var coderIds = _selectedCoders.Select(c => c.Id).ToList();
+        Console.WriteLine($"Enviando {coderIds.Count} coders al grupo {groupId}: {string.Join(", ", coderIds)}");
+
+        var data = new
+        {
+            GroupId = groupId,
+            CoderList = coderIds
+        };
+
+        try
+        {
+            Console.WriteLine("Llamada HTTP POST al backend");
+            var response = await Http.PostAsJsonAsync("http://localhost:5113/coders/grouped", data);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Coders agregados correctamente al grupo.");
+            }
+            else
+            {
+                Console.WriteLine($"Error al agregar los coders: {response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ocurrió un error: {ex.Message}");
+        }
+    }
+
+
 }
