@@ -3,8 +3,6 @@ using riwitalentfrontend.Models;
 using riwitalentfrontend.Models.DTOs;
 using riwitalentfrontend.Services.Interfaces;
 
-
-
 namespace riwitalentfrontend.Services.Implementations
 {
     // Servicio para interactuar con la API de grupos
@@ -13,69 +11,44 @@ namespace riwitalentfrontend.Services.Implementations
         
         // Inyección de HttpClient para realizar peticiones HTTP
         private readonly HttpClient _httpClient;
-
         public GroupService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
         
-        // Lógica  para obtener una lista de coders desde la API
+        // Obtener lista de grupos desde la API
         public async Task<List<Group>> GetGroupsAsync()
         {
             return await _httpClient.GetFromJsonAsync<List<Group>>("http://localhost:5113/groups");
         }
         
-        // Lógica para obtener el grupo por Id desde la base de datos o API
-        public async Task<Group> GetGroupByIdAsync(string groupId)
+        // Obtener un grupo por Id desde la API
+        public async Task<Group?> GetGroupByIdAsync(string groupId) // Group? permite que sea null
         {
-             var response = await _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/group-details/{groupId}");
-
-            if (response != null)
+            var response = await _httpClient.GetAsync($"http://localhost:5113/group-details/{groupId}");
+            if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine("Details successfully fetched");
+                return await response.Content.ReadFromJsonAsync<Group>();
             }
             else
             {
-                Console.WriteLine($"Error al obtener grupo por Id");
+                // Manejar el error en caso de que no se pueda obtener el grupo
+                return null;
             }
-
-            return response;
-
-        
-
         }
         
-        // Lógica para obtener el grupo por Id desde la base de datos o API
+        // Eliminar un grupo por Id desde la API
         public async Task<bool> DeleteGroupAsync(string groupId)
         {
-            try
-            {
-                var response = await _httpClient.DeleteAsync($"http://localhost:5113/group/{groupId}");
-                return response.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al eliminar grupo: {ex.Message}");
-                return false;
-            }
+            var response = await _httpClient.DeleteAsync($"http://localhost:5113/group/{groupId}");
+            return response.IsSuccessStatusCode;
         }
         
-        // Lógica para crear un grupo desde la base de datos o API
+        // Crear un grupo mediante un POST a la API
         public async Task<bool> AddGroupAsync(GroupAddDto groupAddDto)
         {
-            try
-            {
-                var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/groups", groupAddDto);
-                return response.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al crear grupo: {ex.Message}");
-                return false;
-            }
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/groups", groupAddDto);
+            return response.IsSuccessStatusCode;
         }
-
-         
-
     }
 }

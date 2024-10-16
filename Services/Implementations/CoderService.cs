@@ -30,5 +30,12 @@ namespace riwitalentfrontend.Services.Implementations
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<List<Coder>?> FilterCodersBySkillsAsync(List<string> skills)
+        {
+            var queryString = string.Join("&", skills.Select(skill => $"skills={Uri.EscapeDataString(skill)}"));
+            var url = $"http://localhost:5113/coders?{queryString}";
+            Console.WriteLine($"Request URL: {url}");
+            return await _httpClient.GetFromJsonAsync<List<Coder>>(url);
+        }
     }
 }

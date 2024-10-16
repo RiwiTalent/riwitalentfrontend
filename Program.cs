@@ -30,14 +30,21 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<ICoderService, CoderService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ISkillService, SkillService>();
+builder.Services.AddScoped<CustomHttpHandler>();
 builder.Services.AddTransient<CoderService>();
 builder.Services.AddTransient<GroupService>();
 
+
+
+
 // Configuración del HttpClient para servicios específicos
-builder.Services.AddHttpClient<GroupService>(client =>
+builder.Services.AddHttpClient<IGroupService, GroupService>(client =>
 {
     client.BaseAddress = new Uri("https://backend-riwitalent-9pv2.onrender.com/");
-});
+})
+.AddHttpMessageHandler<CustomHttpHandler>(); 
+
 
 // Servicios de estado y almacenamiento
 builder.Services.AddBlazoredSessionStorage();
