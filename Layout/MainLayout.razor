@@ -3,7 +3,6 @@
 @inherits LayoutComponentBase
 
 @* Required *@
-<MudThemeProvider />
 <MudPopoverProvider />
 
 @* Needed for dialogs *@
@@ -18,17 +17,17 @@
     
     <MudAppBar Elevation="1" Class="rounded-br-lg">
         <MudIconButton Icon="@Icons.Material.Rounded.Menu" Color="Color.Primary" Edge="Edge.Start" OnClick="@(DrawerToggle)"/>
-        <NavLink Icon="@Icons.Material.Rounded.Menu" href="/home" Match="NavLinkMatch.All">
+        <NavLink Icon="@Icons.Material.Rounded.Menu" href="/coders" Match="NavLinkMatch.All">
             <MudImage ObjectFit="ObjectFit.ScaleDown" Width="100" Fluid="true" Src="@(DarkLightModeImgLogo)"></MudImage>
         </NavLink>
         <MudSpacer/>
         <AvatarComponent TypeAvatar="Usuario" KeySesionStorage="userEmail"></AvatarComponent>
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Variant="DrawerVariant.Mini" Overlay="false" ClipMode="DrawerClipMode.Always" Elevation="1" Class="rounded-lg ma-2">
+    <MudDrawer @bind-Open="_drawerOpen" Variant="DrawerVariant.Mini" Overlay="false" ClipMode="DrawerClipMode.Always" Elevation="1" Class="rounded ma-2">
         <NavMenu/>
     </MudDrawer>
-    <MudMainContent Style="height: 100vw;">
+    <MudMainContent>
         @Body
     </MudMainContent>
 </MudLayout>
@@ -49,6 +48,9 @@
             PaletteLight = CustomMudTheme.PaletteLight,
             PaletteDark = CustomMudTheme.PaletteDark,
             LayoutProperties = new LayoutProperties()
+            {
+                DefaultBorderRadius = "30px"
+            }
         };
     }
 

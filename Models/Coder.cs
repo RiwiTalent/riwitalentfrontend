@@ -22,7 +22,7 @@ namespace riwitalentfrontend.Models
         public string Status { get; set; } = "Active";
 
         // Fecha de creación del perfil
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; }
 
         // Tecnologías en las que el coder es competente
         public string Stack { get; set; } = string.Empty;

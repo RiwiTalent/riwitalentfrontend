@@ -25,7 +25,7 @@
     <Authorized>
         @if (_loading)
         {
-            <ProgressComponent Indeterminate="true" Color="Color.Info" Class="my-7" />
+            <MudProgressLinear />
         }
         else
         {
@@ -58,14 +58,14 @@
                 <!-- Detail groups -->
                 <MudGrid Justify="Justify.SpaceBetween" Spacing="3">
                     <MudItem xs="4">
-                        <MudCard Class="d-flex flex-column align-center justify-center mud-width-full rounded-lg pa-4">
+                        <MudCard Class="d-flex flex-column align-center justify-center mud-width-full pa-4">
                             <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary">A</MudAvatar>
                             <MudText Typo="Typo.h6" Color="Color.Primary">@_group.Name</MudText>
                             <MudChip T="string" Color="@GetChipColor(_group.Status)" Value="@_group.Status"></MudChip>
                         </MudCard>
                     </MudItem>
                     <MudItem xs="8">
-                        <MudCard Class="d-flex rounded-lg pa-4">
+                        <MudCard Class="d-flex pa-4">
                             <MudCardContent Class="FullWidth">
                                 <MudForm Spacing="2">
                                     <!-- Grid Layout -->
