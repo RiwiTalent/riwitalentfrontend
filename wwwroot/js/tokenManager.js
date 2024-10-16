@@ -16,8 +16,3 @@ window.getCookie = function(name){
 function deleteTokenFromCookies() {
     document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
-
-function deleteCookie(name)
-{
-    document.cookie = name + '=; Max-Age=0; path=/';
-}

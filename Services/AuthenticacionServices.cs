@@ -37,7 +37,7 @@ namespace riwitalentfrontend.Services
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var sesionUsuario = await _sesionStorage.ObtenerStorage<User>("sesionUsuario");
+            var sesionUsuario = await _sesionStorage.ObtenerStorage<User>("userEmail");
 
             if (sesionUsuario == null)
                 return await Task.FromResult(new AuthenticationState(_sinInformacion));

@@ -9,7 +9,7 @@ using CurrieTechnologies.Razor.SweetAlert2;
 using Blazored.SessionStorage;
 using Microsoft.Extensions.DependencyInjection;
 using riwitalentfrontend.App;
-
+using riwitalentfrontend;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -46,6 +46,7 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider,CustomAuthStateProvider>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TermsAndConditionsService>();
+builder.Services.AddScoped<FirebaseAuthService>();
 
 
 

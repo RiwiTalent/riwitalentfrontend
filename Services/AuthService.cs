@@ -30,19 +30,21 @@ namespace riwitalentfrontend.Services
         public async Task<bool> Login(string email, string password)
         {
             var loginData = new { Email = email, Password = password };
-            var response = await _httpClient.PostAsJsonAsync("https://backend-riwitalent-9pv2.onrender.com/login", loginData);
-
-            if (response.IsSuccessStatusCode)
+            // Llama a Firebase Auth desde JS
+            try
             {
-                // Guardo el token y asigno autenticación usando authenticationStateProvider
-                var token = await response.Content.ReadAsStringAsync();
-                await SaveTokenInCookies(token);
-                var authenticationExt = (CustomAuthStateProvider)_authenticationStateProvider;
-                await authenticationExt.ActualizarEstadoAutenticacion(token);
+                var token = await _jsRuntime.InvokeAsync<string>("firebaseAuth.signInWithEmailAndPassword", loginData.Email, loginData.Password);
+
+                Console.WriteLine(token);
+
+                await LoginBack(token);
 
                 return true;
             }
-            return false;
+            catch (JSException jsEx)
+            {
+                return false;
+            }
         }
         
         // Funcion para guardar cookies llamando la funcion de js y asignando el token
@@ -55,16 +57,35 @@ namespace riwitalentfrontend.Services
         public async Task<string> GetToken()
         {
             var token = await _jsRuntime.InvokeAsync<string>("getCookie", "authToken");
+
+            if(token == null || token == ""){
+                return "nada";
+            }
+
             return token;
         }
 
         // Funcion para cerrar sesion eliminando el token de la cookie llamando la funcion de js
         public async Task Logout()
         {
-            await _jsRuntime.InvokeVoidAsync("deleteTokenFromCookies");
+            await _jsRuntime.InvokeAsync<string>("firebaseAuth.signOut");
 
               // Eliminar el correo del SessionStorage
             await _sessionStorage.RemoveItemAsync("userEmail");
+
+            await _jsRuntime.InvokeVoidAsync("deleteTokenFromCookies");
+        }
+
+        private async Task LoginBack(string tokenFirebase){
+            string url = $"http://localhost:5113/login/{tokenFirebase}";
+
+            HttpResponseMessage response = await _httpClient.PostAsync(url, null);
+
+            if(response.IsSuccessStatusCode){
+                ResponseJwt responseBody = await response.Content.ReadFromJsonAsync<ResponseJwt>();
+
+                SaveTokenInCookies(responseBody.token);
+            }
         }
     }
 }
