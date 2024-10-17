@@ -34,7 +34,7 @@ namespace riwitalentfrontend.Models
         public bool? AcceptedTerms { get; set; }
 
 
-        public DateTime Expiration_At { get; set; }
+        public DateTime ExpirationAt { get; set; }
 
         // Lista de coders que pertenecen al grupo
         public List<Coder>? Coders { get; set; } = new List<Coder>();

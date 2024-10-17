@@ -1,0 +1,33 @@
+@inject IGroupService GroupService
+
+<MudIconButton OnClick="@RegenerateToken"
+               Icon="@Icons.Material.Rounded.Autorenew"
+               Color="Color.Primary"
+               Variant="Variant.Outlined" />
+
+@code {
+    [Parameter] public string GroupId { get; set; }
+    [Parameter] public EventCallback<bool> OnTokenRegenerated { get; set; }
+    
+    private async Task RegenerateToken()
+    {
+        if (string.IsNullOrEmpty(GroupId))
+        {
+            Console.WriteLine("El ID del grupo es inválido.");
+            await OnTokenRegenerated.InvokeAsync(false); 
+            return; 
+        }
+
+        bool success = await GroupService.RegenerateToken(GroupId);
+        if (success)
+        {
+            Console.WriteLine("Token regenerado con éxito.");
+            await OnTokenRegenerated.InvokeAsync(true);
+        }
+        else
+        {
+            Console.WriteLine("Error al regenerar el token.");
+            await OnTokenRegenerated.InvokeAsync(false); // Notifica que hubo un error
+        }
+    }
+}

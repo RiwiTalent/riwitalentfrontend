@@ -1,12 +1,10 @@
 @page "/groups"
 @using riwitalentfrontend.Components.Utility
 @layout MainLayout
-
+@inject SweetAlertService Swal;
 @inject IDialogService DialogService
 @inject IGroupService GroupServices
 @inject ISnackbar Snackbar
-@inject SweetAlertService Swal;
-
 
 <PageTitle>RiwiTalent: Gestiona y Comparte Grupos de Desarrolladores</PageTitle>
 
@@ -63,73 +61,58 @@
                                         </MudGrid>
                                     </ToolBarContent>
 
-                                    <Columns>
-                                        <SelectColumn T="Models.Group"/>
-                                        <PropertyColumn Property="x => x.Name" Title="Nombre del grupo">
-                                            <CellTemplate Context="group">
-                                                <MudContainer Class="d-flex gap-2 align-center">
-                                                    <AvatarComponent TypeAvatar="GrupoCoders"
-                                                                     GroupCoders="GetGroupCoders(group.Item.Name, group.Item.Status)"/>
-                                                    <MudContainer>
-                                                        <MudText><b>@group.Item.Name</b></MudText>
-                                                        <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.Description</MudText>
-                                                    </MudContainer>
+                                <Columns>
+                                    <SelectColumn T="Models.Group"/>
+                                    <PropertyColumn Property="x => x.Name" Title="Nombre del grupo">
+                                        <CellTemplate Context="group">
+                                            <MudContainer Class="d-flex gap-2 align-center">
+                                                <AvatarComponent TypeAvatar="GrupoCoders"
+                                                                GroupCoders="GetGroupCoders(group.Item.Name, group.Item.Status)"/>
+                                                <MudContainer>
+                                                    <MudText><b>@group.Item.Name</b></MudText>
+                                                    <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.Description</MudText>
                                                 </MudContainer>
-                                            </CellTemplate>
-                                        </PropertyColumn>
-                                        <PropertyColumn Property="x => x.Coders" Title="Coders">
-                                            <CellTemplate Context="group">
-                                                <MudText>@(group.Item.Coders?.Count ?? 0)</MudText>
-                                            </CellTemplate>
-                                        </PropertyColumn>
-                                        <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación">
-                                            <CellTemplate Context="group">
-                                                <MudText><b>@group.Item.Created_At.ToString("dd/MM/yyyy")</b></MudText>
-                                            </CellTemplate>
-                                        </PropertyColumn>
-                                        <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
-                                            <CellTemplate Context="group">
-                                                <MudStack Row>
-                                                    <MudChip T="string" Color="@GetChipColor(group.Item.Status)"
-                                                             Variant="Variant.Filled" Size="Size.Small" Class="px-4">
-                                                        @group.Item.Status
-                                                    </MudChip>
-                                                </MudStack>
-                                            </CellTemplate>
-                                        </PropertyColumn>
-                                        <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
-                                            <CellTemplate Context="group">
-                                                <MudStack Row>
+                                            </MudContainer>
+                                        </CellTemplate>
+                                    </PropertyColumn>
+                                    <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
+                                        <CellTemplate Context="group">
+                                            <MudStack Row>
+                                                <MudChip T="string" Color="@GetChipColor(group.Item.Status)"
+                                                        Variant="Variant.Filled" Size="Size.Small" Class="px-4">
+                                                    @group.Item.Status
+                                                </MudChip>
+                                            </MudStack>
+                                        </CellTemplate>
+                                    </PropertyColumn>
+                                    <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
+                                        <CellTemplate Context="group">
+                                            <MudStack Row>
+                                                <MudIconButton Href="@($"/GroupDetails/{group.Item.Id}")"
+                                                            Variant="Variant.Outlined"
+                                                            Icon="@Icons.Material.Outlined.RemoveRedEye"
+                                                            Color="Color.Warning" Size="Size.Small"
+                                                            Class="border-solid border-2 mud-border-warning pa-2">
+                                                </MudIconButton>
+                                                <MudIconButton OnClick="@(() => DeleteGroupAsync(group.Item.Id))"
+                                                            Variant="Variant.Outlined"
+                                                            Icon="@Icons.Material.Rounded.DeleteOutline"
+                                                            Color="Color.Error" Size="Size.Small"
+                                                            Class="border-solid border-2 mud-border-error pa-2">
+                                                </MudIconButton>
+                                            </MudStack>
+                                        </CellTemplate>
+                                    </PropertyColumn>
+                                </Columns>
 
-                                                    <MudIconButton Href="/Home" Variant="Variant.Outlined"
-                                                                   Icon="@Icons.Material.Rounded.ModeEditOutline"
-                                                                   Color="Color.Primary" Size="Size.Small"
-                                                                   Class="border-solid border-2 mud-border-primary pa-2">
-                                                    </MudIconButton>
-                                                    <MudIconButton Href="@($"/GroupDetails/{group.Item.Id}")"
-                                                                   Variant="Variant.Outlined"
-                                                                   Icon="@Icons.Material.Outlined.RemoveRedEye"
-                                                                   Color="Color.Warning" Size="Size.Small"
-                                                                   Class="border-solid border-2 mud-border-warning pa-2">
-                                                    </MudIconButton>
-                                                    <MudIconButton OnClick="@(() => DeleteGroupAsync(group.Item.Id))"
-                                                                   Variant="Variant.Outlined"
-                                                                   Icon="@Icons.Material.Rounded.DeleteOutline"
-                                                                   Color="Color.Error" Size="Size.Small"
-                                                                   Class="border-solid border-2 mud-border-error pa-2">
-                                                    </MudIconButton>
-                                                </MudStack>
-                                            </CellTemplate>
-                                        </PropertyColumn>
-                                    </Columns>
-
-                                    <PagerContent>
-                                        <MudDataGridPager T="Group"
-                                                          PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
-                                                          RowsPerPageString="@_rowsPerPageString"
-                                                          InfoFormat="@_infoFormat"/>
-                                    </PagerContent>
-                                </MudDataGrid>
+                                <PagerContent>
+                                    <MudDataGridPager T="Group"
+                                                        PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
+                                                        RowsPerPageString="@_rowsPerPageString"
+                                                        InfoFormat="@_infoFormat"/>
+                                </PagerContent>
+                            
+                            </MudDataGrid>
                         </MudContainer>
                     }
                 else
@@ -158,17 +141,32 @@
     private async Task LoadGroupsAsync()
     {
         _loading = true;
-        _errorMessage  = null;
+        _errorMessage = null;
 
-        await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
+        try
         {
-            var groups = await GroupServices.GetGroupsAsync() ?? new List<Group>();
-            _groups  = groups.OrderByDescending(g => g.Created_At).ToList();
-            },
-        _errorMessage => _errorMessage = this._errorMessage);
-        
-        _loading = false;
+            await ErrorHandling.ExecuteWithErrorHandlingAsync(
+                async () =>
+                {
+                    var groups = await GroupServices.GetGroupsAsync() ?? new List<Group>();
+                    _groups = groups.OrderByDescending(g => g.Created_At).ToList();
+                },
+                errorMessage =>
+                {
+                    _errorMessage = errorMessage; // Asigna el mensaje de error recibido
+                }
+            );
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message; // Maneja el error si ocurre una excepción
+        }
+        finally
+        {
+            _loading = false; // Asegúrate de que siempre se establece en falso
+        }
     }
+
     
     private Func<Group, bool> QuickFilter => group =>
     {
@@ -240,32 +238,18 @@
     if (result.IsConfirmed)
     {
         await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
-        {
-            var success = await GroupServices.DeleteGroupAsync(groupId); // Usamos el servicio
-            if (success)
             {
-                await LoadGroupsAsync(); // Recargar los grupos después de eliminar
-                await Swal.FireAsync(new SweetAlertOptions
+                var success = await GroupServices.DeleteGroupAsync(groupId); // Usamos el servicio
+                if (success)
                 {
-                    Title = "El grupo ha sido eliminado exitosamente",
-                    Icon = SweetAlertIcon.Success,
-                    ShowConfirmButton = false,
-                    Timer = 1500
-                });
-            }
-            else
-            {
-                _errorMessage = "No se pudo eliminar el grupo.";
-                await Swal.FireAsync(new SweetAlertOptions
+                    await LoadGroupsAsync(); // Recargar los grupos después de eliminar
+                }
+                else
                 {
-                    Title = "Error",
-                    Text = _errorMessage,
-                    Icon = SweetAlertIcon.Error,
-                    ConfirmButtonText = "Aceptar"
-                });
-            }
-        },
-        errorMessage => _errorMessage = errorMessage);
+                    _errorMessage = "No se pudo eliminar el grupo.";
+                }
+            },
+            errorMessage => _errorMessage = errorMessage);
     }
     else
     {

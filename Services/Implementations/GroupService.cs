@@ -75,5 +75,21 @@ namespace riwitalentfrontend.Services.Implementations
             var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/groups", groupAddDto);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> RegenerateToken(string groupId)
+        {
+            try
+            {
+                var url = $"http://localhost:5113/groups/regenerate-token";
+                var newKeyDto = new NewKeyDto { Id = groupId }; 
+                var response = await _httpClient.PatchAsync(url, JsonContent.Create(newKeyDto));
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al regenerar el token: {ex.Message}");
+                return false;
+            }
+        }
     }
 }

@@ -72,7 +72,11 @@
                                             </MudContainer>
                                         </CellTemplate>
                                     </PropertyColumn>
-                                    <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación"/>
+                                    <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación">
+                                        <CellTemplate Context="coder">
+                                            <MudText><b>@coder.Item.Created_At.ToString("dd/MM/yyyy")</b></MudText>
+                                        </CellTemplate>
+                                    </PropertyColumn>
                                     <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
                                         <CellTemplate Context="coder">
                                             <MudStack Row>
@@ -229,7 +233,7 @@
         {
             "Active" => Color.Success,
             "Inactive" => Color.Default,
-            "Grouped" => Color.Error,
+            "Grouped" => Color.Success,
             "Selected" => Color.Info,
             _ => Color.Default,
         };
