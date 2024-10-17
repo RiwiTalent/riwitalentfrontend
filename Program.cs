@@ -9,6 +9,7 @@ using MudBlazor.Services;
 using Blazored.Modal;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Blazored.SessionStorage;
+using Microsoft.Extensions.DependencyInjection;
 
 // Espacios de nombres de la aplicación
 using riwitalentfrontend;
@@ -30,6 +31,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<ICoderService, CoderService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+// builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<CustomHttpHandler>();
 builder.Services.AddTransient<CoderService>();
@@ -57,6 +59,9 @@ builder.Services.AddBlazoredModal();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<TermsAndConditionsService>();
+builder.Services.AddScoped<FirebaseAuthService>();
+
 
 // SweetAlert2 para alertas
 builder.Services.AddScoped<AlertService>();

@@ -23,12 +23,11 @@ namespace riwitalentfrontend.Services
             {
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
-
-                }, "JwtAuth"));
-                await _sesionStorage.GuardarStorage("sesionUsuario", sesionUsuario);
+                    
+                },"JwtAuth"));
+                await _sesionStorage.GuardarStorage("sesionUsuario",sesionUsuario);
             }
-            else
-            {
+            else{
                 claimsPrincipal = _sinInformacion;
                 await _sesionStorage.RemoveItemAsync("sesionUsuario");
             }
@@ -38,15 +37,15 @@ namespace riwitalentfrontend.Services
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var sesionUsuario = await _sesionStorage.ObtenerStorage<User>("sesionUsuario");
+            var sesionUsuario = await _sesionStorage.ObtenerStorage<User>("userEmail");
 
             if (sesionUsuario == null)
                 return await Task.FromResult(new AuthenticationState(_sinInformacion));
-
+            
             var claimPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
-            {
-
-            }, "JwtAuth"));
+                {
+                    
+                },"JwtAuth"));
 
             return await Task.FromResult(new AuthenticationState(claimPrincipal));
         }
