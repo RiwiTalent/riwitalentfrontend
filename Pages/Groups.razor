@@ -3,7 +3,7 @@
 @layout MainLayout
 @inject SweetAlertService Swal;
 @inject IDialogService DialogService
-@inject IGroupService GroupServices
+@inject IGroupService GroupService
 @inject ISnackbar Snackbar
 
 <PageTitle>RiwiTalent: Gestiona y Comparte Grupos de Desarrolladores</PageTitle>
@@ -121,7 +121,6 @@
                     }
             }
         </MudContainer>
-
     </Authorized>
 </AuthorizeView>
 
@@ -143,31 +142,16 @@
         _loading = true;
         _errorMessage = null;
 
-        try
-        {
-            await ErrorHandling.ExecuteWithErrorHandlingAsync(
-                async () =>
-                {
-                    var groups = await GroupServices.GetGroupsAsync() ?? new List<Group>();
-                    _groups = groups.OrderByDescending(g => g.Created_At).ToList();
-                },
-                errorMessage =>
-                {
-                    _errorMessage = errorMessage; // Asigna el mensaje de error recibido
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            _errorMessage = ex.Message; // Maneja el error si ocurre una excepción
-        }
-        finally
-        {
-            _loading = false; // Asegúrate de que siempre se establece en falso
-        }
+        await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
+            {
+                var groups = await GroupService.GetGroupsAsync() ?? new List<Group>();
+                _groups = groups.OrderByDescending(g => g.Created_At).ToList();
+            },
+            _errorMessage => _errorMessage = this._errorMessage);
+
+        _loading = false;
     }
 
-    
     private Func<Group, bool> QuickFilter => group =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
@@ -239,7 +223,7 @@
     {
         await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
             {
-                var success = await GroupServices.DeleteGroupAsync(groupId); // Usamos el servicio
+                var success = await GroupService.DeleteGroupAsync(groupId); // Usamos el servicio
                 if (success)
                 {
                     await LoadGroupsAsync(); // Recargar los grupos después de eliminar
