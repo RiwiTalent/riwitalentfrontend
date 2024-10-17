@@ -12,5 +12,6 @@ namespace riwitalentfrontend.Services.Interfaces
                 Task<bool> Update(Group group);
                 Task<bool> DeleteGroupAsync(string groupId);
                 Task<bool> AddGroupAsync(GroupAddDto groupAddDto);
-        }
+                Task<bool> RegenerateToken(string groupId);
+        } 
 }

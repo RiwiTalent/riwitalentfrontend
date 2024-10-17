@@ -23,6 +23,7 @@ namespace riwitalentfrontend.Models
 
         // Fecha de creación del grupo
         public DateTime CreatedAt { get; set; } 
+        
         // Email del creador del grupo
         [Required]
         public string? CreatedBy { get; set; }
@@ -32,7 +33,7 @@ namespace riwitalentfrontend.Models
         public string? AssociateEmail { get; set; }
 
 
-        public DateTime Expiration_At { get; set; }
+        public DateTime ExpirationAt { get; set; }
 
         // Lista de coders que pertenecen al grupo
         public List<Coder>? Coders { get; set; } = new List<Coder>();

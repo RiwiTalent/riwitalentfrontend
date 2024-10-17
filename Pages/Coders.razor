@@ -70,7 +70,11 @@
                                             </MudContainer>
                                         </CellTemplate>
                                     </PropertyColumn>
-                                    <PropertyColumn Property="x => x.CreatedAt" Title="Fecha de creación"/>
+                                    <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación">
+                                        <CellTemplate Context="coder">
+                                            <MudText><b>@coder.Item.Created_At.ToString("dd/MM/yyyy")</b></MudText>
+                                        </CellTemplate>
+                                    </PropertyColumn>
                                     <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
                                         <CellTemplate Context="coder">
                                             <MudStack Row>
@@ -215,7 +219,7 @@
                (coder.SecondName != null && coder.SecondName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
                (coder.SecondLastName != null && coder.SecondLastName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
                (coder.Status != null && coder.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.CreatedAt != null && coder.CreatedAt.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+               (coder.Created_At != null && coder.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
 
 
@@ -227,7 +231,7 @@
         {
             "Active" => Color.Success,
             "Inactive" => Color.Default,
-            "Grouped" => Color.Error,
+            "Grouped" => Color.Success,
             "Selected" => Color.Info,
             _ => Color.Default,
         };
