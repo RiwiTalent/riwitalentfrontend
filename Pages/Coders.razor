@@ -15,108 +15,109 @@
 }
 <AuthorizeView>
     <Authorized>
-        <MudContainer Class="d-flex flex-column justify-center">
+        <MudContainer Class="d-flex flex-column flex-grow-1 justify-center align-content-start">
             @if (_loading)
             {
                 <ProgressComponent/>
             }
             else
             {
-                <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded ma-2">
+                <MudContainer Class="ma-3 w-full h-full">
+                    <MudText Typo="Typo.h5"><b>@_coders.Count</b> Coders encontrados</MudText>
+                </MudContainer>
+                
+                <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true" Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded ma-2">
                     <!-- Filtro por skills -->
                     <CoderFilterComponent OnFiltered="UpdateCoders" />
                 </MudDrawer>
 
-
-                    @if (_coders != null && _coders.Any())
+                @if (_coders != null && _coders.Any())
                     {
-                    <!-- Grid de coders -->
-                    <MudDataGrid T="Coder"
-                                 Class="flex-grow-1 pa-5"
-                                 LoadingProgressColor="Color.Info"
-                                 Hover="true"
-                                 Items="@_coders"
-                                 MultiSelection="true"
-                                 QuickFilter="@QuickFilter">
+                        <MudContainer Class="ma-3 w-full h-full">
+                            <!-- Grid de coders -->
+                            <MudDataGrid T="Coder"
+                                         Class="flex-grow-1 pa-5"
+                                         LoadingProgressColor="Color.Info"
+                                         Hover="true"
+                                         Items="@_coders"
+                                         MultiSelection="true"
+                                         QuickFilter="@QuickFilter">
 
-                        <ToolBarContent>
-                            <MudGrid>
-                                <MudItem xs="12" Class="d-flex flex-grow-1 gap-3 justify-space-between">
-                                    <MudTextField Placeholder="Buscar aquí..." @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Search" AdornmentColor="Color.Primary"></MudTextField>
-                                    <MudSpacer/>
-                                    <MudButton Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" OnClick="DrawerToggle" StartIcon="@Icons.Material.Rounded.Tune">Filtro por tecnologias</MudButton>
-                                    <MudButton @onclick="OpenDialogAsync" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.PersonAdd">Nuevo</MudButton>
-                                </MudItem>
-                            </MudGrid>
-                        </ToolBarContent>
+                                <ToolBarContent>
+                                    <MudGrid>
+                                        <MudItem xs="12" Class="d-flex flex-grow-1 gap-3 justify-space-between">
+                                            <MudTextField Placeholder="Buscar aquí..." @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Search" AdornmentColor="Color.Primary"></MudTextField>
+                                            <MudSpacer/>
+                                            <MudButton Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" OnClick="DrawerToggle" StartIcon="@Icons.Material.Rounded.Tune">Filtro por tecnologias</MudButton>
+                                            <MudButton @onclick="OpenDialogAsync" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.PersonAdd">Nuevo</MudButton>
+                                        </MudItem>
+                                    </MudGrid>
+                                </ToolBarContent>
 
-                        <Columns>
-                            <SelectColumn T="Coder"/>
-                            <!--  <PropertyColumn  Style="width: 100px" Property="x => _coders.IndexOf(x) + 1" Title="Numero" Filterable="false"/> -->
-                            <PropertyColumn Property="x => x.FirstName" Title="Nombre">
-                                <CellTemplate Context="coder">
-                                    <MudContainer Class="d-flex gap-1">
-                                        <MudAvatar>
-                                            <MudImage Src="@coder.Item.Photo"></MudImage>
-                                        </MudAvatar>
-                                        <MudContainer>
-                                            <MudText><b>@coder.Item.FirstName @coder.Item.SecondName</b></MudText>
-                                            <MudText Color="Color.Primary" Typo="Typo.subtitle2">@coder.Item.Stack</MudText>
-                                        </MudContainer>
-                                    </MudContainer>
-                                </CellTemplate>
-                            </PropertyColumn>
-                            <PropertyColumn Property="x => x.CreatedAt" Title="Fecha de creación"/>
-                            <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
-                                <CellTemplate Context="coder">
-                                    <MudStack Row>
-                                        <MudChip T="string" Color="@GetChipColor((string)coder.Item.Status)"
-                                                 Variant="Variant.Filled" Size="Size.Small" Class="px-4">
-                                            @coder.Item.Status
-                                        </MudChip>
-                                    </MudStack>
-                                </CellTemplate>
-                            </PropertyColumn>
+                                <Columns>
+                                    <SelectColumn T="Coder"/>
+                                    <!--  <PropertyColumn  Style="width: 100px" Property="x => _coders.IndexOf(x) + 1" Title="Numero" Filterable="false"/> -->
+                                    <PropertyColumn Property="x => x.FirstName" Title="Nombre">
+                                        <CellTemplate Context="coder">
+                                            <MudContainer Class="d-flex gap-1">
+                                                <MudAvatar>
+                                                    <MudImage Src="@coder.Item.Photo"></MudImage>
+                                                </MudAvatar>
+                                                <MudContainer>
+                                                    <MudText><b>@coder.Item.FirstName @coder.Item.SecondName</b></MudText>
+                                                    <MudText Color="Color.Primary" Typo="Typo.subtitle2">@coder.Item.Stack</MudText>
+                                                </MudContainer>
+                                            </MudContainer>
+                                        </CellTemplate>
+                                    </PropertyColumn>
+                                    <PropertyColumn Property="x => x.CreatedAt" Title="Fecha de creación"/>
+                                    <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
+                                        <CellTemplate Context="coder">
+                                            <MudStack Row>
+                                                <MudChip T="string" Color="@GetChipColor((string)coder.Item.Status)"
+                                                         Variant="Variant.Filled" Size="Size.Small" Class="px-4">
+                                                    @coder.Item.Status
+                                                </MudChip>
+                                            </MudStack>
+                                        </CellTemplate>
+                                    </PropertyColumn>
 
-                            <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
-                                <CellTemplate Context="coder">
-                                    <MudStack Row>
-                                        <MudIconButton Href="/Home" Variant="Variant.Outlined"
-                                                       Icon="@Icons.Material.Rounded.ModeEditOutline"
-                                                       Color="Color.Primary" Size="Size.Small"
-                                                       Class="border-solid border-2 mud-border-primary pa-2">
-                                        </MudIconButton>
-                                        <MudIconButton Href="/Home" Variant="Variant.Outlined"
-                                                       Icon="@Icons.Material.Outlined.RemoveRedEye"
-                                                       Color="Color.Warning" Size="Size.Small"
-                                                       Class="border-solid border-2 mud-border-warning pa-2">
-                                        </MudIconButton>
-                                        <MudIconButton Href="/Home" Variant="Variant.Outlined"
-                                                       Icon="@Icons.Material.Rounded.DeleteOutline"
-                                                       Color="Color.Error" Size="Size.Small"
-                                                       Class="border-solid border-2 mud-border-error pa-2">
-                                        </MudIconButton>
-                                    </MudStack>
-                                </CellTemplate>
-                            </PropertyColumn>
-                        </Columns>
+                                    <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
+                                        <CellTemplate Context="coder">
+                                            <MudStack Row>
+                                                <MudIconButton Href="/Home" Variant="Variant.Outlined"
+                                                               Icon="@Icons.Material.Rounded.ModeEditOutline"
+                                                               Color="Color.Primary" Size="Size.Small"
+                                                               Class="border-solid border-2 mud-border-primary pa-2">
+                                                </MudIconButton>
+                                                <MudIconButton Href="/Home" Variant="Variant.Outlined"
+                                                               Icon="@Icons.Material.Outlined.RemoveRedEye"
+                                                               Color="Color.Warning" Size="Size.Small"
+                                                               Class="border-solid border-2 mud-border-warning pa-2">
+                                                </MudIconButton>
+                                                <MudIconButton Href="/Home" Variant="Variant.Outlined"
+                                                               Icon="@Icons.Material.Rounded.DeleteOutline"
+                                                               Color="Color.Error" Size="Size.Small"
+                                                               Class="border-solid border-2 mud-border-error pa-2">
+                                                </MudIconButton>
+                                            </MudStack>
+                                        </CellTemplate>
+                                    </PropertyColumn>
+                                </Columns>
 
-                        <PagerContent>
-                            <MudDataGridPager T="Coder"
-                                              PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
-                                              RowsPerPageString="@_rowsPerPageString"
-                                              InfoFormat="@_infoFormat"/>
-                        </PagerContent>
-                    </MudDataGrid>
+                                <PagerContent>
+                                    <MudDataGridPager T="Coder"
+                                                      PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
+                                                      RowsPerPageString="@_rowsPerPageString"
+                                                      InfoFormat="@_infoFormat"/>
+                                </PagerContent>
+                            </MudDataGrid>
+                        </MudContainer>
                     }
-                    else
+                else
                     {
-                    <MudText>No hay coders disponibles.</MudText>
+                        <MudText>No hay coders disponibles.</MudText>
                     }
-                <!-- Total coders -->
-                <MudContainer Class="ma-3 w-full h-full">
-                    <MudText Typo="Typo.h5"><b>@CoderCount</b> Coders encontrados</MudText>
-                </MudContainer>
             }
         </MudContainer>
 
