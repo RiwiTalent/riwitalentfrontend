@@ -1,4 +1,5 @@
 @page "/HomeClient/{Key}"
+@inject IGroupService groupService
 @layout ClientLayout
 
 
@@ -10,9 +11,33 @@
 
 <MudMainContent />
 <BannerCodersComponent />
-<CardComponent />
+
+@if(coders == null)
+{
+    <p>Cargando coders del grupo...</p>
+}
+else if(!coders.Any())
+{
+    <p>No hay coders en el grupo</p>
+}
+else
+{
+    <CardComponent />
+}
+
 
 @code {
     [Parameter]
     public string? Key { get; set; }
+
+    private List<Coder>? coders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(!string.IsNullOrEmpty(Key))
+        {
+            var codersInGroup = await groupService.GetGroupByIdAsync(Key);
+            coders = codersInGroup?.Coders;
+        }
+    }
 }

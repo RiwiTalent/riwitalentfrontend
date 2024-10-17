@@ -154,7 +154,7 @@
 
 .cards__badges{
     display: grid;
-    grid-template-columns: repeat(3);
+    grid-template-columns: repeat(3, 1fr);
 }
 
 .cards__badge {
