@@ -64,10 +64,14 @@
 
 @if (FilterInGroup == true)
 {
-   if (coders != null && coders.Any(c => c.GroupId != null && c.GroupId.Contains(groupId)))
+   var filteredCoders = coders != null 
+        ? paginatedCoders.Where(coder => coder.GroupId != null && coder.GroupId.Contains(groupId)).ToList()
+        : new List<Coder>();
+
+    if (filteredCoders.Any())
     {
         <div class="cards">
-            @foreach (var coder in paginatedCoders)
+            @foreach (var coder in filteredCoders)
             {
                 <MudCard style="height:300px" class="relative rounded-lg overflow-hidden mud-card">
                     @if (coder.Photo != null)
@@ -133,6 +137,10 @@
                 <MudPagination class="mud-pagination mud-pagination-item mud-button" Variant="Variant.Filled" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize" TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
             </div>
         </div>
+    }
+    else
+    {
+        <p>No se encontraron coders en este grupo.</p>
     }
 }
 
@@ -318,14 +326,15 @@ else
     private List<Badge> badges = new List<Badge>();
     
 
+  
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("Filter" +FilterInGroup);
+        Console.WriteLine("Filter: " + FilterInGroup);
 
         try
         {
             coders = await coderService.GetCodersAsync();
-            
+
             if (coders == null || coders.Count == 0)
             {
                 Console.WriteLine("No se encontraron coders o la lista está vacía.");
@@ -339,17 +348,19 @@ else
 
             foreach (var skill in coders)
             {
-                for(int i = 0; i < skill.Skills.Count; i++)
+                if (skill.Skills != null)
                 {
-
-                    badges.Add(new Badge{
-                        Technology = skill.Skills[i].Language_Programming,
-                        Color = GetColor(skill.ToString()),
-                        Icon = GetIcon(skill.ToString())
-                    });
+                    for (int i = 0; i < skill.Skills.Count; i++)
+                    {
+                        badges.Add(new Badge
+                        {
+                            Technology = skill.Skills[i].Language_Programming,
+                            Color = GetColor(skill.Skills[i].Language_Programming),
+                            Icon = GetIcon(skill.Skills[i].Language_Programming)
+                        });
+                    }
                 }
             }
-            
         }
         catch (Exception ex)
         {
@@ -362,8 +373,47 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error al obtener las Tecnologìas: {ex.Message}");
+            Console.WriteLine($"Error al obtener las Tecnologías: {ex.Message}");
         }
+    }
+
+    private void LoadCoders(int pageNumber)
+    {
+        if (coders == null)
+        {
+            paginatedCoders = new List<Coder>();
+            return;
+        }
+
+        paginatedCoders = coders
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        if (coders == null || coders.Count == 0)
+        {
+            Console.WriteLine("La lista de coders está vacía.");
+        }
+        else
+        {
+            Console.WriteLine($"Total de coders obtenidos: {coders.Count}");
+        }
+
+        if (paginatedCoders == null || paginatedCoders.Count == 0)
+        {
+            Console.WriteLine("La lista de paginatedCoders está vacía.");
+        }
+        else
+        {
+            Console.WriteLine($"Total de paginatedCoders: {paginatedCoders.Count}");
+        }
+    }
+
+
+    private void OnPageChanged(int pageNumber)
+    {
+        currentPage = pageNumber;
+        LoadCoders(currentPage);
     }
 
     private void AddCoderToGroup(Coder coder)
@@ -451,25 +501,7 @@ else
             _ => "simple-icons:coder"
         };
     }
-
-    private async Task LoadCodersAsync()
-    {
-        try
-        {
-            coders = await coderService.GetCodersAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error al obtener coders: {ex.Message}");
-        }
-    }
-
-    private void OnPageChanged(int pageNumber)
-    {
-        currentPage = pageNumber;
-        LoadCoders(currentPage);
-    }
-    
+ 
 
     private async Task FilterCoders()
     {
@@ -548,15 +580,6 @@ else
         }
     }
 
-    private void LoadCoders(int pageNumber)
-    {
-        paginatedCoders = coders
-            ?.Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
-    }
-
-    //Funcionalidad ver detalles
     private async Task ShowDetails(string id)
     {
         var coder = coders.FirstOrDefault(c => c.Id == id);
