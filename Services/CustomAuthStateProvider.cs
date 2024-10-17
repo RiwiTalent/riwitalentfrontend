@@ -1,62 +1,81 @@
+
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using System.Threading.Tasks;
 
 namespace riwitalentfrontend.Services
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         private readonly IJSRuntime _jsRuntime;
-        private ClaimsPrincipal _usuarioActual = new ClaimsPrincipal(new ClaimsIdentity());
+        private ClaimsPrincipal _anonymous = new ClaimsPrincipal(new ClaimsIdentity());
+
         public CustomAuthStateProvider(IJSRuntime jsRuntime)
         {
             _jsRuntime = jsRuntime;
         }
 
-        public async Task ActualizarEstadoAutenticacion(string token)
-        {
-            // Aquí codificamos el token y especificamos que esperamos que el token es vacio
-            var authenticatedUser = !string.IsNullOrEmpty(token)
-                ? new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("jwt", token) }, "jwt"))
-                : new ClaimsPrincipal(new ClaimsIdentity());
-
-            // Actualiza el estado de autenticación
-            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(authenticatedUser)));
-        }
-
-        // Obtiene el token desde la cookie llamando las funciones de js y puede verificarse si es autorizado o no
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var token = await _jsRuntime.InvokeAsync<string>("getCookie", "authToken");
+            // Obtener el token desde la cookie
+            var token = await _jsRuntime.InvokeAsync<string>("getAuthToken");
+
             if (string.IsNullOrEmpty(token))
             {
-                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+                // Si no hay token, retorna un usuario anónimo (no autenticado)
+                return new AuthenticationState(_anonymous);
             }
 
-            var identity = new System.Security.Claims.ClaimsIdentity();
-            var user = new System.Security.Claims.ClaimsPrincipal(identity);
+            // Si hay token, crea las claims basadas en el token JWT
+            var claims = ParseClaimsFromJwt(token);
+            var identity = new ClaimsIdentity(claims, "jwtAuthType");
+            var user = new ClaimsPrincipal(identity);
 
             return new AuthenticationState(user);
         }
 
-        // Asignando parametros de la autenticacion de el usuario
-        public void NotifyUserAuthentication(string token)
+        // Método para extraer las claims desde el token JWT
+        private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
-            var identity = new System.Security.Claims.ClaimsIdentity();
-            var authenticatedUser = new System.Security.Claims.ClaimsPrincipal(identity);
-            var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
+            var payload = jwt.Split('.')[1];
+            var jsonBytes = ParseBase64WithoutPadding(payload);
+            var keyValuePairs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
-            NotifyAuthenticationStateChanged(authState);
+            var claims = new List<Claim>();
+            foreach (var kvp in keyValuePairs)
+            {
+                claims.Add(new Claim(kvp.Key, kvp.Value.ToString()));
+            }
+
+            return claims;
         }
 
-        // funcion para cerrar sesion eliminando el token de la cookie y quitando la autorizacion 
-        public void NotifyUserLogout()
+        private byte[] ParseBase64WithoutPadding(string base64)
         {
-            var anonymousUser = new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity());
-            var authState = Task.FromResult(new AuthenticationState(anonymousUser));
+            switch (base64.Length % 4)
+            {
+                case 2: base64 += "=="; break;
+                case 3: base64 += "="; break;
+            }
+            return Convert.FromBase64String(base64);
+        }
 
-            NotifyAuthenticationStateChanged(authState);
+        public void MarkUserAsAuthenticated(string token)
+        {
+            var claims = ParseClaimsFromJwt(token);
+            var identity = new ClaimsIdentity(claims, "jwtAuthType");
+            var user = new ClaimsPrincipal(identity);
+
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
+        }
+
+        public void MarkUserAsLoggedOut()
+        {
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(_anonymous)));
         }
 
     }
+
+
 }

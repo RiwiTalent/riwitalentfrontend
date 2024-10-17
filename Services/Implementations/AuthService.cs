@@ -1,12 +1,13 @@
-using System.Security.Claims;
+
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using riwitalentfrontend.Models;
 using Microsoft.AspNetCore.Components.Authorization;
+using riwitalentfrontend.Services.Interfaces;
 using System.Net.Http.Headers;
 using Blazored.SessionStorage;
-using riwitalentfrontend.Services.Interfaces;
 
 
 namespace riwitalentfrontend.Services.Implementations
@@ -31,23 +32,25 @@ namespace riwitalentfrontend.Services.Implementations
         public async Task<bool> Login(string email, string password)
         {
             var loginData = new { Email = email, Password = password };
-            var response = await _httpClient.PostAsJsonAsync("https://backend-riwitalent-9pv2.onrender.com/login", loginData);
-
-            if (response.IsSuccessStatusCode)
+            // Llama a Firebase Auth desde JS
+            try
             {
-                // Guardo el token y asigno autenticación usando authenticationStateProvider
-                var token = await response.Content.ReadAsStringAsync();
-                await SaveTokenInCookies(token);
-                var authenticationExt = (CustomAuthStateProvider)_authenticationStateProvider;
-                await authenticationExt.ActualizarEstadoAutenticacion(token);
+                var token = await _jsRuntime.InvokeAsync<string>("firebaseAuth.signInWithEmailAndPassword", loginData.Email, loginData.Password);
+
+                Console.WriteLine(token);
+
+                await LoginBack(token);
 
                 return true;
             }
-            return false;
+            catch (JSException jsEx)
+            {
+                return false;
+            }
         }
-
+        
         // Funcion para guardar cookies llamando la funcion de js y asignando el token
-        public async Task SaveTokenInCookies(string token)
+        private async Task SaveTokenInCookies(string token)
         {
             await _jsRuntime.InvokeVoidAsync("setTokenInCookies", token);
         }
@@ -56,19 +59,38 @@ namespace riwitalentfrontend.Services.Implementations
         public async Task<string> GetToken()
         {
             var token = await _jsRuntime.InvokeAsync<string>("getCookie", "authToken");
+
+            if(token == null || token == ""){
+                return "nada";
+            }
+
             return token;
         }
 
         // Funcion para cerrar sesion eliminando el token de la cookie llamando la funcion de js
         public async Task Logout()
         {
-            await _jsRuntime.InvokeVoidAsync("deleteTokenFromCookies");
+            await _jsRuntime.InvokeAsync<string>("firebaseAuth.signOut");
 
-            // Eliminar el correo del SessionStorage
+              // Eliminar el correo del SessionStorage
             await _sessionStorage.RemoveItemAsync("userEmail");
+
+            await _jsRuntime.InvokeVoidAsync("deleteTokenFromCookies");
         }
 
-        public async Task<bool> AuthenticationExternalAsync(AuthExternalRequest login)
+        private async Task LoginBack(string tokenFirebase){
+            string url = $"http://localhost:5113/login/{tokenFirebase}";
+
+            HttpResponseMessage response = await _httpClient.PostAsync(url, null);
+
+            if(response.IsSuccessStatusCode){
+                ResponseJwt responseBody = await response.Content.ReadFromJsonAsync<ResponseJwt>();
+
+                SaveTokenInCookies(responseBody.token);
+            }
+        }
+
+           public async Task<bool> AuthenticationExternalAsync(AuthExternalRequest login)
         {
             var loginExternalResponse = await _httpClient.PostAsJsonAsync<AuthExternalRequest>
                 ($"http://localhost:5113/validation-external?Id={login.GroupId}&AssociateEmail={login.AssociateEmail}&Key={login.Key}",
