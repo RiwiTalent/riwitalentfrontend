@@ -68,14 +68,6 @@
             await SessionStorage.SetItemAsync("userEmail", _email);
 
             NavigationManager.NavigateTo("/coders");
-            await Swal.FireAsync(new SweetAlertOptions
-            {   
-                Title = "¡Bienvenido",
-                Position = "center",
-                Icon = SweetAlertIcon.Success,
-                ShowConfirmButton = false ,
-                Timer = 1500
-            });
         }
         else
         {

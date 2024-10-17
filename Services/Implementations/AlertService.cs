@@ -96,5 +96,17 @@ namespace riwitalentfrontend.Services.Implementations
                     Timer = 1500
                 });
         }
+
+        public async Task AddCodersToGroup()
+        {
+            await _swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Agregar Coders",
+                Text = "¿Seguro que quiere agreagar a estos coders al grupo?",
+                Icon = SweetAlertIcon.Warning,
+                ShowConfirmButton = false ,
+                Timer = 1500
+            });
+        }
     }
 }
