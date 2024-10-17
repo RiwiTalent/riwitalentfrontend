@@ -7,12 +7,7 @@ namespace riwitalentfrontend.Services.Interfaces
         Task NewRegister();
         Task Warning();
         Task ConfirmDeleteCoder(); // Nuevo método
-        
-
-
-    
-        
-
+        Task AddCodersToGroup();
     }
 }
 

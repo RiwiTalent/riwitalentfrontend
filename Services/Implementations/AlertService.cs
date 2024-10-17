@@ -110,5 +110,17 @@ namespace riwitalentfrontend.Services.Implementations
                 CancelButtonText="<button class='btn-eliminar'>Cancelar</button>"
             });
         }
+
+        public async Task AddCodersToGroup()
+        {
+            await _swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Agregar Coders",
+                Text = "¿Estás seguro de añadir estos coders al grupo?",
+                Icon = SweetAlertIcon.Warning,
+                ShowConfirmButton = false ,
+                Timer = 1500
+            });
+        }
     }
 }
