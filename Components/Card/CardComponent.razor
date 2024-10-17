@@ -66,7 +66,7 @@
 {
    var filteredCoders = coders?.Where(coder => coder.GroupId != null && coder.GroupId.Contains(groupId)).ToList();
 
-    if (filteredCoders.Any())
+    if (filteredCoders.Count() > 0)
     {
         <div class="cards">
             @foreach (var coder in filteredCoders)
@@ -75,7 +75,7 @@
                     @if (coder.Photo != null)
                     {
                         <MudImage Fluid="true"
-                        ObjetctFit="Cover" Src="@ImageNullOrEmpty(coder.Photo)" Alt="Mony the dog" Width="250" Height="300"/>
+                        Src="@ImageNullOrEmpty(coder.Photo)" Alt="@coder.FirstName" Width="250" Height="300"/>
                     }
                     else
                     {
@@ -499,7 +499,6 @@ else
             _ => "simple-icons:coder"
         };
     }
- 
 
     private async Task FilterCoders()
     {
@@ -596,7 +595,7 @@ else
     {
         if(string.IsNullOrEmpty(photo))
         {
-            return "wwwroot/images/Avatar1.png";
+            return "images/Avatar1.png";
         }
 
         return photo;
