@@ -5,6 +5,8 @@
 @inject ICoderService CoderService
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject SweetAlertService Swal;
+
 
 <PageTitle>RiwiTalent: Explora el Mejor Talento de Desarrolladores</PageTitle>
 
@@ -95,10 +97,10 @@
                                                                Color="Color.Warning" Size="Size.Small"
                                                                Class="border-solid border-2 mud-border-warning pa-2">
                                                 </MudIconButton>
-                                                <MudIconButton Href="/Home" Variant="Variant.Outlined"
-                                                               Icon="@Icons.Material.Rounded.DeleteOutline"
-                                                               Color="Color.Error" Size="Size.Small"
-                                                               Class="border-solid border-2 mud-border-error pa-2">
+                                                 <MudIconButton OnClick="@(() => DeleteCoderAsync(coder.Item.Id))" Variant="Variant.Outlined"
+                                                            Icon="@Icons.Material.Rounded.DeleteOutline"
+                                                            Color="Color.Error" Size="Size.Small"
+                                                            Class="border-solid border-2 mud-border-error pa-2">
                                                 </MudIconButton>
                                             </MudStack>
                                         </CellTemplate>
@@ -232,4 +234,63 @@
             _ => Color.Default,
         };
     }
+
+    private async Task DeleteCoderAsync(string Id)
+{
+    // Mostrar alerta de confirmación
+    var result = await Swal.FireAsync(new SweetAlertOptions
+    {
+        Icon = SweetAlertIcon.Warning,
+        Title = "¿Estás seguro/a de que deseas eliminar este coder?",
+        Text = "Esta acción no se podrá deshacer.",
+        ShowCancelButton = true,
+        ConfirmButtonColor = "#FE654F",
+        ConfirmButtonText = "Eliminar",
+        CancelButtonColor = "#fff",
+        CancelButtonText = "<button style='color:#FE654F; background-color:#fff'>Cancelar</button>"
+    });
+
+    // Si el usuario confirma, proceder con la eliminación
+    if (result.IsConfirmed)
+    {
+        await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
+        {
+            var success = await CoderService.DeleteCodersAsync(Id);
+            if (success)
+            {
+                await LoadCodersAsync(); // Recargar los coders después de eliminar
+                await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "El codificador ha sido eliminado exitosamente",
+                    Icon = SweetAlertIcon.Success,
+                    ShowConfirmButton = false,
+                    Timer = 1500
+                });
+            }
+            else
+            {
+                _errorMessage = "No se pudo eliminar el coder.";
+                await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Error",
+                    Text = _errorMessage,
+                    Icon = SweetAlertIcon.Error,
+                    ConfirmButtonText = "Aceptar"
+                });
+            }
+        },
+        errorMessage => _errorMessage = errorMessage);
+    }
+    else
+    {
+        // El usuario canceló la eliminación
+        Console.WriteLine("Eliminación cancelada");
+    }
+}
+
+
+
+
+
+
 }

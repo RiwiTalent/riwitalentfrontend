@@ -171,5 +171,20 @@ namespace riwitalentfrontend.Services.Implementations
         }
 
 
+
+        public async  Task ConfirmDeleteCoder()
+        {
+            var result = await _swal.FireAsync(new SweetAlertOptions
+            {
+                Icon = SweetAlertIcon.Warning,
+                Title = "¿Estás seguro/a de que deseas eliminar este programador?",
+                Text = "Esta acción no se podra deshacer.",
+                ShowCancelButton = true,
+                ConfirmButtonColor = "#FE654F",
+                ConfirmButtonText = "Eliminar",
+                CancelButtonColor = "#fff",
+                CancelButtonText="<button class='btn-eliminar'>Cancelar</button>"
+            });
+        }
     }
 }

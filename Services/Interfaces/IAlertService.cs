@@ -8,6 +8,13 @@ namespace riwitalentfrontend.Services.Interfaces
         Task Warning();
         Task AcceptTerms();
         Task CancelTerms(); 
+        Task ConfirmDeleteCoder(); // Nuevo método
+        
+
+
+    
+        
+
     }
 
 }

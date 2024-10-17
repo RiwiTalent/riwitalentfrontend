@@ -5,6 +5,8 @@
 @inject IDialogService DialogService
 @inject IGroupService GroupServices
 @inject ISnackbar Snackbar
+@inject SweetAlertService Swal;
+
 
 <PageTitle>RiwiTalent: Gestiona y Comparte Grupos de Desarrolladores</PageTitle>
 
@@ -219,22 +221,59 @@
         }
     }
     
-    private async Task DeleteGroupAsync(string groupId)
+  private async Task DeleteGroupAsync(string groupId)
+{
+    // Mostrar alerta de confirmación
+    var result = await Swal.FireAsync(new SweetAlertOptions
+    {
+        Icon = SweetAlertIcon.Warning,
+        Title = "¿Estás seguro/a de que deseas eliminar este grupo?",
+        Text = "Esta acción no se podrá deshacer.",
+        ShowCancelButton = true,
+        ConfirmButtonColor = "#FE654F",
+        ConfirmButtonText = "Eliminar",
+        CancelButtonColor = "#fff",
+        CancelButtonText = "<button style='color:#FE654F; background-color:#fff'>Cancelar</button>"
+    });
+
+    // Si el usuario confirma, proceder con la eliminación
+    if (result.IsConfirmed)
     {
         await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
+        {
+            var success = await GroupServices.DeleteGroupAsync(groupId); // Usamos el servicio
+            if (success)
             {
-                var success = await GroupServices.DeleteGroupAsync(groupId); // Usamos el servicio
-                if (success)
+                await LoadGroupsAsync(); // Recargar los grupos después de eliminar
+                await Swal.FireAsync(new SweetAlertOptions
                 {
-                    await LoadGroupsAsync(); // Recargar los grupos después de eliminar
-                }
-                else
+                    Title = "El grupo ha sido eliminado exitosamente",
+                    Icon = SweetAlertIcon.Success,
+                    ShowConfirmButton = false,
+                    Timer = 1500
+                });
+            }
+            else
+            {
+                _errorMessage = "No se pudo eliminar el grupo.";
+                await Swal.FireAsync(new SweetAlertOptions
                 {
-                    _errorMessage = "No se pudo eliminar el grupo.";
-                }
-            },
-            errorMessage => _errorMessage = errorMessage);
+                    Title = "Error",
+                    Text = _errorMessage,
+                    Icon = SweetAlertIcon.Error,
+                    ConfirmButtonText = "Aceptar"
+                });
+            }
+        },
+        errorMessage => _errorMessage = errorMessage);
     }
+    else
+    {
+        // El usuario canceló la eliminación
+        Console.WriteLine("Eliminación de grupo cancelada");
+    }
+}
+
 
 
 }

@@ -22,7 +22,7 @@ namespace riwitalentfrontend.Services.Implementations
             return await _httpClient.GetFromJsonAsync<List<Coder>>("https://backend-riwitalent-9pv2.onrender.com/coders");
         }
 
-         public async Task<bool> UpdateCoderAsync(Coder coder)
+        public async Task<bool> UpdateCoderAsync(Coder coder)
         {
             var url = $"https://backend-riwitalent-9pv2.onrender.com/coders?Id={coder.Id}&FirstName={coder.FirstName}&SecondName={coder.SecondName}&FirstLastName={coder.FirstLastName}&SecondLastName={coder.SecondLastName}&Email={coder.Email}&Age={coder.Age}";
             
@@ -36,6 +36,21 @@ namespace riwitalentfrontend.Services.Implementations
             var url = $"http://localhost:5113/coders?{queryString}";
             Console.WriteLine($"Request URL: {url}");
             return await _httpClient.GetFromJsonAsync<List<Coder>>(url);
+        }
+
+        public async Task<bool> DeleteCodersAsync(string Id)
+        {
+            
+            try
+                {
+                    var response = await _httpClient.DeleteAsync($"http://localhost:5113/coders/{Id}");
+                    return response.IsSuccessStatusCode;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al eliminar coder: {ex.Message}");
+                    return false;     
+            }
         }
     }
 }
