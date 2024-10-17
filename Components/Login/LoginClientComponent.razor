@@ -1,0 +1,185 @@
+@namespace riwitalentfrontend.Components
+
+@inject IAuthService AuthService;
+@inject GroupService GroupService
+@inject IEmailService EmailService
+@inject ISessionStorageService SessionStorage
+@inject NavigationManager NavigationManager;
+@inject SweetAlertService Swal;
+@inject AlertService AlertService;
+@inject IModalService ModalService
+@using Blazored.SessionStorage
+
+<MudGrid Class="pa-0 ma-0">
+    <MudItem Class="d-flex justify-center align-center">
+        <MudItem xs="6" sm="6" Class="d-flex justify-center align-center pa-0">
+            <MudItem xs="8">
+                <MudCard Class="pa-6 d-flex justify-center align-center">
+                    <MudCardHeader>
+                        <MudItem xs="12" Class="d-flex justify-center align-center">
+                            <MudImage Src="images/riwi.png" ObjectFit="ObjectFit.ScaleDown" Height="50" Alt="Logo Riwi"></MudImage>
+                        </MudItem>
+                    </MudCardHeader>
+                    <MudItem>
+                        <MudText Align="Align.Center" Typo="Typo.h5"><b>¡Bienvenido/a de nuevo!</b></MudText>
+                        <MudText Align="Align.Center" Typo="Typo.subtitle1">Ingresa con tu cuenta para continuar</MudText>
+                    </MudItem>
+                    <MudCardContent Class="FullWidth" Style="width: 100%;">
+
+                        <MudForm Spacing="2">
+                            <MudTextField T="string" Label="Correo" @bind-value="@AssociateEmail" Variant="Variant.Outlined" InputType="InputType.Email"/>
+
+                            <MudTextField T="string" Label="Contraseña" @bind-value="@Key" Variant="Variant.Outlined" InputType="InputType.Password" IconSize="Size.Small" Adornment="Adornment.End" OnAdornmentClick="ButtonTestclick" AdornmentIcon="Icons.Material.Filled.RemoveRedEye" AdornmentAriaLabel="Ver Contraseña"/>
+                        </MudForm>
+
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="IniciarSesion">Ingresar</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </MudItem>
+        <MudItem xs="12" sm="6" Class="d-flex justify-center align-center pa-0 ma-0 rounded-xl" Style="background-image: url('images/Image.jpeg'); background-size: cover; background-position: center; height: 100vh; width: 100vw">
+        </MudItem>
+    </MudItem>
+</MudGrid>
+
+@code {
+
+
+    [Parameter] public Group? Group { get; set; }
+    [Parameter]
+    public string? groupId { get; set; }
+    [Parameter] public required string AssociateEmail { get; set; }
+    [Parameter] public required string Key { get; set; }
+    [Parameter] public required string Name { get; set; }
+    private string email;
+    private string password;
+    private string passwordInputType = "password"; // Inicialmente oculto
+
+    private bool IsDarkMode { get; set; }
+
+    bool _isShow;
+    InputType _passwordInput = InputType.Password;
+    string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    public AuthExternalRequest login { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Asegúrate de que estás obteniendo el groupId correctamente.
+        if (!string.IsNullOrEmpty(groupId))
+        {
+            await LoadGroupDetails(groupId);
+        }
+        else
+        {
+            Console.WriteLine("GroupId is null or empty.");
+        }
+    }
+
+
+
+
+
+    void ButtonTestclick()
+    {
+        @if (_isShow)
+        {
+            _isShow = false;
+            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            _passwordInput = InputType.Password;
+        }
+        else {
+            _isShow = true;
+            _passwordInputIcon = Icons.Material.Filled.Visibility;
+            _passwordInput = InputType.Text;
+        }
+    }
+
+    
+    private async Task IniciarSesion()
+    {
+        var login = new AuthExternalRequest
+        {
+            Id = groupId,
+            AssociateEmail = AssociateEmail,
+            Key = Key
+        };
+
+        var authResult = await AuthService.AuthenticationExternalAsync(login);
+
+        if (authResult)
+        {
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¡Bienvenido!",
+                Position = "center",
+                Icon = SweetAlertIcon.Success,
+                ShowConfirmButton = false,
+                Timer = 1500
+            });
+
+            var group = await GroupService.GetGroupByIdAsync(groupId);
+
+            if (group != null && group.AcceptedTerms == false)
+            {
+                var parameters = new ModalParameters();
+                parameters.Add("GroupId", groupId);
+                parameters.Add("AcceptedEmail", group.AssociateEmail ?? string.Empty);
+                parameters.Add("CreatorEmail", group.CreatedBy ?? string.Empty);
+
+                var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
+                var result = await modal.Result;
+
+            }
+            else
+            {
+                NavigationManager.NavigateTo($"/HomeClient/{groupId}");
+            }
+
+            // Inicializar nuevamente los datos
+            await OnInitializedAsync();
+        }
+        else
+        {
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Correo o contraseña incorrectos!",
+                Text = "",
+                Icon = SweetAlertIcon.Warning,
+                ConfirmButtonText = "Intenta de nuevo",
+                Timer = 1500
+            });
+        }
+    }
+
+
+
+
+   
+    private async Task LoadGroupDetails(string groupId)
+    {
+        try
+        {
+            var groupResponse = await GroupService.GetGroupByIdAsync(groupId);
+
+            if (groupResponse != null)
+            {
+                Group = groupResponse;
+            }
+            else
+            {
+                Console.WriteLine("No se encontró información del grupo.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener la información del grupo: {ex.Message}");
+        }
+    }
+
+
+
+}
+

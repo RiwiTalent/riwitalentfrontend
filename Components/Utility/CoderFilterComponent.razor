@@ -1,0 +1,56 @@
+@inject ICoderService CoderService
+@inject ISkillService SkillService
+
+
+<MudDrawerContainer Class="ma-2">
+    <MudChipSet @bind-SelectedValues="_selectedSkills" SelectionMode="SelectionMode.MultiSelection"
+                CheckMark="true" Variant="Variant.Text" Color="Color.Primary">
+
+        @foreach (var skill in _availableSkills)
+        {
+        <MudChip T="string" Value="@skill">@skill</MudChip>
+        }
+    </MudChipSet>
+</MudDrawerContainer>
+
+
+<MudStack Class="gap-2 ma-2 pa-2">
+    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="ApplyFilter">Filtrar Coders</MudButton>
+</MudStack>
+
+
+
+@code {
+    private List<Coder> _coders;
+    private List<string> _availableSkills = new List<string>();
+    private IReadOnlyCollection<string> _selectedSkills = new List<string>();
+    
+    [Parameter] public EventCallback<bool> OnDrawerToggle { get; set; }
+    [Parameter] public EventCallback<List<Coder>> OnFiltered { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _coders = await CoderService.GetCodersAsync();
+        _availableSkills = SkillService.GetUniqueSkills(_coders);
+    }
+    
+    private async Task ApplyFilter()
+    {
+        if (_selectedSkills != null && _selectedSkills.Any())
+        {
+            _coders = await CoderService.FilterCodersBySkillsAsync(_selectedSkills.ToList());
+        }
+        else
+        {
+            _coders = await CoderService.GetCodersAsync();
+        }
+        
+        await OnFiltered.InvokeAsync(_coders);
+    }
+
+    private async Task OnSelectedValuesChanged(IReadOnlyCollection<string>? newValues)
+    {
+        _selectedSkills = newValues.ToList();
+        await ApplyFilter();
+    }
+}

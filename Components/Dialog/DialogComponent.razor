@@ -1,0 +1,80 @@
+@namespace riwitalentfrontend.Components
+
+@using Models.DTOs;
+@inject GroupService GroupService
+
+<MudDialog>
+    <DialogContent>
+    <!-- Nombre del Grupo -->
+    <MudStack>
+        <MudText Typo="Typo.subtitle2"><b>Nombre</b></MudText>
+        <MudTextField T="string" @bind-Value="GroupName" Placeholder="Ingresa el nombre del grupo"
+                      Variant="Variant.Outlined" FullWidth="true" Margin="Margin.Dense"
+                      AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
+                      Adornment="Adornment.Start" AdornmentColor="Color.Primary"></MudTextField>
+    </MudStack>
+
+    <!-- Email asociado -->
+    <MudStack>
+        <MudText Typo="Typo.subtitle2"><b>Correo asociado</b></MudText>
+        <MudTextField T="string" @bind-Value="AssociateEmail" InputType="InputType.Email"
+                      Placeholder="Ingresa el correo electrónico que tendrá acceso al grupo"
+                      Variant="Variant.Outlined" FullWidth="true"
+                      Margin="Margin.Dense"></MudTextField>
+    </MudStack>
+        
+    <!-- Descripción del Grupo -->
+    <MudStack>
+        <MudText Typo="Typo.subtitle2"><b>Descripción</b></MudText>
+        <MudTextField T="string" @bind-Value="GroupDescription"
+                      Placeholder="Escribe una breve descripción del grupo"
+                      Variant="Variant.Outlined" FullWidth="true" Lines="3"
+                      Margin="Margin.Dense"></MudTextField>
+    </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@Cancel">Cancelar</MudButton>
+        <MudButton OnClick="@Submit" Color="Color.Primary">Crear</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance? MudDialog { get; set; }
+    
+    // Propiedades para los datos del grupo
+    private string GroupName { get; set; } = String.Empty;
+    private string GroupDescription { get; set; } = String.Empty;
+    private string AssociateEmail { get; set; } = String.Empty;
+
+    [Parameter] // Parámetro para la página que invoque el modal
+    public EventCallback<GroupAddDto> OnGroupCreated { get; set; }
+
+    // Método para manejar la creación del grupo
+    private async void Submit()
+    {
+        var groupAddDto = new GroupAddDto
+        {
+            Name = GroupName,
+            Description = GroupDescription,
+            AssociateEmail = AssociateEmail
+        };
+        
+        var success = await GroupService.AddGroupAsync(groupAddDto);
+
+        if (success)
+        {
+            MudDialog?.Close();
+        }
+        else
+        {
+            Console.WriteLine("Error al crear el grupo");
+        }
+    }
+    
+    private void Cancel()
+    {
+        MudDialog?.Cancel();
+    }
+}

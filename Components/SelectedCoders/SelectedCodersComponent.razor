@@ -1,0 +1,79 @@
+@using riwitalentfrontend.Services;
+@using riwitalentfrontend.Components
+@using riwitalentfrontend.Models;
+@inject ICoderService coderService;
+@inject IModalService model;
+@inject HttpClient Http
+@namespace riwitalentfrontend.Components
+
+
+<MudPaper Height="200px" class="fixed" Style="overflow:hidden;">
+    <MudDrawerContainer>
+        <MudDrawer @bind-Open="@_open" Anchor="Anchor.End" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+            <MudNavMenu>
+                <MudChipSet T="string" AllClosable OnClose="RemoveCoderFromGroup">
+                    @foreach (var selectedCoder in SelectedCoders)
+                    {
+                        <MudChip Text="@($"{selectedCoder.FirstName} {selectedCoder.FirstLastName}")">
+                            <AvatarContent>
+                                <MudAvatar>
+                                    <MudImage Src="@selectedCoder.Photo"></MudImage>
+                                </MudAvatar>
+                            </AvatarContent>
+                        </MudChip> 
+                    }
+                </MudChipSet>
+
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCodersToGroupAsync">
+                    Agregar coders
+                </MudButton>
+                
+
+
+                
+            </MudNavMenu>
+        </MudDrawer>
+        <div class="d-flex justify-center align-center mud-height-full">
+            <MudButton OnClick="@ToggleDrawer" Color="Color.Primary">L</MudButton>
+        </div>
+    </MudDrawerContainer>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public List<Coder> SelectedCoders { get; set; } = new List<Coder>();
+    [Parameter]
+    public EventCallback AddCodersToGroupAsync { get; set; }
+    [Parameter]
+    public EventCallback<Coder> OnCoderAdded { get; set; }
+
+    private bool _open;
+    private string groupId;
+    private int _i = 1;
+    private List<string> _values = new();
+    public void Add() => _values.Add("Value " + (_i++));
+
+   private void ToggleDrawer()
+    {
+        _open = !_open;
+    } 
+
+    public void AddCoderToGroup(Coder coder)
+    { 
+        if (!SelectedCoders.Contains(coder))
+        {
+            SelectedCoders.Add(coder); // Agregar el coder a la lista de seleccionados
+            OnCoderAdded.InvokeAsync(coder);
+        }
+    }    
+
+    public void RemoveCoderFromGroup(MudChip<string> chip)
+    {
+        var coderToRemove = SelectedCoders.FirstOrDefault(c => $"{c.FirstName} {c.FirstLastName}" == chip.Text);
+        if (coderToRemove != null)
+        {
+            SelectedCoders.Remove(coderToRemove); // Eliminar el coder de la lista de seleccionados
+        }
+    }    
+
+}

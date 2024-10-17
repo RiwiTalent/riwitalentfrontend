@@ -1,6 +1,6 @@
 using MudBlazor;
 
-namespace riwi.Theme;
+namespace riwitalentfrontend.Theme;
 
     public static class CustomMudTheme
     {
@@ -125,7 +125,7 @@ namespace riwi.Theme;
         {
             DrawerWidthLeft = "240px",
             AppbarHeight = "64px",
-            DefaultBorderRadius = "10px"
+            DefaultBorderRadius = "20px"
         };
         // Tipografía personalizada
         public static Typography Typography = new()

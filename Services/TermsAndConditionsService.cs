@@ -1,14 +1,13 @@
 using System.Net.Http.Json;
-using riwi.Models;
+using riwitalentfrontend.Models;
 using Microsoft.AspNetCore.Components;
 
-namespace riwi.Services
+namespace riwitalentfrontend.Services
 {
     public class TermsAndConditionsService
     {
         private readonly HttpClient _client;
         private readonly NavigationManager _navigation;
-
         public TermsAndConditionsService(HttpClient client, NavigationManager navigation)
         {
             _client = client;
@@ -30,19 +29,6 @@ namespace riwi.Services
                 return false; // Retorna false si falló
             }
         }
-        // public async Task<bool> UpdateTermsAsync(string GroupId, TermAndCondition updatedTermsDto)
-        // {
-        //     var response = await _client.PutAsync($"http://localhost:5113/terms?Id={updatedTermsDto.Id}&IsActive={updatedTermsDto.IsActive}&Accepted={updatedTermsDto.Accepted}&GroupId={GroupId}&AcceptedEmail={updatedTermsDto.AcceptedEmail}&CreatorEmail={updatedTermsDto}", updatedTermsDto);
 
-        //     if (response.IsSuccessStatusCode)
-        //     {
-        //         return true; // Retorna true si la creación fue exitosa
-        //     }
-        //     else
-        //     {
-        //         Console.WriteLine($"Error creating terms: {response.StatusCode}");
-        //         return false; // Retorna false si falló
-        //     }
-        // }
     }
 }
