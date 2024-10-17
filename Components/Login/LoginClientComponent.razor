@@ -107,37 +107,46 @@
             Key = Key
         };
 
-        Console.WriteLine("Login: " + login.Id);
-        Console.WriteLine("GrupId: " + groupId );
-
         var authResult = await AuthService.AuthenticationExternalAsync(login);
-        Console.WriteLine(authResult);
-        Console.WriteLine($"Sending: GroupId={login.Id}, Email={login.AssociateEmail}, Key={login.Key}");
 
         if (authResult)
         {
-             await Swal.FireAsync(new SweetAlertOptions
-            {   
-                Title = "¡Bienvenido",
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "¡Bienvenido!",
                 Position = "center",
                 Icon = SweetAlertIcon.Success,
-                ShowConfirmButton = false ,
+                ShowConfirmButton = false,
                 Timer = 1500
             });
 
-            Console.WriteLine("login successful!");
+            var Group = await GroupService.GetGroupByIdAsync(groupId);
+            // Verificar si los términos no han sido aceptados
+            if (Group != null && Group.AcceptedTerms == false)
+            {
+                // Mostrar el modal para aceptar los términos y condiciones
+                var parameters = new ModalParameters();
+                parameters.Add("GroupId", groupId);
+                parameters.Add("AcceptedEmail", Group.AssociateEmail ?? string.Empty);
+                parameters.Add("CreatorEmail", Group.CreatedBy ?? string.Empty);
 
+                var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
+                var result = await modal.Result;
 
-            // Show modal of terms 
+                if (!result.Cancelled)
+                {
+                    // Actualizar los términos aceptados
+                    Group.AcceptedTerms = true;
 
-            var parameters = new ModalParameters();
-            parameters.Add("GroupId", groupId);
-            parameters.Add("AcceptedEmail", Group?.AssociateEmail ?? string.Empty); 
-            parameters.Add("CreatorEmail", Group?.CreatedBy ?? string.Empty); 
-            var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
-            await modal.Result;
-
-
+                    // Aquí deberías guardar los cambios en la base de datos
+                    await GroupService.Update(Group);
+                }
+            }
+            else
+            {
+                NavigationManager.NavigateTo($"/HomeClient/{groupId}");
+            }
+            // Inicializar nuevamente los datos
             await OnInitializedAsync();
         }
         else
@@ -154,6 +163,7 @@
     }
 
 
+
    
     private async Task LoadGroupDetails(string groupId)
     {
@@ -164,9 +174,6 @@
             if (groupResponse != null)
             {
                 Group = groupResponse;
-                Console.WriteLine($"ID: {Group.Id}");
-                Console.WriteLine($"AssociateEmail: {Group.AssociateEmail}");
-                Console.WriteLine($"CreatedBy: {Group.CreatedBy}");
             }
             else
             {

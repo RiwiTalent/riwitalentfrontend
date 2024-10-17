@@ -42,18 +42,17 @@ namespace riwitalentfrontend.Services.Implementations
         public async Task<bool> Update(Group group)
         {
             
-            var url = "http://localhost:5113/groups"; // Asegúrate de que esta URL sea correcta
+            var url = ($"http://localhost:5113/groups?Id={group.Id}&Name={group.Name}&Photo={group.Photo}&Description={group.Description}&Status={group.Status}&CreatedBy={group.CreatedBy}&AssociateEmail={group.AssociateEmail}&AcceptedTerms={group.AcceptedTerms}");
             try
             {
-                var jsonContent = JsonContent.Create(group);
-                var response = await _httpClient.PutAsync(url, jsonContent);
+                var response = await _httpClient.PutAsync(url, null);
                 return response.IsSuccessStatusCode;
             }
             catch (HttpRequestException ex)
             {
-                // Maneja la excepción (puedes registrar el error o mostrar un mensaje)
+
                 Console.WriteLine($"Error al actualizar el grupo: {ex.Message}");
-                return false; // Devuelve false en caso de error
+                return false;
             }
         }
 

@@ -31,6 +31,8 @@ namespace riwitalentfrontend.Models
         [Required]
         public string? AssociateEmail { get; set; }
 
+        public bool? AcceptedTerms { get; set; }
+
 
         public DateTime Expiration_At { get; set; }
 

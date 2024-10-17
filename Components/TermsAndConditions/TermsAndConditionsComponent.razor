@@ -58,14 +58,16 @@
             IsActive = true,
             Accepted = true,
             GroupId = group.Id,
+            Clicked_Date = DateTime.UtcNow,
             AcceptedEmail = AcceptedEmail,
             CreatorEmail = CreatorEmail
         };
 
+
         bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
         if (success)
         {
-            NavigationManager.NavigateTo($"/HomeExterno/{groupId}");
+            NavigationManager.NavigateTo($"/HomeClient/{groupId}");
         }
         else
         {
@@ -84,7 +86,7 @@
             IsActive = true,
             Accepted = false,
             GroupId = group.Id,
-            Clicked_Date = DateTime.UtcNow;
+            Clicked_Date = DateTime.UtcNow,
             AcceptedEmail = AcceptedEmail,
             CreatorEmail = CreatorEmail
         };
@@ -92,7 +94,7 @@
         bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
         if (success)
         {
-            @* NavigationManager.NavigateTo("external-access/{groupId}"); // Redirigir a la página deseada *@
+            NavigationManager.NavigateTo("external-access/{groupId}");
         }
         else
         {
