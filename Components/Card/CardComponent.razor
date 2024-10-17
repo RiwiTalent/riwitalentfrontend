@@ -64,9 +64,7 @@
 
 @if (FilterInGroup == true)
 {
-   var filteredCoders = coders != null 
-        ? paginatedCoders.Where(coder => coder.GroupId != null && coder.GroupId.Contains(groupId)).ToList()
-        : new List<Coder>();
+   var filteredCoders = coders?.Where(coder => coder.GroupId != null && coder.GroupId.Contains(groupId)).ToList();
 
     if (filteredCoders.Any())
     {
@@ -596,8 +594,11 @@ else
     //Lógica para renderizar imagen por defecto
     private string ImageNullOrEmpty(string? photo)
     {
+        if(string.IsNullOrEmpty(photo))
+        {
+            return "wwwroot/images/Avatar1.png";
+        }
 
-        return "wwwroot/images/Avatar1.png";
-        
+        return photo;
     }
 }
