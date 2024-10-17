@@ -27,9 +27,9 @@
                     <MudCardContent Class="FullWidth" Style="width: 100%;">
 
                         <MudForm Spacing="2">
-                            <MudTextField T="string" Label="Correo" @bind-value="email" @bind="@AssociateEmail" Variant="Variant.Outlined" InputType="InputType.Email"/>
+                            <MudTextField T="string" Label="Correo" @bind-value="@AssociateEmail" Variant="Variant.Outlined" InputType="InputType.Email"/>
 
-                            <MudTextField T="string" Label="Contraseña" @bind="@Key" Variant="Variant.Outlined" InputType="InputType.Password" IconSize="Size.Small" Adornment="Adornment.End" OnAdornmentClick="ButtonTestclick" AdornmentIcon="Icons.Material.Filled.RemoveRedEye" AdornmentAriaLabel="Ver Contraseña"/>
+                            <MudTextField T="string" Label="Contraseña" @bind-value="@Key" Variant="Variant.Outlined" InputType="InputType.Password" IconSize="Size.Small" Adornment="Adornment.End" OnAdornmentClick="ButtonTestclick" AdornmentIcon="Icons.Material.Filled.RemoveRedEye" AdornmentAriaLabel="Ver Contraseña"/>
                         </MudForm>
 
                     </MudCardContent>
@@ -48,11 +48,11 @@
 
 
     [Parameter] public Group? Group { get; set; }
-    [Parameter] public required string AssociateEmail { get; set; }
     [Parameter]
     public string? groupId { get; set; }
-    [Parameter] public required string Name { get; set; }
+    [Parameter] public required string AssociateEmail { get; set; }
     [Parameter] public required string Key { get; set; }
+    [Parameter] public required string Name { get; set; }
     private string email;
     private string password;
     private string passwordInputType = "password"; // Inicialmente oculto
@@ -63,8 +63,22 @@
     InputType _passwordInput = InputType.Password;
     string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
 
-
     public AuthExternalRequest login { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Asegúrate de que estás obteniendo el groupId correctamente.
+        if (!string.IsNullOrEmpty(groupId))
+        {
+            await LoadGroupDetails(groupId);
+        }
+        else
+        {
+            Console.WriteLine("GroupId is null or empty.");
+        }
+    }
+
+
 
 
 
@@ -88,49 +102,59 @@
     {
         var login = new AuthExternalRequest
         {
-            GroupId = groupId,
+            Id = groupId,
             AssociateEmail = AssociateEmail,
             Key = Key
         };
 
-        var authResult = AuthService.AuthenticationExternalAsync(login);
-        Console.WriteLine(authResult);
-        Console.WriteLine($"Sending: GroupId={login.GroupId}, Email={login.AssociateEmail}, Key={login.Key}");
+        Console.WriteLine("Login: " + login.Id);
+        Console.WriteLine("GrupId: " + groupId );
 
-        if (authResult != null)
+        var authResult = await AuthService.AuthenticationExternalAsync(login);
+        Console.WriteLine(authResult);
+        Console.WriteLine($"Sending: GroupId={login.Id}, Email={login.AssociateEmail}, Key={login.Key}");
+
+        if (authResult)
         {
+             await Swal.FireAsync(new SweetAlertOptions
+            {   
+                Title = "¡Bienvenido",
+                Position = "center",
+                Icon = SweetAlertIcon.Success,
+                ShowConfirmButton = false ,
+                Timer = 1500
+            });
+
             Console.WriteLine("login successful!");
-            // Mostrar modal y manejar autenticación
+
+
+            // Show modal of terms 
+
             var parameters = new ModalParameters();
-            parameters.Add("GroupId", groupId); // Pasar el ID del grupo
-            parameters.Add("AcceptedEmail", Group?.AssociateEmail ?? string.Empty); // Pasar el correo del asociado
-            parameters.Add("CreatorEmail", Group?.CreatedBy ?? string.Empty); // Pasar el correo del creador
+            parameters.Add("GroupId", groupId);
+            parameters.Add("AcceptedEmail", Group?.AssociateEmail ?? string.Empty); 
+            parameters.Add("CreatorEmail", Group?.CreatedBy ?? string.Empty); 
             var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
             await modal.Result;
 
-            // Redirigir o cargar otros datos
+
             await OnInitializedAsync();
         }
         else
         {
-            Console.WriteLine("Error en la autenticación.");
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Correo o contraseña incorrectos!",
+                Text = "",
+                Icon = SweetAlertIcon.Warning,
+                ConfirmButtonText = "Intenta de nuevo",
+                Timer = 1500
+            });
         }
     }
 
 
-    protected override async Task OnInitializedAsync()
-    {
-        // Asegúrate de que estás obteniendo el groupId correctamente.
-        if (!string.IsNullOrEmpty(groupId))
-        {
-            await LoadGroupDetails(groupId);
-        }
-        else
-        {
-            Console.WriteLine("GroupId is null or empty.");
-        }
-    }
-
+   
     private async Task LoadGroupDetails(string groupId)
     {
         try

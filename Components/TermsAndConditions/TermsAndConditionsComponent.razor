@@ -31,14 +31,13 @@
 @code {
     [Parameter]
     public string? groupId { get; set; }
-    [Parameter] public string GroupId { get; set; }
     [Parameter] public string AcceptedEmail { get; set; }
     [Parameter] public string CreatorEmail { get; set; }
     private Group? group;
 
     protected override async Task OnInitializedAsync()
     {
-        group = await GroupService.GetGroupByIdAsync(GroupId);
+        group = await GroupService.GetGroupByIdAsync(groupId);
         Console.WriteLine($"Group recibido en el modal: {group?.Id ?? "null"}");
     }
 
@@ -66,7 +65,7 @@
         bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
         if (success)
         {
-            NavigationManager.NavigateTo($"/HomeExterno/{GroupId}");
+            NavigationManager.NavigateTo($"/HomeExterno/{groupId}");
         }
         else
         {
@@ -85,6 +84,7 @@
             IsActive = true,
             Accepted = false,
             GroupId = group.Id,
+            Clicked_Date = DateTime.UtcNow;
             AcceptedEmail = AcceptedEmail,
             CreatorEmail = CreatorEmail
         };
@@ -92,7 +92,7 @@
         bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
         if (success)
         {
-            @* NavigationManager.NavigateTo("/{groupId}"); // Redirigir a la página deseada *@
+            @* NavigationManager.NavigateTo("external-access/{groupId}"); // Redirigir a la página deseada *@
         }
         else
         {
