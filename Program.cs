@@ -9,13 +9,13 @@ using MudBlazor.Services;
 using Blazored.Modal;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Blazored.SessionStorage;
+using MudBlazor;
 
 // Espacios de nombres de la aplicación
 using riwitalentfrontend;
 using riwitalentfrontend.Services.Implementations;
 using riwitalentfrontend.Services.Interfaces;
 using riwitalentfrontend.Services;
-
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -35,9 +35,6 @@ builder.Services.AddScoped<CustomHttpHandler>();
 builder.Services.AddTransient<CoderService>();
 builder.Services.AddTransient<GroupService>();
 
-
-
-
 // Configuración del HttpClient para servicios específicos
 builder.Services.AddHttpClient<IGroupService, GroupService>(client =>
 {
@@ -45,12 +42,24 @@ builder.Services.AddHttpClient<IGroupService, GroupService>(client =>
 })
 .AddHttpMessageHandler<CustomHttpHandler>(); 
 
-
 // Servicios de estado y almacenamiento
 builder.Services.AddBlazoredSessionStorage();
 
-// Servicios de interfaz de usuario - MudBlazor
-builder.Services.AddMudServices();
+// Configuración de MudBlazor con ajustes adicionales para Snackbars
+builder.Services.AddMudServices(config =>
+{
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomLeft;
+    config.SnackbarConfiguration.PreventDuplicates = false;
+    config.SnackbarConfiguration.NewestOnTop = false;
+    config.SnackbarConfiguration.ShowCloseIcon = true;
+    config.SnackbarConfiguration.VisibleStateDuration = 10000;
+    config.SnackbarConfiguration.HideTransitionDuration = 500;
+    config.SnackbarConfiguration.ShowTransitionDuration = 500;
+    config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+});
+
+// Servicios de interfaz de usuario - MudBlazor y BlazoredModal
+builder.Services.AddMudServices();  // Ya está añadido con la configuración de Snackbar
 builder.Services.AddBlazoredModal();
 
 // Servicios de seguridad y autenticación
@@ -58,8 +67,9 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddScoped<AuthService>();
 
-// SweetAlert2 para alertas
+// SweetAlert2 para alertas personalizadas
 builder.Services.AddScoped<AlertService>();
 builder.Services.AddSweetAlert2();
 
+// Construir y ejecutar la aplicación
 await builder.Build().RunAsync();
