@@ -2,8 +2,10 @@
 @inject IModalService ModalService
 @using Blazored.Modal.Services
 @inject IGroupService GroupService
+@inject IEmailService EmailService
 @inject TermsAndConditionsService _termsAndConditionsService
 @inject NavigationManager NavigationManager
+@inject SweetAlertService Swal;
 @inject AlertService AlertService;
 @using riwitalentfrontend.Models;
 @using riwitalentfrontend.Models.DTOs;
@@ -50,7 +52,7 @@
         }
 
         // Mostrar alerta de confirmación antes de guardar
-        await AlertService.SaveChangesRegister(); // Se debe eliminar la asignación a result
+        await AlertService.SaveChangesRegister(); // Alerta de confirmación
 
         // Crear el nuevo registro de términos
         var newTerms = new TermAndCondition
@@ -63,11 +65,36 @@
             CreatorEmail = CreatorEmail
         };
 
-
         bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
         if (success)
         {
-            NavigationManager.NavigateTo($"/HomeClient/{groupId}");
+            // Actualizar AcceptedTerms en el grupo
+            group.AcceptedTerms = true;
+            var updateResult = await GroupService.Update(group); // Actualizar el grupo en la base de datos
+
+            if (updateResult)
+            {
+                Console.WriteLine("Grupo actualizado correctamente.");
+
+                // Enviar correo después de aceptar los términos
+                var emailSent = await EmailService.SendEmailTest(group.Id);
+                if (emailSent)
+                {
+                    await Swal.FireAsync("Correo Enviado", "El correo ha sido enviado con éxito.", SweetAlertIcon.Success);
+                    NavigationManager.NavigateTo($"/HomeClient/{groupId}");
+                }
+                else
+                {
+                    await Swal.FireAsync("Error", "No se pudo enviar el correo.", SweetAlertIcon.Error);
+                }
+
+                // Redirigir al usuario después de aceptar los términos
+                NavigationManager.NavigateTo($"/HomeClient/{groupId}");
+            }
+            else
+            {
+                Console.WriteLine("No se pudo actualizar el grupo.");
+            }
         }
         else
         {
@@ -77,10 +104,8 @@
 
     private async Task Cancelar()
     {
-        // Mostrar alerta de confirmación antes de eliminar
-        await AlertService.DeleteRegister(); // Se debe eliminar la asignación a result
 
-        // Crear el nuevo registro de términos con Accepted = false
+        await AlertService.DeleteRegister();
         var newTerms = new TermAndCondition
         {
             IsActive = true,
@@ -94,7 +119,7 @@
         bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
         if (success)
         {
-            NavigationManager.NavigateTo("external-access/{groupId}");
+            NavigationManager.NavigateTo($"external-access/{groupId}");
         }
         else
         {

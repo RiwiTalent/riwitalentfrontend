@@ -2,9 +2,9 @@
 
 @inject IAuthService AuthService;
 @inject GroupService GroupService
+@inject IEmailService EmailService
 @inject ISessionStorageService SessionStorage
 @inject NavigationManager NavigationManager;
-@inject HttpClient HttpClient;
 @inject SweetAlertService Swal;
 @inject AlertService AlertService;
 @inject IModalService ModalService
@@ -120,32 +120,24 @@
                 Timer = 1500
             });
 
-            var Group = await GroupService.GetGroupByIdAsync(groupId);
-            // Verificar si los términos no han sido aceptados
-            if (Group != null && Group.AcceptedTerms == false)
+            var group = await GroupService.GetGroupByIdAsync(groupId);
+
+            if (group != null && group.AcceptedTerms == false)
             {
-                // Mostrar el modal para aceptar los términos y condiciones
                 var parameters = new ModalParameters();
                 parameters.Add("GroupId", groupId);
-                parameters.Add("AcceptedEmail", Group.AssociateEmail ?? string.Empty);
-                parameters.Add("CreatorEmail", Group.CreatedBy ?? string.Empty);
+                parameters.Add("AcceptedEmail", group.AssociateEmail ?? string.Empty);
+                parameters.Add("CreatorEmail", group.CreatedBy ?? string.Empty);
 
                 var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
                 var result = await modal.Result;
 
-                if (!result.Cancelled)
-                {
-                    // Actualizar los términos aceptados
-                    Group.AcceptedTerms = true;
-
-                    // Aquí deberías guardar los cambios en la base de datos
-                    await GroupService.Update(Group);
-                }
             }
             else
             {
                 NavigationManager.NavigateTo($"/HomeClient/{groupId}");
             }
+
             // Inicializar nuevamente los datos
             await OnInitializedAsync();
         }
@@ -161,6 +153,7 @@
             });
         }
     }
+
 
 
 
