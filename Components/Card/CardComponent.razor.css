@@ -1,6 +1,6 @@
 .cards {
     margin: auto;
-    width: 95%;
+    width: 100%;
     max-width: 1120px;
     display: flex;
     justify-content: center;
@@ -8,7 +8,7 @@
     flex-wrap: wrap;
     gap: 15px;
     max-height: 1030px;
-    padding: 20px;
+    padding: 13px;
     border-radius: 8px;
 }
 
@@ -52,7 +52,7 @@
     height: 300px;
     fill: #000;
     stroke-width: 0.5px;
-    backdrop-filter: blur(60.5px);
+    backdrop-filter: blur(30px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -154,10 +154,7 @@
 
 .cards__badges{
     display: grid;
-    grid-template-columns: repeat(2, 1fr );
-    height: 50%;
-    gap: 7px;
-    align-items: baseline;
+    grid-template-columns: repeat(3);
 }
 
 .cards__badge {
@@ -514,6 +511,11 @@ p{
 
 .search-container{
     border-radius: 8px;
+}
+
+.container-box{
+    display: flex;
+    justify-content: end;
 }
 
 @media (max-width: 768px) {
