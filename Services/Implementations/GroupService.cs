@@ -63,7 +63,7 @@ namespace riwitalentfrontend.Services.Implementations
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"http://localhost:5113/group/{groupId}");
+                var response = await _httpClient.DeleteAsync($"http://localhost:5113/groups/{groupId}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
