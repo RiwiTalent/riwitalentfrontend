@@ -96,5 +96,80 @@ namespace riwitalentfrontend.Services.Implementations
                     Timer = 1500
                 });
         }
+
+        public async Task AcceptTerms()
+        {
+            var result = await _swal.FireAsync(new SweetAlertOptions
+            {
+                Icon = SweetAlertIcon.Info,
+                Title = "Términos y Condiciones",
+                Text = "Por favor, lee y acepta los términos y condiciones antes de continuar.",
+                ShowCancelButton = true,
+                ConfirmButtonText = "Ya los leì",
+                ConfirmButtonColor = "#5ACCA4",
+                CancelButtonText = "Atràs",
+                CancelButtonColor = "#fff"
+            });
+
+            if (result.IsConfirmed)
+            {
+                await _swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "¡Gracias por aceptar los términos!",
+                    Text = "Se enviarà una copia de la versiòn de tèrminos aceptada al correo asociado al grupo",
+                    Icon = SweetAlertIcon.Success,
+                    ShowConfirmButton = false,
+                    Timer = 1500
+                });
+            }
+            else
+            {
+                await _swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Has cancelado la aceptación de los términos.",
+                    Icon = SweetAlertIcon.Warning,
+                    ShowConfirmButton = false,
+                    Timer = 1500
+                });
+            }
+        }
+
+        public async Task CancelTerms()
+        {
+            var result = await _swal.FireAsync(new SweetAlertOptions
+            {
+                Icon = SweetAlertIcon.Warning,
+                Title = "¿Estás seguro/a de que deseas cancelar la aceptación de los términos?",
+                Text = "Se requiere de su aceptaciòn para iniciar a la plataforma por primera vez. Una vez aceptados, no se te pedirà de nuevo aceptarlos.",
+                ShowCancelButton = true,
+                ConfirmButtonText = "Sí, Cancelar",
+                ConfirmButtonColor = "#FE654F",
+                CancelButtonText = "No, Volver",
+                CancelButtonColor = "#fff"
+            });
+
+            if (result.IsConfirmed)
+            {
+                await _swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Has cancelado la aceptación de los términos.",
+                    Icon = SweetAlertIcon.Info,
+                    ShowConfirmButton = false,
+                    Timer = 1500
+                });
+            }
+            else
+            {
+                await _swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Regresaste a la aceptación de los términos.",
+                    Icon = SweetAlertIcon.Success,
+                    ShowConfirmButton = false,
+                    Timer = 1500
+                });
+            }
+        }
+
+
     }
 }

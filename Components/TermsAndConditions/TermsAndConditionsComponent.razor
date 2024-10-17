@@ -258,7 +258,7 @@
         }
 
         // Mostrar alerta de confirmación antes de guardar
-        await AlertService.SaveChangesRegister(); // Alerta de confirmación
+        await AlertService.AcceptTerms(); // Alerta de confirmación
 
         // Crear el nuevo registro de términos
         var newTerms = new TermAndCondition
@@ -311,7 +311,7 @@
     private async Task Cancelar()
     {
 
-        await AlertService.DeleteRegister();
+        await AlertService.CancelTerms();
         var newTerms = new TermAndCondition
         {
             IsActive = true,

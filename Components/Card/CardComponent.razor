@@ -62,7 +62,81 @@
 </ToolBarContent>
 
 
-@if(coders != null)
+@if (FilterInGroup == true)
+{
+   if (coders != null && coders.Any(c => c.GroupId != null && c.GroupId.Contains(groupId)))
+    {
+        <div class="cards">
+            @foreach (var coder in paginatedCoders)
+            {
+                <MudCard style="height:300px" class="relative rounded-lg overflow-hidden mud-card">
+                    @if (coder.Photo != null)
+                    {
+                        <MudImage Fluid="true"
+                        ObjetctFit="Cover" Src="@ImageNullOrEmpty(coder.Photo)" Alt="Mony the dog" Width="250" Height="300"/>
+                    }
+                    else
+                    {
+                        <p>Cargando...</p>
+                    }
+                    <MudCardContent class="d-flex justify-space-between relative  mud-card-content">
+                            <div class="cards__container">
+                            
+
+                                <div class="cards__profile">
+                                    <div class="cards__coder">
+                                        <h6 class="">@coder.FirstName @coder.FirstLastName</h6>
+                                        <p>@coder.Stack</p>
+                                    </div>
+                                        <MudContainer Class="d-flex justify-end flex-grow-1">
+
+                                    <MudChipSet T="string" @bind-SelectedChips="SelectedCoders" SelectionMode="SelectionMode.MultiSelection" CheckMark>
+                                        <MudChip Style="color:white;" Class="border-solid border-2 mud-b mud-border-white" Icon="@Icons.Material.Rounded.PersonAddAlt1" Variant="Variant.Text" @onclick="() => AddCoderToGroup(coder)">
+                                        </MudChip>
+                                    </MudChipSet>
+
+                                        </MudContainer>
+                                </div>
+                                @*badges*@
+                                @if(coder.Skills != null)
+                                {
+                                    <div class="cards__badges">
+                                        @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
+                                        {
+                                            var skill = coder.Skills[i].Language_Programming;
+                                            var badgeColor = GetColor(skill);
+                                            var badgeIcon = GetIcon(skill);
+
+                                            <MudChip T="string" Style=@($"background-color: {badgeColor}; color: white")>
+                                                <i class="@badgeIcon"></i>@skill
+                                            </MudChip>
+
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>Contenido no disponible...</p>
+                                }
+                                @*Buttons*@
+                                <div class="cards__button--primary">
+                                    <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
+                                </div>
+                            </div>
+                    </MudCardContent>
+                </MudCard>
+            }
+        </div>
+
+        <div class="container-pagination">
+            <div class="container-box">
+                <MudPagination class="mud-pagination mud-pagination-item mud-button" Variant="Variant.Filled" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize" TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
+            </div>
+        </div>
+    }
+}
+
+else if(coders != null)
 {
     <div class="cards">
         @foreach (var coder in paginatedCoders)
@@ -138,6 +212,7 @@ else
 
 }
 
+
 @if (coders != null)
 {
 <div class="cardsCell">
@@ -196,6 +271,12 @@ else
 
 @code
 {   
+    [Parameter]
+    public string? groupId { get; set; }
+
+
+    [Parameter]
+    public bool? FilterInGroup { get; set; }
     //SelectedCoders Component
     [Parameter]
     public List<Coder> SelectedCoders { get; set; } = new List<Coder>(); // Parámetro para recibir los coders seleccionados
@@ -239,14 +320,22 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        //Llamado a las apis
+        Console.WriteLine("Filter" +FilterInGroup);
+
         try
         {
             coders = await coderService.GetCodersAsync();
-            totalCoders = coders.Count;
-            pag = (int)Math.Ceiling((double)totalCoders / pageSize);
-            Console.WriteLine(pag);
-            LoadCoders(currentPage);
+            
+            if (coders == null || coders.Count == 0)
+            {
+                Console.WriteLine("No se encontraron coders o la lista está vacía.");
+            }
+            else
+            {
+                totalCoders = coders.Count;
+                pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+                LoadCoders(currentPage);
+            }
 
             foreach (var skill in coders)
             {
