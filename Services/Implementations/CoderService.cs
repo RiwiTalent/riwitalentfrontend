@@ -24,11 +24,18 @@ namespace riwitalentfrontend.Services.Implementations
 
          public async Task<bool> UpdateCoderAsync(Coder coder)
         {
-            var url = $"https://backend-riwitalent-9pv2.onrender.com/updatecoder?Id={coder.Id}&FirstName={coder.FirstName}&Secon    dName={coder.SecondName}&FirstLastName={coder.FirstLastName}&SecondLastName={coder.SecondLastName}&Email={coder.Email}&Age={coder.Age}";
+            var url = $"https://backend-riwitalent-9pv2.onrender.com/updatecoder?Id={coder.Id}&FirstName={coder.FirstName}&SecondName={coder.SecondName}&FirstLastName={coder.FirstLastName}&SecondLastName={coder.SecondLastName}&Email={coder.Email}&Age={coder.Age}";
             
             var response = await _httpClient.PutAsync(url, null);
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<List<Coder>?> FilterCodersBySkillsAsync(List<string> skills)
+        {
+            var queryString = string.Join("&", skills.Select(skill => $"skills={Uri.EscapeDataString(skill)}"));
+            var url = $"http://localhost:5113/coders?{queryString}";
+            Console.WriteLine($"Request URL: {url}");
+            return await _httpClient.GetFromJsonAsync<List<Coder>>(url);
+        }
     }
 }

@@ -3,8 +3,6 @@ using riwitalentfrontend.Models;
 using riwitalentfrontend.Models.DTOs;
 using riwitalentfrontend.Services.Interfaces;
 
-
-
 namespace riwitalentfrontend.Services.Implementations
 {
     // Servicio para interactuar con la API de grupos
@@ -13,23 +11,21 @@ namespace riwitalentfrontend.Services.Implementations
         
         // Inyección de HttpClient para realizar peticiones HTTP
         private readonly HttpClient _httpClient;
-
         public GroupService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
         
-        // Lógica  para obtener una lista de coders desde la API
+        // Obtener lista de grupos desde la API
         public async Task<List<Group>> GetGroupsAsync()
         {
             return await _httpClient.GetFromJsonAsync<List<Group>>("http://localhost:5113/groups");
         }
         
-        // Lógica para obtener el grupo por Id desde la base de datos o API
-        public async Task<Group> GetGroupByIdAsync(string groupId)
+        // Obtener un grupo por Id desde la API
+        public async Task<Group?> GetGroupByIdAsync(string groupId) // Group? permite que sea null
         {
-             var response = await _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/group-details/{groupId}");
-
+             var response = await _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/groups/{groupId}/details");
             if (response != null)
             {
                 Console.WriteLine("Details successfully fetched");
@@ -41,16 +37,33 @@ namespace riwitalentfrontend.Services.Implementations
 
             return response;
 
-        
-
         }
+
+        public async Task<bool> Update(Group group)
+        {
+            
+            var url = "http://localhost:5113/groups"; // Asegúrate de que esta URL sea correcta
+            try
+            {
+                var jsonContent = JsonContent.Create(group);
+                var response = await _httpClient.PutAsync(url, jsonContent);
+                return response.IsSuccessStatusCode;
+            }
+            catch (HttpRequestException ex)
+            {
+                // Maneja la excepción (puedes registrar el error o mostrar un mensaje)
+                Console.WriteLine($"Error al actualizar el grupo: {ex.Message}");
+                return false; // Devuelve false en caso de error
+            }
+        }
+
         
         // Lógica para obtener el grupo por Id desde la base de datos o API
         public async Task<bool> DeleteGroupAsync(string groupId)
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"http://localhost:5113/group/{groupId}");
+                var response = await _httpClient.DeleteAsync($"http://localhost:5113/groups/{groupId}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -59,23 +72,13 @@ namespace riwitalentfrontend.Services.Implementations
                 return false;
             }
         }
+
         
         // Lógica para crear un grupo desde la base de datos o API
         public async Task<bool> AddGroupAsync(GroupAddDto groupAddDto)
         {
-            try
-            {
-                var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/groups", groupAddDto);
-                return response.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al crear grupo: {ex.Message}");
-                return false;
-            }
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/groups", groupAddDto);
+            return response.IsSuccessStatusCode;
         }
-
-         
-
     }
 }

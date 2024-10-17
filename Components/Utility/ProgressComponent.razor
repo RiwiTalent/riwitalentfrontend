@@ -1,12 +1,9 @@
-<MudProgressLinear Indeterminate="@Indeterminate" Color="@Color" Class="@Class" />
+<MudProgressLinear Indeterminate="@Indeterminate" Color="@Color" Class="@Class" Rounded="@Rounded" Size="@Size"/>
 
 @code {
-[Parameter]
-public bool Indeterminate { get; set; } = true;
-
-[Parameter]
-public Color Color { get; set; } = Color.Info;
-
-[Parameter]
-public string Class { get; set; } = "my-7";
+    [Parameter] public bool Indeterminate { get; set; } = true;
+    [Parameter] public Color Color { get; set; } = Color.Info;
+    [Parameter] public string Class { get; set; } = "my-7";
+    [Parameter] public Size Size { get; set; } = Size.Medium;
+    [Parameter] public bool Rounded { get; set; } = true;
 }

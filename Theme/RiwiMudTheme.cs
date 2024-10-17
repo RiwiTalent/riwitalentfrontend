@@ -125,7 +125,7 @@ namespace riwitalentfrontend.Theme;
         {
             DrawerWidthLeft = "240px",
             AppbarHeight = "64px",
-            DefaultBorderRadius = "10px"
+            DefaultBorderRadius = "20px"
         };
         // Tipografía personalizada
         public static Typography Typography = new()
