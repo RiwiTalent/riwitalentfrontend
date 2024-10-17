@@ -17,10 +17,8 @@
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            await Task.Delay(3000);
-            NavManager.NavigateTo("/");
-        }
+        await Task.Delay(3000);
+        NavManager.NavigateTo("/");
+
     }
 }
