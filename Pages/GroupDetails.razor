@@ -1,4 +1,5 @@
 @page "/GroupDetails/{groupId}"
+@using riwitalentfrontend.Components.GroupCoder
 @layout MainLayout
 @inject IGroupService GroupService
 @inject SweetAlertService Swal;
@@ -151,19 +152,8 @@
                 </MudGrid>
             </MudContainer>
 
-            <!-- Total coders -->
-            <MudContainer Class="ma-3 w-full h-full">
-                <MudText Typo="Typo.h5"><b>43</b> Coders encontrados</MudText>
-            </MudContainer>
-
-         
-            <MudButton StartIcon="@Icons.Material.Outlined.Edit" 
-                        class="content_left-container_top__edit" 
-                        Variant="Variant.Filled" 
-                        OnClick="AddCodersToGroup">
-                Agregar Coders
-            </MudButton>
-      
+            <!-- Total coders en el grupo -->
+            <ListCodersGroupComponent/>
         }
     </Authorized>
 </AuthorizeView>
@@ -252,11 +242,6 @@
             // Aquí puedes manejar la lógica si el usuario cancela, si es necesario
             Console.WriteLine("Actualización cancelada");
         }
-    }
-
-    private async Task AddCodersToGroup()
-    {
-        NavigationManager.NavigateTo($"/home/{groupId}");
     }
 
     private async Task LoadGroupDetailsAsync()

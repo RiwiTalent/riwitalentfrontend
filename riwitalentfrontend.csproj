@@ -24,7 +24,6 @@
     <Folder Include="Components\Avatar\" />
     <Folder Include="Components\BannerCoders\" />
     <Folder Include="Components\Dialog\" />
-    <Folder Include="Components\GroupCoder\" />
     <Folder Include="Components\Login\" />
   </ItemGroup>
 
