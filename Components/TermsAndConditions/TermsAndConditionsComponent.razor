@@ -1,0 +1,102 @@
+@namespace riwitalentfrontend.Components
+@inject IModalService ModalService
+@using Blazored.Modal.Services
+@inject IGroupService GroupService
+@inject TermsAndConditionsService _termsAndConditionsService
+@inject NavigationManager NavigationManager
+@inject AlertService AlertService;
+@using riwitalentfrontend.Models;
+@using riwitalentfrontend.Models.DTOs;
+@using riwitalentfrontend.Services.Interfaces;
+@using riwitalentfrontend.Services.Implementations;
+
+
+<head>
+    <link rel="stylesheet" href="css/Components/TermsAndConditionsComponent.css">
+</head>
+
+
+
+<BlazoredModalTitle>
+    Términos y Condiciones
+</BlazoredModalTitle>
+<BlazoredModalContent>
+    <p>Por favor, acepte los términos y condiciones para continuar.</p>
+</BlazoredModalContent>
+<BlazoredModalFooter>
+    <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+    <button class="btn btn-primary" @onclick="Aceptar">Aceptar</button>
+</BlazoredModalFooter>
+
+@code {
+    [Parameter]
+    public string? groupId { get; set; }
+    [Parameter] public string GroupId { get; set; }
+    [Parameter] public string AcceptedEmail { get; set; }
+    [Parameter] public string CreatorEmail { get; set; }
+    private Group? group;
+
+    protected override async Task OnInitializedAsync()
+    {
+        group = await GroupService.GetGroupByIdAsync(GroupId);
+        Console.WriteLine($"Group recibido en el modal: {group?.Id ?? "null"}");
+    }
+
+    private async Task Aceptar()
+    {
+        if (group == null)
+        {
+            Console.WriteLine("El grupo no se pudo cargar.");
+            return;
+        }
+
+        // Mostrar alerta de confirmación antes de guardar
+        await AlertService.SaveChangesRegister(); // Se debe eliminar la asignación a result
+
+        // Crear el nuevo registro de términos
+        var newTerms = new TermAndCondition
+        {
+            IsActive = true,
+            Accepted = true,
+            GroupId = group.Id,
+            AcceptedEmail = AcceptedEmail,
+            CreatorEmail = CreatorEmail
+        };
+
+        bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
+        if (success)
+        {
+            NavigationManager.NavigateTo($"/HomeExterno/{GroupId}");
+        }
+        else
+        {
+            await AlertService.Warning();
+        }
+    }
+
+    private async Task Cancelar()
+    {
+        // Mostrar alerta de confirmación antes de eliminar
+        await AlertService.DeleteRegister(); // Se debe eliminar la asignación a result
+
+        // Crear el nuevo registro de términos con Accepted = false
+        var newTerms = new TermAndCondition
+        {
+            IsActive = true,
+            Accepted = false,
+            GroupId = group.Id,
+            AcceptedEmail = AcceptedEmail,
+            CreatorEmail = CreatorEmail
+        };
+
+        bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
+        if (success)
+        {
+            @* NavigationManager.NavigateTo("/{groupId}"); // Redirigir a la página deseada *@
+        }
+        else
+        {
+            await AlertService.Warning();
+        }
+    }
+}

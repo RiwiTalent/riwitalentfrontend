@@ -1,0 +1,17 @@
+@page "/HomeClient/{Key}"
+@layout LoginLayout
+
+<PageTitle>RiwiTalent: Software de gestión talento Riwi</PageTitle>
+
+<head>
+    <link rel="stylesheet" href="css/CardComponent.css">
+</head>
+
+<MudMainContent />
+<BannerCodersComponent />
+<CardComponent />
+
+@code {
+    [Parameter]
+    public string? Key { get; set; }
+}

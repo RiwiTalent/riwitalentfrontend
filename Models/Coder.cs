@@ -1,29 +1,36 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using riwi.Models;
-
-namespace riwi.Models
+namespace riwitalentfrontend.Models
 {
     public class Coder
     {
-        public string? Id { get; set; }
-        public string? FirstName { get; set; }
-        public string? SecondName { get; set; }
-        public string? FirstLastName { get; set; }
-        public string? SecondLastName { get; set; }
-        public string? Email { get; set; }
-        public string? Photo { get; set; }
-        public int Age { get; set; }
-        public string? Status { get; set; }
-        public DateTime Created_At { get; set; }
-        public string? Stack { get; set; }
-        // public string? ProfessionalDescription { get; set; }
+        // Identificador único del coder
+        public string Id { get; set; } = string.Empty;
 
-        // public StandarRiwi? StandarRiwi { get; set; }
+        // Nombres del coder
+        public string FirstName { get; set; } = string.Empty;
+        public string SecondName { get; set; } = string.Empty;
+
+        // Apellidos del coder
+        public string FirstLastName { get; set; } = string.Empty;
+        public string SecondLastName { get; set; } = string.Empty;
+
+        // Información de contacto
+        public string Email { get; set; } = string.Empty;
+        public string Photo { get; set; } = string.Empty;
+
+        // Datos adicionales
+        public int Age { get; set; } = 0;
+        public string Status { get; set; } = "Active";
+
+        // Fecha de creación del perfil
+        public DateTime CreatedAt { get; set; }
+
+        // Tecnologías en las que el coder es competente
+        public string Stack { get; set; } = string.Empty;
+
+        // Habilidades del coder
         public List<Skill>? Skills { get; set; }
+
+        // Habilidades lingüísticas del coder
         public LanguageSkill? LanguageSkills { get; set; }
     }
-
 }

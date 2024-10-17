@@ -1,0 +1,92 @@
+@namespace riwitalentfrontend.Components
+
+@inject AuthenticationStateProvider AutenticacionProvider;
+@inject IAuthService AuthService;
+@inject ISessionStorageService SessionStorage
+@using Blazored.SessionStorage
+@inject NavigationManager NavigationManager;
+@inject HttpClient HttpClient;
+@inject SweetAlertService Swal;
+@inject AlertService AlertService;
+
+<MudGrid Class="pa-0 ma-0">
+    <MudContainer Class="d-flex justify-center align-center pa-2 flex-grow-1">
+        <MudCard Class="pa-6 d-flex justify-center align-center">
+            <MudCardHeader>
+                <MudItem Class="d-flex justify-center align-center">
+                    <LogoComponent IsDarkMode="@IsDarkMode" />
+                </MudItem>
+            </MudCardHeader>
+            <MudItem>
+                <MudText Align="Align.Center" Typo="Typo.h5"><b>¡Bienvenido/a de nuevo!</b></MudText>
+                <MudText Align="Align.Center" Typo="Typo.subtitle1">Ingresa con tu cuenta para continuar</MudText>
+            </MudItem>
+            <MudCardContent Class="FullWidth" Style="width: 100%;">
+                <MudForm Spacing="2">
+                    <MudTextField T="string" Label="Correo" @bind-value="_email" Variant="Variant.Outlined" InputType="InputType.Email"/>
+                    <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@_passwordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
+                </MudForm>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="Login" Class="rounded">Continuar</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudContainer>
+</MudGrid>
+
+@code {
+    private string? _email;
+    private string? _password;
+    private bool IsDarkMode { get; set; }
+
+    bool _isShow;
+    InputType _passwordInput = InputType.Password;
+    string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        @if (_isShow)
+        {
+            _isShow = false;
+            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            _passwordInput = InputType.Password;
+        }
+        else {
+            _isShow = true;
+            _passwordInputIcon = Icons.Material.Filled.Visibility;
+            _passwordInput = InputType.Text;
+        }
+    }
+    
+    private async Task Login()
+    {
+        var succes = await AuthService.Login(_email, _password);
+        
+        if (succes)
+        {
+            // Guardar el correo en SessionStorage
+            await SessionStorage.SetItemAsync("userEmail", _email);
+
+            NavigationManager.NavigateTo("/coders");
+            await Swal.FireAsync(new SweetAlertOptions
+            {   
+                Title = "¡Bienvenido",
+                Position = "center",
+                Icon = SweetAlertIcon.Success,
+                ShowConfirmButton = false ,
+                Timer = 1500
+            });
+        }
+        else
+        {
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Correo o contraseña incorrectos!",
+                Text = "",
+                Icon = SweetAlertIcon.Warning,
+                ConfirmButtonText = "Intenta de nuevo",
+                Timer = 1500
+            });
+        }
+    }
+}

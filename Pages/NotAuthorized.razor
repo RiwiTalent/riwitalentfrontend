@@ -1,0 +1,26 @@
+@page "/NotAuthorized"
+@layout LoginLayout
+@inject NavigationManager NavManager
+
+<PageTitle>Página no autorizada</PageTitle>
+
+<MudGrid Class="d-flex align-center justify-center fill-height">
+    <MudItem xs="12" sm="6" md="6" lg="4" Class="d-flex align-center justify-center">
+        <MudPaper Class="d-flex flex-column align-center justify-center gap-2 pa-4">
+            <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Large" Color="Color.Error" />
+            <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Error"><b>No estás autorizado para ver esta página.</b></MudText>
+            <MudText Typo="Typo.body1" Align="Align.Center">Serás redirigido a la página principal en unos segundos...</MudText>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(3000);
+            NavManager.NavigateTo("/");
+        }
+    }
+}

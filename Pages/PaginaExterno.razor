@@ -1,8 +1,15 @@
 @page "/{groupId}"
-@inject GroupCodersServices _groupCodersServices
-@using riwi.Models;
-@inject IModalService ModalService
-@layout ExternalLayout
+@inject IAuthService AuthService
+@inject IGroupService GroupService
+@using riwitalentfrontend.Components
+@layout ClientLayout
+@using riwitalentfrontend.Services.Implementations;
+
+
+<PageTitle>RiwiTalent: Software de gestión talento Riwi</PageTitle>
+
+@* <MudProgressLinear Indeterminate="true" Color="Color.Info" Class="my-7" />
+            <p>cargando...></p> *@
 
 <MudForm Style="display: flex; align-items: center " Valid="IniciarSesion">
     <br>
@@ -38,39 +45,13 @@
     [Parameter] public required string Name { get; set; }
     [Parameter] public required string Key { get; set; }
     
+    
+    
     public AuthExternalRequest login { get; set; } = new();
 
     private async Task IniciarSesion()
     {
-        var login = new AuthExternalRequest
-        {
-            GroupId = groupId,
-            AssociateEmail = AssociateEmail,
-            Key = Key
-        };
-
-        var authResult = await _groupCodersServices.AuthenticationExternalAsync(login);
-        Console.WriteLine(authResult);
-        Console.WriteLine($"Sending: GroupId={login.GroupId}, Email={login.AssociateEmail}, Key={login.Key}");
-
-        if (authResult)
-        {
-            Console.WriteLine("login successful!");
-            // Mostrar modal y manejar autenticación
-            var parameters = new ModalParameters();
-            parameters.Add("GroupId", groupId); // Pasar el ID del grupo
-            parameters.Add("AcceptedEmail", Group?.AssociateEmail ?? string.Empty); // Pasar el correo del asociado
-            parameters.Add("CreatorEmail", Group?.CreatedBy ?? string.Empty); // Pasar el correo del creador
-            var modal = ModalService.Show<TermsAndConditionsComponent>("Términos y Condiciones", parameters);
-            await modal.Result;
-
-            // Redirigir o cargar otros datos
-            await OnInitializedAsync();
-        }
-        else
-        {
-            Console.WriteLine("Error en la autenticación.");
-        }
+     
     }
 
 
@@ -91,7 +72,7 @@
     {
         try
         {
-            var groupResponse = await _groupCodersServices.GetGroupInfoById(groupId);
+            var groupResponse = await GroupService.GetGroupByIdAsync(groupId);
 
             if (groupResponse != null)
             {

@@ -1,0 +1,77 @@
+@namespace riwitalentfrontend.Components
+@using riwitalentfrontend.Models;
+@using Blazored.SessionStorage
+@inject IGroupService GroupService
+@inject ISessionStorageService _sessionStorage
+
+
+
+
+@if (Inicial != null)
+{
+    <MudBadge Style="margin-right: 4px" Color="Status" Overlap="true" Bordered="true">
+        <MudAvatar Color="ColorRandom">@Inicial.ToUpper()</MudAvatar>
+    </MudBadge>
+}
+else
+{
+     Console.WriteLine("Cargando");
+    <p>Cargando...</p> 
+}
+
+@code {
+    private string? Inicial { get; set; }
+    private Color ColorRandom { get; set; }
+    private Color Status { get; set; } = Color.Success;
+
+    [Parameter]
+    public required string TypeAvatar { get; set; }
+    [Parameter]
+    public string? KeySesionStorage { get; set; }
+    [Parameter]
+    public GroupCoders? GroupCoders { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        GenerarColorRandom();
+        await ObtenerSesionStorageAvatar();
+    } 
+    private async Task ObtenerSesionStorageAvatar()
+    {
+        if (TypeAvatar == "Usuario")
+        {
+            // Cambia esto para obtener un string directamente
+            var email = await _sessionStorage.GetItemAsync<string>(KeySesionStorage); // KeySesionStorage debe ser "userEmail"
+            
+            if (!string.IsNullOrEmpty(email))
+            {
+                Inicial = email.Length > 1 ? $"{email[0]}{email[1]}" : email[0].ToString();
+                Console.WriteLine($"Email recuperado: {email}");
+                Console.WriteLine($"Inicial: {Inicial}");
+            }
+            else
+            {
+                Console.WriteLine("El usuario no se encontró en el Session Storage.");
+            }
+        }
+        else if (TypeAvatar == "GrupoCoders" && GroupCoders != null)
+        {
+            Inicial = $"{GroupCoders.Name[0]}{GroupCoders.Name[1]}";
+            Status = GroupCoders.IsActive == false ? Color.Error : Color.Success;
+        }
+    }
+
+    
+    private void GenerarColorRandom()
+    {
+        List<Color> listColors = new List<Color>
+        {
+            Color.Success,
+            Color.Primary,
+            Color.Warning
+        };
+
+        Random numeroRandom = new Random();
+        ColorRandom = listColors[numeroRandom.Next(listColors.Count)];
+    }
+}
