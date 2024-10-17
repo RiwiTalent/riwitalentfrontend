@@ -6,6 +6,13 @@ namespace riwitalentfrontend.Services.Interfaces
         Task SaveChangesRegister();
         Task NewRegister();
         Task Warning();
+        Task ConfirmDeleteCoder(); // Nuevo método
+        
+
+
+    
+        
+
     }
 }
 
