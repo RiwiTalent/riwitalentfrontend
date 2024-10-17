@@ -8,7 +8,7 @@
 
 
 <MudContainer Class="d-flex" Style="margin: 15px auto auto auto ; padding: 0; width: 85%;">
-    <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Coders</MudText>
+    <MudText Class="text-resultado" Typo="Typo.h5" style="font-weight: 700;">@totalCoders Coders</MudText>
 </MudContainer>
 
 
@@ -51,7 +51,7 @@
                 <MudSelectItem Value="\"C1\"">C1</MudSelectItem>
                 <MudSelectItem Value="\"C2\"">C2</MudSelectItem>
                 <MudSelectItem Value="\"clear\"">Limpiar Filtro</MudSelectItem>
-            </MudSelect> -->
+            </MudSelect> -->    
 
            
             <MudButton OnClick="CleanFilters" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" StartIcon="@Icons.Material.Outlined.FilterAltOff">Limpiar Filtros</MudButton>
@@ -62,68 +62,148 @@
 </ToolBarContent>
 
 
-@if(coders != null)
+@if (FilterInGroup == true)
+{
+   var filteredCoders = coders?.Where(coder => coder.GroupId != null && coder.GroupId.Contains(groupId)).ToList();
+
+    if (filteredCoders.Count() > 0)
+    {
+        <div class="cards">
+            @foreach (var coder in filteredCoders)
+            {
+                <MudCard style="height:300px" class="relative rounded-lg overflow-hidden mud-card">
+                    @if (coder.Photo != null)
+                    {
+                        <MudImage Fluid="true"
+                        Src="@ImageNullOrEmpty(coder.Photo)" Alt="@coder.FirstName" Width="250" Height="300"/>
+                    }
+                    else
+                    {
+                        <p>Cargando...</p>
+                    }
+                    <MudCardContent class="d-flex justify-space-between relative  mud-card-content">
+                            <div class="cards__container">
+                            
+
+                                <div class="cards__profile">
+                                    <div class="cards__coder">
+                                        <h6 class="">@coder.FirstName @coder.FirstLastName</h6>
+                                        <p>@coder.Stack</p>
+                                    </div>
+                                        <MudContainer Class="d-flex justify-end flex-grow-1">
+
+                                    <MudChipSet T="string" @bind-SelectedChips="SelectedCoders" SelectionMode="SelectionMode.MultiSelection" CheckMark>
+                                        <MudChip Style="color:white;" Class="border-solid border-2 mud-b mud-border-white" Icon="@Icons.Material.Rounded.PersonAddAlt1" Variant="Variant.Text" @onclick="() => AddCoderToGroup(coder)">
+                                        </MudChip>
+                                    </MudChipSet>
+
+                                        </MudContainer>
+                                </div>
+                                @*badges*@
+                                @if(coder.Skills != null)
+                                {
+                                    <div class="cards__badges">
+                                        @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
+                                        {
+                                            var skill = coder.Skills[i].Language_Programming;
+                                            var badgeColor = GetColor(skill);
+                                            var badgeIcon = GetIcon(skill);
+
+                                            <MudChip T="string" Style=@($"background-color: {badgeColor}; color: white")>
+                                                <i class="@badgeIcon"></i>@skill
+                                            </MudChip>
+
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>Contenido no disponible...</p>
+                                }
+                                @*Buttons*@
+                                <div class="cards__button--primary">
+                                    <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
+                                </div>
+                            </div>
+                    </MudCardContent>
+                </MudCard>
+            }
+        </div>
+
+        <div class="container-pagination">
+            <div class="container-box">
+                <MudPagination class="mud-pagination mud-pagination-item mud-button" Variant="Variant.Filled" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize" TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>No se encontraron coders en este grupo.</p>
+    }
+}
+
+else if(coders != null)
 {
     <div class="cards">
-        @foreach (var coder in paginatedCoders)
-        {
-            <MudCard style="height:300px" class="relative rounded-lg overflow-hidden mud-card">
-                @if (coder.Photo != null)
-                {
-                    <MudImage Fluid="true"
-                    ObjetctFit="Cover" Src="@ImageNullOrEmpty(coder.Photo)" Alt="Mony the dog" Width="250" Height="300"/>
-                }
-                else
-                {
-                    <p>Cargando...</p>
-                }
-                <MudCardContent class="d-flex justify-space-between relative  mud-card-content">
-                        <div class="cards__container">
-                          
+            @foreach (var coder in paginatedCoders)
+            {
+                <MudCard style="height:300px" class="relative rounded-lg overflow-hidden mud-card">
+                    @if (coder.Photo != null)
+                    {
+                        <MudImage Fluid="true"
+                        Src="@ImageNullOrEmpty(coder.Photo)" Alt="@coder.FirstName" Width="250" Height="300"/>
+                    }
+                    else
+                    {
+                        <p>Cargando...</p>
+                    }
+                    <MudCardContent class="d-flex justify-space-between relative  mud-card-content">
+                            <div class="cards__container">
+                            
 
-                            <div class="cards__profile">
-                                <div class="cards__coder">
-                                    <h6 class="">@coder.FirstName @coder.FirstLastName</h6>
-                                    <p>@coder.Stack</p>
-                                </div>
-                                    <MudContainer Class="d-flex justify-end flex-grow-1">
+                                <div class="cards__profile">
+                                    <div class="cards__coder">
+                                        <h6 class="">@coder.FirstName @coder.FirstLastName</h6>
+                                        <p>@coder.Stack</p>
+                                    </div>
+                                        <MudContainer Class="d-flex justify-end flex-grow-1">
 
-                                <MudChipSet T="string" @bind-SelectedChips="SelectedCoders" SelectionMode="SelectionMode.MultiSelection" CheckMark>
-                                    <MudChip Style="color:white;" Class="border-solid border-2 mud-b mud-border-white" Icon="@Icons.Material.Rounded.PersonAddAlt1" Variant="Variant.Text" @onclick="() => AddCoderToGroup(coder)">
-                                    </MudChip>
-                                </MudChipSet>
-
-                                    </MudContainer>
-                            </div>
-                            @*badges*@
-                            @if(coder.Skills != null)
-                            {
-                                <div class="cards__badges">
-                                    @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
-                                    {
-                                        var skill = coder.Skills[i].Language_Programming;
-                                        var badgeColor = GetColor(skill);
-                                        var badgeIcon = GetIcon(skill);
-
-                                        <MudChip T="string" Style=@($"background-color: {badgeColor}; color: white")>
-                                            <i class="@badgeIcon"></i>@skill
+                                    <MudChipSet T="string" @bind-SelectedChips="SelectedCoders" SelectionMode="SelectionMode.MultiSelection" CheckMark>
+                                        <MudChip Style="color:white;" Class="border-solid border-2 mud-b mud-border-white" Icon="@Icons.Material.Rounded.PersonAddAlt1" Variant="Variant.Text" @onclick="() => AddCoderToGroup(coder)">
                                         </MudChip>
+                                    </MudChipSet>
 
-                                    }
+                                        </MudContainer>
                                 </div>
-                            }
-                            else
-                            {
-                                <p>Contenido no disponible...</p>
-                            }
-                            @*Buttons*@
-                            <div class="cards__button--primary">
-                                <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
+                                @*badges*@
+                                @if(coder.Skills != null)
+                                {
+                                    <div class="cards__badges">
+                                        @for(int i = 0; i < coder.Skills.Count && i < 6; i++)
+                                        {
+                                            var skill = coder.Skills[i].Language_Programming;
+                                            var badgeColor = GetColor(skill);
+                                            var badgeIcon = GetIcon(skill);
+
+                                            <MudChip T="string" Style=@($"background-color: {badgeColor}; color: white")>
+                                                <i class="@badgeIcon"></i>@skill
+                                            </MudChip>
+
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>Contenido no disponible...</p>
+                                }
+                                @*Buttons*@
+                                <div class="cards__button--primary">
+                                    <MudButton style="background: #fff; width: 100%;" Variant="Variant.Filled" OnClick="@(() => ShowDetails(@coder.Id))">@ButtonDetails</MudButton>      
+                                </div>
                             </div>
-                        </div>
-                </MudCardContent>
-            </MudCard>
-        }
+                    </MudCardContent>
+                </MudCard>
+            }
     </div>
 
     <div class="container-pagination">
@@ -138,6 +218,7 @@ else
 
 }
 
+
 @if (coders != null)
 {
 <div class="cardsCell">
@@ -149,12 +230,12 @@ else
                 @if (coder.Photo != null)
                 {
                 <MudImage
-                    Src="@ImageNullOrEmpty(coder.Photo)"
+                    Src="@coder.Photo"
                     Alt="profile" />
                 }
                 else
                 {
-                <p>Cargando...</p>
+                <p>@ImageNullOrEmpty(@coder.Photo)</p>
                 }
                 <MudCardContent>
                     <div class="cards__container">
@@ -196,6 +277,12 @@ else
 
 @code
 {   
+    [Parameter]
+    public string? groupId { get; set; }
+
+
+    [Parameter]
+    public bool? FilterInGroup { get; set; }
     //SelectedCoders Component
     [Parameter]
     public List<Coder> SelectedCoders { get; set; } = new List<Coder>(); // Parámetro para recibir los coders seleccionados
@@ -237,30 +324,41 @@ else
     private List<Badge> badges = new List<Badge>();
     
 
+  
     protected override async Task OnInitializedAsync()
     {
-        //Llamado a las apis
+        Console.WriteLine("Filter: " + FilterInGroup);
+
         try
         {
             coders = await coderService.GetCodersAsync();
-            totalCoders = coders.Count;
-            pag = (int)Math.Ceiling((double)totalCoders / pageSize);
-            Console.WriteLine(pag);
-            LoadCoders(currentPage);
+
+            if (coders == null || coders.Count == 0)
+            {
+                Console.WriteLine("No se encontraron coders o la lista está vacía.");
+            }
+            else
+            {
+                totalCoders = coders.Count;
+                pag = (int)Math.Ceiling((double)totalCoders / pageSize);
+                LoadCoders(currentPage);
+            }
 
             foreach (var skill in coders)
             {
-                for(int i = 0; i < skill.Skills.Count; i++)
+                if (skill.Skills != null)
                 {
-
-                    badges.Add(new Badge{
-                        Technology = skill.Skills[i].Language_Programming,
-                        Color = GetColor(skill.ToString()),
-                        Icon = GetIcon(skill.ToString())
-                    });
+                    for (int i = 0; i < skill.Skills.Count; i++)
+                    {
+                        badges.Add(new Badge
+                        {
+                            Technology = skill.Skills[i].Language_Programming,
+                            Color = GetColor(skill.Skills[i].Language_Programming),
+                            Icon = GetIcon(skill.Skills[i].Language_Programming)
+                        });
+                    }
                 }
             }
-            
         }
         catch (Exception ex)
         {
@@ -273,8 +371,47 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error al obtener las Tecnologìas: {ex.Message}");
+            Console.WriteLine($"Error al obtener las Tecnologías: {ex.Message}");
         }
+    }
+
+    private void LoadCoders(int pageNumber)
+    {
+        if (coders == null)
+        {
+            paginatedCoders = new List<Coder>();
+            return;
+        }
+
+        paginatedCoders = coders
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        if (coders == null || coders.Count == 0)
+        {
+            Console.WriteLine("La lista de coders está vacía.");
+        }
+        else
+        {
+            Console.WriteLine($"Total de coders obtenidos: {coders.Count}");
+        }
+
+        if (paginatedCoders == null || paginatedCoders.Count == 0)
+        {
+            Console.WriteLine("La lista de paginatedCoders está vacía.");
+        }
+        else
+        {
+            Console.WriteLine($"Total de paginatedCoders: {paginatedCoders.Count}");
+        }
+    }
+
+
+    private void OnPageChanged(int pageNumber)
+    {
+        currentPage = pageNumber;
+        LoadCoders(currentPage);
     }
 
     private void AddCoderToGroup(Coder coder)
@@ -363,25 +500,6 @@ else
         };
     }
 
-    private async Task LoadCodersAsync()
-    {
-        try
-        {
-            coders = await coderService.GetCodersAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error al obtener coders: {ex.Message}");
-        }
-    }
-
-    private void OnPageChanged(int pageNumber)
-    {
-        currentPage = pageNumber;
-        LoadCoders(currentPage);
-    }
-    
-
     private async Task FilterCoders()
     {
         coders = await coderService.GetCodersAsync();
@@ -459,15 +577,6 @@ else
         }
     }
 
-    private void LoadCoders(int pageNumber)
-    {
-        paginatedCoders = coders
-            ?.Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
-    }
-
-    //Funcionalidad ver detalles
     private async Task ShowDetails(string id)
     {
         var coder = coders.FirstOrDefault(c => c.Id == id);
