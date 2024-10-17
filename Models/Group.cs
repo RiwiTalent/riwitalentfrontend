@@ -22,7 +22,7 @@ namespace riwitalentfrontend.Models
         public string Status { get; set; } = "Active";
 
         // Fecha de creación del grupo
-        public DateTime CreatedAt { get; set; } 
+        public DateTime Created_At { get; set; } 
         // Email del creador del grupo
         [Required]
         public string? CreatedBy { get; set; }
@@ -30,6 +30,8 @@ namespace riwitalentfrontend.Models
         // Email de la empresa asociada al grupo
         [Required]
         public string? AssociateEmail { get; set; }
+
+        public bool? AcceptedTerms { get; set; }
 
 
         public DateTime Expiration_At { get; set; }

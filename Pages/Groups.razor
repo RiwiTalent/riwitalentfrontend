@@ -80,9 +80,9 @@
                                                 <MudText>@(group.Item.Coders?.Count ?? 0)</MudText>
                                             </CellTemplate>
                                         </PropertyColumn>
-                                        <PropertyColumn Property="x => x.CreatedAt" Title="Fecha de creación">
+                                        <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación">
                                             <CellTemplate Context="group">
-                                                <MudText><b>@group.Item.CreatedAt.ToString("dd/MM/yyyy")</b></MudText>
+                                                <MudText><b>@group.Item.Created_At.ToString("dd/MM/yyyy")</b></MudText>
                                             </CellTemplate>
                                         </PropertyColumn>
                                         <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
@@ -161,7 +161,7 @@
         await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
         {
             var groups = await GroupServices.GetGroupsAsync() ?? new List<Group>();
-            _groups  = groups.OrderByDescending(g => g.CreatedAt).ToList();
+            _groups  = groups.OrderByDescending(g => g.Created_At).ToList();
             },
         _errorMessage => _errorMessage = this._errorMessage);
         
@@ -180,7 +180,7 @@
     {
         return (group.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
                (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
-               (group.CreatedAt.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+               (group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
 
     private Color GetChipColor(string? status)

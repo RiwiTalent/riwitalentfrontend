@@ -90,24 +90,29 @@ namespace riwitalentfrontend.Services.Implementations
             }
         }
 
-           public async Task<bool> AuthenticationExternalAsync(AuthExternalRequest login)
+        public async Task<bool> AuthenticationExternalAsync(AuthExternalRequest login)
         {
-            var loginExternalResponse = await _httpClient.PostAsJsonAsync<AuthExternalRequest>
-                ($"http://localhost:5113/validation-external?Id={login.GroupId}&AssociateEmail={login.AssociateEmail}&Key={login.Key}",
-                login);
-
-
-
-            if (loginExternalResponse.IsSuccessStatusCode)
+            try
             {
-                // _navigation.NavigateTo($"/HomeExterno/{key}");
-                return true; 
+                var loginExternalResponse = await _httpClient.PostAsJsonAsync("http://localhost:5113/company/validate-external", login);
+
+                if (loginExternalResponse.IsSuccessStatusCode)
+                {
+                    return true; 
+                }
+                else
+                {
+                    var errorContent = await loginExternalResponse.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {loginExternalResponse.StatusCode}, Detalles: {errorContent}");
+                    return false; 
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine($"Error: {loginExternalResponse.StatusCode}");
-                return false; 
+                Console.WriteLine($"Ocurrió un error al enviar la solicitud: {ex.Message}");
+                return false;
             }
         }
+
     }
 }

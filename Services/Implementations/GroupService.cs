@@ -5,12 +5,10 @@ using riwitalentfrontend.Services.Interfaces;
 
 namespace riwitalentfrontend.Services.Implementations
 {
-    // Servicio para interactuar con la API de grupos
     public class GroupService  : IGroupService
     {
-        
-        // Inyección de HttpClient para realizar peticiones HTTP
         private readonly HttpClient _httpClient;
+
         public GroupService(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -41,19 +39,16 @@ namespace riwitalentfrontend.Services.Implementations
 
         public async Task<bool> Update(Group group)
         {
-            
-            var url = "http://localhost:5113/groups"; // Asegúrate de que esta URL sea correcta
             try
             {
-                var jsonContent = JsonContent.Create(group);
-                var response = await _httpClient.PutAsync(url, jsonContent);
+                var response = await _httpClient.PutAsJsonAsync($"http://localhost:5113/groups?Id={group.Id}&Name={group.Name}&Photo={group.Photo}&Description={group.Description}&Status={group.Status}&CreatedBy={group.CreatedBy}&AssociateEmail={group.AssociateEmail}&AcceptedTerms={group.AcceptedTerms}", group);
+                response.EnsureSuccessStatusCode(); // Lanza una excepción si la solicitud no es exitosa
                 return response.IsSuccessStatusCode;
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
-                // Maneja la excepción (puedes registrar el error o mostrar un mensaje)
                 Console.WriteLine($"Error al actualizar el grupo: {ex.Message}");
-                return false; // Devuelve false en caso de error
+                return false;
             }
         }
 

@@ -55,7 +55,8 @@ namespace riwitalentfrontend.Services.Implementations
                 {
                     Title = "Los datos se han guardado exitosamente",
                     Icon = SweetAlertIcon.Success,
-                    ShowConfirmButton = false 
+                    ShowConfirmButton = false,
+                    Timer = 1500
                 });
             }
         }
