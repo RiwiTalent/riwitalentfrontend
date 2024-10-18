@@ -15,6 +15,7 @@
     <!-- Muestra alerta si se produce un error -->
     Snackbar.Add(_errorMessage, Severity.Error);
 }
+
 <AuthorizeView>
     <Authorized>
         <MudContainer Class="d-flex flex-column flex-grow-1 justify-center align-content-start">
@@ -28,159 +29,176 @@
                     <MudText Typo="Typo.h5"><b>@_coders.Count</b> Coders encontrados</MudText>
                 </MudContainer>
                 
+                <!-- Drawer para filtro -->
                 <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true" Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded ma-2">
-                    <!-- Filtro por skills -->
                     <CoderFilterComponent OnFiltered="UpdateCoders" />
                 </MudDrawer>
 
                 @if (_coders != null && _coders.Any())
-                    {
-                        <MudContainer Class="ma-3 w-full h-full">
-                            <!-- Grid de coders -->
-                            <MudDataGrid T="Coder"
-                                         Class="flex-grow-1 pa-5"
-                                         LoadingProgressColor="Color.Info"
-                                         Hover="true"
-                                         Items="@_coders"
-                                         MultiSelection="true"
-                                         QuickFilter="@QuickFilter">
+                {
+                    <MudContainer Class="ma-3 w-full h-full">
+                        <!-- Grid de coders -->
+                        <MudDataGrid T="Coder"
+                                     Class="flex-grow-1 pa-5"
+                                     LoadingProgressColor="Color.Info"
+                                     Hover="true"
+                                     Items="@_coders"
+                                     QuickFilter="@QuickFilter">
 
-                                <ToolBarContent>
-                                    <MudGrid>
-                                        <MudItem xs="12" Class="d-flex flex-grow-1 gap-3 justify-space-between">
-                                            <MudTextField Placeholder="Buscar aquí..." @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Search" AdornmentColor="Color.Primary"></MudTextField>
-                                            <MudSpacer/>
-                                            <MudButton Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" OnClick="DrawerToggle" StartIcon="@Icons.Material.Rounded.Tune">Filtro por tecnologias</MudButton>
-                                            <MudButton @onclick="OpenDialogAsync" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.PersonAdd">Nuevo</MudButton>
-                                        </MudItem>
-                                    </MudGrid>
-                                </ToolBarContent>
+                            <!-- Contenido de la barra de herramientas -->
+                            <ToolBarContent>
+                                <MudGrid>
+                                    <MudItem xs="12" md="6" Class="d-flex">
+                                        <MudTextField Placeholder="Buscar aquí..."
+                                                      @bind-Value="_searchString"
+                                                      Immediate="true"
+                                                      Variant="Variant.Outlined"
+                                                      Adornment="Adornment.End"
+                                                      AdornmentIcon="@Icons.Material.Rounded.Search"
+                                                      AdornmentColor="Color.Primary">
+                                        </MudTextField>
+                                    </MudItem>
 
-                                <Columns>
-                                    <SelectColumn T="Coder"/>
-                                    <!--  <PropertyColumn  Style="width: 100px" Property="x => _coders.IndexOf(x) + 1" Title="Numero" Filterable="false"/> -->
-                                    <PropertyColumn Property="x => x.FirstName" Title="Nombre">
-                                        <CellTemplate Context="coder">
-                                            <MudContainer Class="d-flex gap-1">
-                                                <MudAvatar>
-                                                    <MudImage Src="@coder.Item.Photo"></MudImage>
-                                                </MudAvatar>
-                                                <MudContainer>
-                                                    <MudText><b>@coder.Item.FirstName @coder.Item.SecondName</b></MudText>
-                                                    <MudText Color="Color.Primary" Typo="Typo.subtitle2">@coder.Item.Stack</MudText>
-                                                </MudContainer>
+                                    <!-- Espaciador -->
+                                    <!-- <MudSpacer/> -->
+
+                                    <MudItem xs="12" md="6" Class="d-flex justify-end gap-2">
+                                        <MudButton Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" OnClick="DrawerToggle" StartIcon="@Icons.Material.Rounded.Tune">
+                                            Filtro por tecnologías
+                                        </MudButton>
+                                        <MudButton @onclick="OpenDialogAsync" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.PersonAdd">
+                                            Nuevo
+                                        </MudButton>
+                                    </MudItem>
+                                </MudGrid>
+                            </ToolBarContent>
+
+                            <!-- Columnas de datos -->
+                            <Columns>
+                                <PropertyColumn Property="x => x.FirstName" Title="Nombre">
+                                    <CellTemplate Context="coder">
+                                        <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                            <MudAvatar>
+                                                <MudImage Src="@coder.Item.Photo"></MudImage>
+                                            </MudAvatar>
+                                            <MudContainer>
+                                                <MudText><b>@coder.Item.FirstName @coder.Item.SecondName</b></MudText>
+                                                <MudText Color="Color.Primary" Typo="Typo.subtitle2">@coder.Item.Stack</MudText>
                                             </MudContainer>
-                                        </CellTemplate>
-                                    </PropertyColumn>
-                                    <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación">
-                                        <CellTemplate Context="coder">
-                                            <MudText><b>@coder.Item.Created_At.ToString("dd/MM/yyyy")</b></MudText>
-                                        </CellTemplate>
-                                    </PropertyColumn>
-                                    <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
-                                        <CellTemplate Context="coder">
-                                            <MudStack Row>
-                                                <MudChip T="string" Color="@GetChipColor((string)coder.Item.Status)"
-                                                         Variant="Variant.Filled" Size="Size.Small" Class="px-4">
-                                                    @coder.Item.Status
-                                                </MudChip>
-                                            </MudStack>
-                                        </CellTemplate>
-                                    </PropertyColumn>
+                                        </MudStack>
+                                    </CellTemplate>
+                                </PropertyColumn>
+                                <PropertyColumn Property="x => x.AssessmentScore" Title="Puntaje">
+                                    <CellTemplate Context="coder">
+                                        <MudStack Row="true">
+                                            <MudText Align="Align.Justify" Typo="Typo.h6" Color="Color.Primary">
+                                                <b>@coder.Item.AssessmentScore</b> pts.
+                                            </MudText>
+                                        </MudStack>
+                                    </CellTemplate>
+                                </PropertyColumn>
+                                <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
+                                    <CellTemplate Context="coder">
+                                        <MudStack Row="true">
+                                            <MudChip T="string" Color="@GetChipColor((string)coder.Item.Status)"
+                                                     Variant="Variant.Filled" Size="Size.Small" Class="px-4">
+                                                @coder.Item.Status
+                                            </MudChip>
+                                        </MudStack>
+                                    </CellTemplate>
+                                </PropertyColumn>
+                                
+                                <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
+                                    <CellTemplate Context="coder">
+                                        <MudStack Row="true">
+                                            <MudIconButton  Variant="Variant.Outlined"
+                                                           Icon="@Icons.Material.Rounded.ModeEditOutline"
+                                                           Color="Color.Primary" Size="Size.Small"
+                                                           Class="border-solid border-2 mud-border-primary pa-2">
+                                            </MudIconButton>
+                                            <MudIconButton  Variant="Variant.Outlined"
+                                                           Icon="@Icons.Material.Outlined.RemoveRedEye"
+                                                           Color="Color.Warning" Size="Size.Small"
+                                                           Class="border-solid border-2 mud-border-warning pa-2">
+                                            </MudIconButton>
+                                            <MudIconButton OnClick="@(() => DeleteCoderAsync(coder.Item.Id))" Variant="Variant.Outlined"
+                                                           Icon="@Icons.Material.Rounded.DeleteOutline"
+                                                           Color="Color.Error" Size="Size.Small"
+                                                           Class="border-solid border-2 mud-border-error pa-2">
+                                            </MudIconButton>
+                                        </MudStack>
+                                    </CellTemplate>
+                                </PropertyColumn>
+                            </Columns>
 
-                                    <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
-                                        <CellTemplate Context="coder">
-                                            <MudStack Row>
-                                                <MudIconButton Href="/Home" Variant="Variant.Outlined"
-                                                               Icon="@Icons.Material.Rounded.ModeEditOutline"
-                                                               Color="Color.Primary" Size="Size.Small"
-                                                               Class="border-solid border-2 mud-border-primary pa-2">
-                                                </MudIconButton>
-                                                <MudIconButton Href="/Home" Variant="Variant.Outlined"
-                                                               Icon="@Icons.Material.Outlined.RemoveRedEye"
-                                                               Color="Color.Warning" Size="Size.Small"
-                                                               Class="border-solid border-2 mud-border-warning pa-2">
-                                                </MudIconButton>
-                                                 <MudIconButton OnClick="@(() => DeleteCoderAsync(coder.Item.Id))" Variant="Variant.Outlined"
-                                                            Icon="@Icons.Material.Rounded.DeleteOutline"
-                                                            Color="Color.Error" Size="Size.Small"
-                                                            Class="border-solid border-2 mud-border-error pa-2">
-                                                </MudIconButton>
-                                            </MudStack>
-                                        </CellTemplate>
-                                    </PropertyColumn>
-                                </Columns>
-
-                                <PagerContent>
-                                    <MudDataGridPager T="Coder"
-                                                      PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
-                                                      RowsPerPageString="@_rowsPerPageString"
-                                                      InfoFormat="@_infoFormat"/>
-                                </PagerContent>
-                            </MudDataGrid>
-                        </MudContainer>
-                    }
+                            <!-- Contenido del paginador -->
+                            <PagerContent>
+                                <MudDataGridPager T="Coder"
+                                                  PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
+                                                  RowsPerPageString="@_rowsPerPageString"
+                                                  InfoFormat="@_infoFormat"/>
+                            </PagerContent>
+                        </MudDataGrid>
+                    </MudContainer>
+                }
                 else
-                    {
-                        <MudText>No hay coders disponibles.</MudText>
-                    }
+                {
+                    <MudText>No hay coders disponibles.</MudText>
+                }
             }
         </MudContainer>
-
     </Authorized>
 </AuthorizeView>
 
 @code {
+    // Variables privadas para el manejo de los coders
     private List<Coder> _coders;
     private string? _searchString;
-    private bool _loading = true;
-    private int CoderCount => _coders?.Count ?? 0;
-    private string _errorMessage;
+    private bool _loading = true; // Indicador de carga
+    private string _errorMessage; // Mensaje de error
     private string _rowsPerPageString = "Filas por página:";
     private string _infoFormat = "{first_item}-{last_item} de {all_items}";
-    private List<string> _selectedSkills = new List<string>();
-    private HashSet<string> _skillsSet = new HashSet<string>();
-    private bool _drawerOpen = false;
-    
+    private bool _drawerOpen = false; // Estado del drawer
+
     protected override async Task OnInitializedAsync()
     {
-        await LoadCodersAsync();
+        await LoadCodersAsync(); // Cargar coders al inicializar
     }
     
+    // Método para cargar los coders
     private async Task LoadCodersAsync()
     {
-        _loading = true;
+        _loading = true; // Activar indicador de carga
         _errorMessage = string.Empty; // Limpiar el mensaje de error previo
     
         try
         {
             // Intentar obtener los coders
             _coders = await CoderService.GetCodersAsync();
-
-            // Asegura que no haya coder nulos
-            _coders = _coders?.Where(c => c != null).ToList() ?? new List<Coder>();
+            _coders = _coders?.Where(c => c != null).ToList() ?? new List<Coder>(); // Asegurar que no haya coders nulos
         }
-        catch (HttpRequestException httpEx) // Manejo específico de errores de red
+        catch (HttpRequestException httpEx)
         {
             _errorMessage = "Hubo un problema con la conexión a internet. Intente nuevamente más tarde.";
-            LogError(httpEx); // Método para loguear el error
+            LogError(httpEx); // Loguear error de conexión
         }
-        catch (NullReferenceException nullEx) // Manejo de errores de referencia nula
+        catch (NullReferenceException nullEx)
         {
             _errorMessage = "Ocurrió un error inesperado. Intente más tarde.";
-            LogError(nullEx);
+            LogError(nullEx); // Loguear error de referencia nula
         }
-        catch (Exception ex) // Catch general para cualquier otra excepción
+        catch (Exception ex)
         {
-            _errorMessage = "Hubo un error al cargar los coder. Intente nuevamente más tarde.";
-            LogError(ex); // Loguear cualquier otro tipo de error
+            _errorMessage = "Hubo un error al cargar los coders. Intente nuevamente más tarde.";
+            LogError(ex); // Loguear cualquier otro error
         }
         finally
         {
-            _loading = false;
+            _loading = false; // Desactivar indicador de carga
         }
     }
 
+    // Alternar estado del drawer
     private void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
@@ -189,110 +207,138 @@
     // Método para loguear errores
     private void LogError(Exception ex)
     {
-        Console.WriteLine($"Error al obtener grupos: {ex.Message}");
+        Console.WriteLine($"Error: {ex.Message}");
     }
     
+    // Actualiza la lista de coders filtrados
     private void UpdateCoders(List<Coder> filteredCoders)
     {
         _coders = filteredCoders;
     }
     
-    // Metodo para abrir dialogo
+    // Método para abrir el diálogo
     private Task OpenDialogAsync()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
-        return DialogService.ShowAsync<DialogComponent>("Creación de grupo", options);
+        return DialogService.ShowAsync<GroupDialogComponent>("Creación de grupo", options);
     }
     
-    // Filtro de busqueda
+    // Filtro de búsqueda
     private Func<Coder, bool> QuickFilter => coder =>
     {
-
-        if (string.IsNullOrWhiteSpace(_searchString) && !_selectedSkills.Any())
+        // Devuelve verdadero si no hay criterios de búsqueda
+        if (string.IsNullOrWhiteSpace(_searchString))
             return true;
 
         return MatchesSearchCriteria(coder);
     };
 
-
+    // Verifica si el coder coincide con los criterios de búsqueda
     private bool MatchesSearchCriteria(Coder coder)
     {
         return (coder.FirstName != null && coder.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
                (coder.SecondName != null && coder.SecondName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
                (coder.SecondLastName != null && coder.SecondLastName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
                (coder.Status != null && coder.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.Created_At != null && coder.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+               (coder.DateCreation != null && coder.DateCreation.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
 
-
-
-    // Condicional para colores de los Chip de Status
+    // Devuelve el color del chip según el estado
     private Color GetChipColor(string? status)
     {
         return status switch
         {
-            "Active" => Color.Success,
-            "Inactive" => Color.Default,
-            "Grouped" => Color.Success,
-            "Selected" => Color.Info,
+            "Activo" => Color.Success,
+            "Inactivo" => Color.Default,
+            "Agrupado" => Color.Success,
+            "Seleccionado" => Color.Info,
             _ => Color.Default,
         };
     }
 
     private async Task DeleteCoderAsync(string Id)
-{
-    // Mostrar alerta de confirmación
-    var result = await Swal.FireAsync(new SweetAlertOptions
     {
-        Icon = SweetAlertIcon.Warning,
-        Title = "¿Estás seguro/a de que deseas eliminar este coder?",
-        Text = "Esta acción no se podrá deshacer.",
-        ShowCancelButton = true,
-        ConfirmButtonColor = "#FE654F",
-        ConfirmButtonText = "Eliminar",
-        CancelButtonColor = "#fff",
-        CancelButtonText = "<button style='color:#FE654F; background-color:#fff'>Cancelar</button>"
-    });
+        // Llamar al servicio para obtener el coder y verificar su estado
+        var coder = await CoderService.GetCoderByIdAsync(Id); // Obtiene el objeto Coder
 
-    // Si el usuario confirma, proceder con la eliminación
-    if (result.IsConfirmed)
-    {
-        await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
+        // Verificar si se pudo obtener el coder
+        if (coder == null)
         {
-            var success = await CoderService.DeleteCodersAsync(Id);
-            if (success)
+            // Mostrar mensaje de que no se encontró el coder
+            await Swal.FireAsync(new SweetAlertOptions
             {
-                await LoadCodersAsync(); // Recargar los coders después de eliminar
-                await Swal.FireAsync(new SweetAlertOptions
-                {
-                    Title = "El codificador ha sido eliminado exitosamente",
-                    Icon = SweetAlertIcon.Success,
-                    ShowConfirmButton = false,
-                    Timer = 1500
-                });
-            }
-            else
+                Title = "No se pudo encontrar el coder",
+                Text = "El coder no existe o ocurrió un error.",
+                Icon = SweetAlertIcon.Error,
+                ConfirmButtonText = "Aceptar"
+            });
+            return; // Salir de la función si no se encuentra el coder
+        }
+
+        // Verificar si el estado del coder es "Inactivo" o "Agrupado" o "selected".
+        if (coder.Status == "Inactivo" || coder.Status == "Agrupado" || coder.Status == "Seleccionado")
+        {
+            // Mostrar mensaje de que no se puede desactivar el coder debido a su estado
+            await Swal.FireAsync(new SweetAlertOptions
             {
-                _errorMessage = "No se pudo eliminar el coder.";
-                await Swal.FireAsync(new SweetAlertOptions
+                Title = "No se puede desactivar el coder",
+                Text = $"El coder tiene el estado '{coder.Status}' y no se puede desactivar.",
+                Icon = SweetAlertIcon.Warning,
+                ConfirmButtonText = "Aceptar"
+            });
+            return; // Salir de la función si el coder no puede ser desactivado
+        }
+
+        // Mostrar alerta de confirmación
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Icon = SweetAlertIcon.Warning,
+            Title = "¿Estás seguro/a de que deseas desactivar este coder?",
+            Text = "Esta acción no se podrá deshacer.",
+            ShowCancelButton = true,
+            ConfirmButtonColor = "#FE654F",
+            ConfirmButtonText = "Eliminar",
+            CancelButtonColor = "#fff",
+            CancelButtonText = "<button style='color:#FE654F; background-color:#fff'>Cancelar</button>"
+        });
+
+        // Si el usuario confirma, proceder con la eliminación
+        if (result.IsConfirmed)
+        {
+            await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
+            {
+                var success = await CoderService.DeleteCodersAsync(Id); // Eliminar el coder
+                if (success == true)
                 {
-                    Title = "Error",
-                    Text = _errorMessage,
-                    Icon = SweetAlertIcon.Error,
-                    ConfirmButtonText = "Aceptar"
-                });
-            }
-        },
-        errorMessage => _errorMessage = errorMessage);
+                    await LoadCodersAsync(); // Recargar los coders después de desactivar
+                    await Swal.FireAsync(new SweetAlertOptions
+                    {
+                        Title = "El codificador ha sido desactivado exitosamente",
+                        Icon = SweetAlertIcon.Success,
+                        ShowConfirmButton = false,
+                        Timer = 1500
+                    });
+                }
+                else
+                {
+                    _errorMessage = "No se pudo desactivar el coder.";
+                    await Swal.FireAsync(new SweetAlertOptions
+                    {
+                        Title = "Error",
+                        Text = _errorMessage,
+                        Icon = SweetAlertIcon.Error,
+                        ConfirmButtonText = "Aceptar"
+                    });
+                }
+            },
+            errorMessage => _errorMessage = errorMessage);
+        }
+        else
+        {
+            // El usuario canceló la eliminación
+            Console.WriteLine("Eliminación cancelada");
+        }
     }
-    else
-    {
-        // El usuario canceló la eliminación
-        Console.WriteLine("Eliminación cancelada");
-    }
-}
-
-
 
 
 

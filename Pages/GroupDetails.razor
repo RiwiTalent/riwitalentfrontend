@@ -1,4 +1,5 @@
 @page "/GroupDetails/{groupId}"
+@using riwitalentfrontend.Components.GroupCoder
 @layout MainLayout
 @inject IGroupService GroupService
 @inject SweetAlertService Swal;
@@ -23,7 +24,7 @@
         }
         else
         {
-            <MudContainer Class="ma-3 w-full h-full">
+            <MudContainer Class="ma-3 d-flex flex-column flex-grow-1 justify-center align-content-start">
                 <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 py-3 px-0">
                     <!-- Botón Regresar -->
                     <MudTooltip Text="Regresar">
@@ -46,7 +47,6 @@
                         @(isEditing ? "Guardar Grupo" : "Editar Grupo")
                     </MudButton>
                 </MudContainer>
-
                 <!-- Detail groups -->
                 <MudGrid Justify="Justify.SpaceBetween" Spacing="3">
 
@@ -151,34 +151,22 @@
                 </MudGrid>
             </MudContainer>
 
-            <!-- Total coders -->
-            <MudContainer Class="ma-3 w-full h-full">
-                <MudText Typo="Typo.h5"><b>43</b> Coders encontrados</MudText>
-            </MudContainer>
-
-         
-            <MudButton StartIcon="@Icons.Material.Outlined.Edit" 
-                        class="content_left-container_top__edit" 
-                        Variant="Variant.Filled" 
-                        OnClick="AddCodersToGroup">
-                Agregar Coders
-            </MudButton>
-      
+            <!-- Total coders en el grupo -->
+            <ListCodersGroupComponent GroupId="@groupId"/>
         }
     </Authorized>
 </AuthorizeView>
 
 @code {
-    [Parameter]
-    public string? groupId { get; set; }
+    [Parameter] public string? groupId { get; set; }
 
-    private Group _group; 
+    private Group _group;
     private string _searchString;
     private bool _loading = true;
     private string _errorMessage;
     private string _rowsPerPageString = "Filas por página:";
     private string _infoFormat = "{first_item}-{last_item} de {all_items}";
-    private bool isEditing  = false;
+    private bool isEditing = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -203,7 +191,7 @@
     {
         Console.WriteLine("Modo de edición habilitado");
     }
-    
+
     private async Task UpdateGroup()
     {
         // Mostrar alerta de confirmación
@@ -236,7 +224,7 @@
                 {
                     Title = "Los datos se han guardado exitosamente",
                     Icon = SweetAlertIcon.Success,
-                    ShowConfirmButton = false 
+                    ShowConfirmButton = false
                 });
 
 
@@ -252,11 +240,6 @@
 
             Console.WriteLine("Actualización cancelada");
         }
-    }
-
-    private async Task AddCodersToGroup()
-    {
-        NavigationManager.NavigateTo($"/home/{groupId}");
     }
 
     private async Task LoadGroupDetailsAsync()
@@ -306,13 +289,13 @@
                (group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
 
-    
+
     private Color GetChipColor(string? status)
     {
         return status switch
         {
-            "Active" => Color.Success,
-            "Inactive" => Color.Error,
+            "Activo" => Color.Success,
+            "Inactivo" => Color.Error,
             _ => Color.Default,
         };
     }
@@ -321,7 +304,7 @@
     {
         bool statusBool;
 
-        if (status == "Active")
+        if (status == "Activo")
         {
             statusBool = true;
         }
@@ -329,7 +312,7 @@
         {
             statusBool = false;
         }
-        
+
         GroupCoders groupCoders = new GroupCoders()
         {
             Name = name,
@@ -338,7 +321,7 @@
 
         return groupCoders;
     }
-    
+
     bool _isShow;
     InputType _passwordInput = InputType.Password;
     string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
@@ -358,7 +341,7 @@
             _passwordInput = InputType.Text;
         }
     }
-    
+
     private async Task OnTokenRegenerated(bool isRegenerated)
     {
         if (isRegenerated)
@@ -371,5 +354,5 @@
             Console.WriteLine("No se pudo regenerar el token.");
         }
     }
-
+}
 }

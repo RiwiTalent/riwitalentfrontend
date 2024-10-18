@@ -19,13 +19,13 @@ namespace riwitalentfrontend.Models
         public string Description { get; set; } = string.Empty;
 
         // Estado del grupo (activo, inactivo, etc.)
-        public string Status { get; set; } = "Active";
+        public string Status { get; set; } = "Activo";
 
         // Fecha de creación del grupo
         public DateTime Created_At { get; set; } 
         // Email del creador del grupo
         [Required]
-        public string? CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
 
         // Email de la empresa asociada al grupo
         [Required]

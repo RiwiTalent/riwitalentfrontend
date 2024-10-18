@@ -15,7 +15,7 @@ namespace riwitalentfrontend.Services.Implementations
             var result = await _swal.FireAsync(new SweetAlertOptions
             {
                 Icon = SweetAlertIcon.Warning,
-                Title = "¿Estás seguro/a de que deseas eliminar este registro?",
+                Title = "¿Estás seguro/a de que deseas desactivar este registro?",
                 Text = "Esta acción no se podra deshacer.",
                 ShowCancelButton = true,
                 ConfirmButtonColor = "#FE654F",
@@ -28,7 +28,7 @@ namespace riwitalentfrontend.Services.Implementations
             {
                 await _swal.FireAsync(new SweetAlertOptions
                 {
-                    Title = "Los datos se han eliminado exitosamente",
+                    Title = "Los datos se han desactivado exitosamente",
                     Icon = SweetAlertIcon.Success,
                     ShowConfirmButton = false 
                 });
@@ -176,7 +176,7 @@ namespace riwitalentfrontend.Services.Implementations
             var result = await _swal.FireAsync(new SweetAlertOptions
             {
                 Icon = SweetAlertIcon.Warning,
-                Title = "¿Estás seguro/a de que deseas eliminar este programador?",
+                Title = "¿Estás seguro/a de que deseas desactivar este coder?",
                 Text = "Esta acción no se podra deshacer.",
                 ShowCancelButton = true,
                 ConfirmButtonColor = "#FE654F",
