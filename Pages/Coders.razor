@@ -19,16 +19,23 @@
         <MudContainer Class="d-flex flex-column flex-grow-1 justify-center align-content-start">
             @if (_loading)
             {
-                <ProgressComponent/>
+                <ProgressComponent />
             }
             else
             {
                 <MudContainer Class="ma-3 w-full h-full">
                     <MudText Typo="Typo.h5"><b>@_coders.Count</b> Coders encontrados</MudText>
                 </MudContainer>
-                
+
                 <!-- Drawer para filtro -->
-                <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true" Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded ma-2">
+                <MudDrawer @bind-Open="_drawerOpen" 
+                           Anchor="Anchor.Right" 
+                           Overlay="true" 
+                           OverlayAutoClose="true" 
+                           Variant="DrawerVariant.Temporary" 
+                           ClipMode="DrawerClipMode.Never" 
+                           Elevation="1" 
+                           Class="rounded ma-2">
                     <CoderFilterComponent OnFiltered="UpdateCoders" />
                 </MudDrawer>
 
@@ -58,13 +65,21 @@
                                     </MudItem>
 
                                     <!-- Espaciador -->
-                                    <MudSpacer/>
+                                    <MudSpacer />
 
                                     <MudItem xs="12" md="6" Class="d-flex justify-end gap-2">
-                                        <MudButton Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" OnClick="DrawerToggle" StartIcon="@Icons.Material.Rounded.Tune">
+                                        <MudButton Color="Color.Primary" 
+                                                   Variant="Variant.Outlined" 
+                                                   Size="Size.Medium" 
+                                                   OnClick="DrawerToggle" 
+                                                   StartIcon="@Icons.Material.Rounded.Tune">
                                             Filtro por tecnologías
                                         </MudButton>
-                                        <MudButton @onclick="OpenDialogAsync" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.PersonAdd">
+                                        <MudButton @onclick="OpenDialogAsync" 
+                                                   Color="Color.Primary" 
+                                                   Variant="Variant.Filled" 
+                                                   Size="Size.Medium" 
+                                                   StartIcon="@Icons.Material.Rounded.PersonAdd">
                                             Nuevo
                                         </MudButton>
                                     </MudItem>
@@ -105,7 +120,7 @@
                                         </MudStack>
                                     </CellTemplate>
                                 </PropertyColumn>
-                                
+
                                 <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
                                     <CellTemplate Context="coder">
                                         <MudStack Row="true">
@@ -134,7 +149,7 @@
                                 <MudDataGridPager T="Coder"
                                                   PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
                                                   RowsPerPageString="@_rowsPerPageString"
-                                                  InfoFormat="@_infoFormat"/>
+                                                  InfoFormat="@_infoFormat" />
                             </PagerContent>
                         </MudDataGrid>
                     </MudContainer>
@@ -152,75 +167,77 @@
     // Variables privadas para el manejo de los coders
     private List<Coder> _coders;
     private string? _searchString;
-    private bool _loading = true; // Indicador de carga
-    private string _errorMessage; // Mensaje de error
+    private bool _loading = true;
+    private string _errorMessage;
     private string _rowsPerPageString = "Filas por página:";
     private string _infoFormat = "{first_item}-{last_item} de {all_items}";
-    private bool _drawerOpen = false; // Estado del drawer
+    private bool _drawerOpen = false;
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadCodersAsync(); // Cargar coders al inicializar
+        await LoadCodersAsync();
     }
-    
-    // Método para cargar los coders
+
+// Método para cargar los coders
     private async Task LoadCodersAsync()
     {
-        _loading = true; // Activar indicador de carga
-        _errorMessage = string.Empty; // Limpiar el mensaje de error previo
-    
+        _loading = true;
+        _errorMessage = string.Empty; // Limpiar el mensaje de error al comenzar
+
         try
         {
             // Intentar obtener los coders
-            _coders = await CoderService.GetCodersAsync();
-            _coders = _coders?.Where(c => c != null).ToList() ?? new List<Coder>(); // Asegurar que no haya coders nulos
+            var coders = await CoderService.GetCodersAsync();
+        
+            // Asegurar que no haya coders nulos y ordenar
+            _coders = (coders ?? new List<Coder>())
+                .Where(c => c != null)
+                .OrderByDescending(c => c.Status == "Activo")
+                .ThenByDescending(c => c.Date_Creation)
+                .ToList();
         }
         catch (HttpRequestException httpEx)
         {
             _errorMessage = "Hubo un problema con la conexión a internet. Intente nuevamente más tarde.";
-            LogError(httpEx); // Loguear error de conexión
-        }
-        catch (NullReferenceException nullEx)
-        {
-            _errorMessage = "Ocurrió un error inesperado. Intente más tarde.";
-            LogError(nullEx); // Loguear error de referencia nula
+            LogError(httpEx);
         }
         catch (Exception ex)
         {
             _errorMessage = "Hubo un error al cargar los coders. Intente nuevamente más tarde.";
-            LogError(ex); // Loguear cualquier otro error
+            LogError(ex);
         }
         finally
         {
-            _loading = false; // Desactivar indicador de carga
+            _loading = false;
         }
     }
+
 
     // Alternar estado del drawer
     private void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
-    
+
     // Método para loguear errores
     private void LogError(Exception ex)
     {
         Console.WriteLine($"Error: {ex.Message}");
     }
-    
+
     // Actualiza la lista de coders filtrados
     private void UpdateCoders(List<Coder> filteredCoders)
     {
         _coders = filteredCoders;
     }
-    
+
     // Método para abrir el diálogo
     private Task OpenDialogAsync()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
         return DialogService.ShowAsync<GroupDialogComponent>("Creación de grupo", options);
     }
-    
+
     // Filtro de búsqueda
     private Func<Coder, bool> QuickFilter => coder =>
     {
@@ -246,10 +263,10 @@
     {
         return status switch
         {
-            "Active" => Color.Success,
-            "Inactive" => Color.Default,
-            "Grouped" => Color.Success,
-            "Selected" => Color.Info,
+            "Activo" => Color.Success,
+            "Inactivo" => Color.Default,
+            "Agrupado" => Color.Success,
+            "Seleccionado" => Color.Info,
             _ => Color.Default,
         };
     }

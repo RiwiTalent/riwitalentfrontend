@@ -86,8 +86,7 @@ namespace riwitalentfrontend.Services.Implementations
             try
             {
                 var url = $"http://localhost:5113/groups/regenerate-token";
-                var newKeyDto = new NewKeyDto { Id = groupId }; // Asegúrate de que NewKeyDto tenga una propiedad GroupId
-                var response = await _httpClient.PatchAsync(url, JsonContent.Create(newKeyDto));
+                var response = await _httpClient.PatchAsync(url, JsonContent.Create(groupId));
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
