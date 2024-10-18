@@ -48,9 +48,29 @@ namespace riwitalentfrontend.Services.Implementations
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error al eliminar coder: {ex.Message}");
+                    Console.WriteLine($"Error al desactivar coder: {ex.Message}");
                     return false;     
             }
+        }
+
+        public async Task<Coder> GetCoderByIdAsync(string Id)
+        {
+                // Realiza la solicitud GET para obtener los detalles del coder
+                Console.WriteLine("entra a get coder BY id");
+            var response = await _httpClient.GetFromJsonAsync<Coder>($"http://localhost:5113/coder/{Id}");
+            
+            if (response != null)
+            {
+                // Mensaje de éxito si el coder fue encontrado
+                Console.WriteLine("Coder details successfully fetched");
+            }
+            else
+            {
+                // Mensaje de error si no se pudo obtener el coder
+                Console.WriteLine("Error al obtener coder por Id");
+            }
+
+            return response; // Retorna el coder o null si no se encontró
         }
     }
 }

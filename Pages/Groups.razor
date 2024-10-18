@@ -177,8 +177,8 @@
     {
         return status switch
         {
-            "Active" => Color.Success,
-            "Inactive" => Color.Error,
+            "Activo" => Color.Success,
+            "Inactivo" => Color.Error,
             _ => Color.Default,
         };
     }
@@ -188,7 +188,7 @@
         return new GroupCoders
         {
             Name = name,
-            IsActive = status == "Active"
+            IsActive = status == "Activo"
         };
     }
 
@@ -215,7 +215,7 @@
     var result = await Swal.FireAsync(new SweetAlertOptions
     {
         Icon = SweetAlertIcon.Warning,
-        Title = "¿Estás seguro/a de que deseas eliminar este grupo?",
+        Title = "¿Estás seguro/a de que deseas desactivar este grupo?",
         Text = "Esta acción no se podrá deshacer.",
         ShowCancelButton = true,
         ConfirmButtonColor = "#FE654F",
@@ -232,11 +232,11 @@
                 var success = await GroupService.DeleteGroupAsync(groupId); // Usamos el servicio
                 if (success)
                 {
-                    await LoadGroupsAsync(); // Recargar los grupos después de eliminar
+                    await LoadGroupsAsync(); // Recargar los grupos después de desactivar
                 }
                 else
                 {
-                    _errorMessage = "No se pudo eliminar el grupo.";
+                    _errorMessage = "No se pudo desactivar el grupo.";
                 }
             },
             errorMessage => _errorMessage = errorMessage);

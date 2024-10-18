@@ -294,8 +294,8 @@
     {
         return status switch
         {
-            "Active" => Color.Success,
-            "Inactive" => Color.Error,
+            "Activo" => Color.Success,
+            "Inactivo" => Color.Error,
             _ => Color.Default,
         };
     }
@@ -304,7 +304,7 @@
     {
         bool statusBool;
 
-        if (status == "Active")
+        if (status == "Activo")
         {
             statusBool = true;
         }

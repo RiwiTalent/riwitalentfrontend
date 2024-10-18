@@ -10,7 +10,7 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #F9FAFC; /* Duplicado eliminado */
+    background-color: #F9FAFC; /* Duplicado desactivado */
     overflow: hidden;
 }
 
