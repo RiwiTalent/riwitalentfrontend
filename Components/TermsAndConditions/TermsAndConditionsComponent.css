@@ -1,0 +1,7 @@
+.bm-container{
+    display:flex;
+}
+
+.mud-appbar .mud-toolbar-appbar {
+    z-index: 1;
+}

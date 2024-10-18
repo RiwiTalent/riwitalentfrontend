@@ -22,11 +22,15 @@
         <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" />
         
 
-        <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" /> 
+        <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler"  FilterInGroup = "@FilterInGroup" /> 
     </Authorized>
 </AuthorizeView>
 
 @code {
+
+    [Parameter]
+    public bool? FilterInGroup { get; set; } = false;
+
     [Parameter] public Group? Group { get; set; }
     [Parameter]
     public string? groupId { get; set; }
@@ -36,7 +40,7 @@
     private void AddCoderHandler(Coder coder)
     {
         Console.WriteLine($"Coder agregado: {coder.FirstName} {coder.FirstLastName}");
-        // Aquí puedes manejar cualquier lógica adicional cuando se agrega un coder
+
     }
 
      private async Task AddCodersToGroupAsync()

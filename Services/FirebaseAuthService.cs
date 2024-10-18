@@ -21,8 +21,7 @@ public class FirebaseAuthService{
         }
         catch (JSException jsEx)
         {
-            // Atrapar la excepción de Firebase y propagar el mensaje de error
-            // Puedes procesar el error aquí o pasarlo tal cual para mostrarlo en el componente
+
             return "Error";
         }
     }

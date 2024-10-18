@@ -20,7 +20,9 @@
 .banner_image{
     width: 100%;
     height: 100%;
-    border-radius: 8px;
+    border-radius: 10px;
+    image-rendering: auto;
+    object-fit: fill;
 }
 
 .container-banner__item{
