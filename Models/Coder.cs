@@ -22,13 +22,19 @@ namespace riwitalentfrontend.Models
         public string Status { get; set; } = "Active";
 
         // Fecha de creación del perfil
-        public DateTime Created_At { get; set; }
+        public DateTime DateCreation { get; set; }
 
 
         public List<string>? GroupId { get; set; } = new List<string>();
 
         // Tecnologías en las que el coder es competente
         public string Stack { get; set; } = string.Empty;
+        
+        // Puntaje de desempeño
+        public float AssessmentScore { get; set; }
+
+        // Estandar Riwi
+        public StandarRiwi? StandarRiwi { get; set; }
 
         // Habilidades del coder
         public List<Skill>? Skills { get; set; }
