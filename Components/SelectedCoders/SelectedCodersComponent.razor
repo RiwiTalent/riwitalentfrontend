@@ -8,37 +8,25 @@
 @namespace riwitalentfrontend.Components
 
 
-<MudPaper Height="200px" class="fixed" Style="overflow:hidden;">
-    <MudDrawerContainer>
-        <MudDrawer @bind-Open="@_open" Anchor="Anchor.End" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
-            <MudNavMenu>
-                <MudChipSet T="string" AllClosable OnClose="RemoveCoderFromGroup">
-                    @foreach (var selectedCoder in SelectedCoders)
-                    {
-                        <MudChip Text="@($"{selectedCoder.FirstName} {selectedCoder.FirstLastName}")">
-                            <AvatarContent>
-                                <MudAvatar>
-                                    <MudImage Src="@selectedCoder.Photo"></MudImage>
-                                </MudAvatar>
-                            </AvatarContent>
-                        </MudChip> 
-                    }
-                </MudChipSet>
 
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCoderHandler">
-                    Agregar coders
-                </MudButton>
-                
+<MudChipSet T="string" AllClosable OnClose="RemoveCoderFromGroup">
 
+        @foreach (var selectedCoder in SelectedCoders)
+        {
+            <MudChip Text="@($"{selectedCoder.FirstName} {selectedCoder.FirstLastName}")">
+                <AvatarContent>
+                    <MudAvatar>
+                        <MudImage Src="@selectedCoder.Photo"></MudImage>
+                    </MudAvatar>
+                </AvatarContent>
+            </MudChip> 
+        }
+</MudChipSet>
 
-                
-            </MudNavMenu>
-        </MudDrawer>
-        <div class="d-flex justify-center align-center mud-height-full">
-            <MudButton OnClick="@ToggleDrawer" Color="Color.Primary">L</MudButton>
-        </div>
-    </MudDrawerContainer>
-</MudPaper>
+<MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;">
+    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Agregar Coders</MudButton>
+</MudStack>
+
 
 @code {
     [Parameter]

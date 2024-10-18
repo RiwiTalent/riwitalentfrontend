@@ -13,20 +13,25 @@
     <link rel="stylesheet" href="css/Components/PaginationComponent.css">   
 </head>
 
+<MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true" Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded-t ma-2 py-5 px-2">
+    <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" />
+</MudDrawer>
+
+<MudStack Class="d-flex justify-end">
+    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Code" Size="Size.Medium" OnClick="DrawerToggle" Class="fixed" Style="bottom: 20px; right: 20px;"/>
+</MudStack>
+
 <AuthorizeView>
     <Authorized>
         <MudText Color="Color.Primary" class="title">
         </MudText>
-        
         <BannerCodersComponent />
-        <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" />
-        
-
         <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler"  FilterInGroup = "@FilterInGroup" /> 
     </Authorized>
 </AuthorizeView>
 
 @code {
+    private bool _drawerOpen = false;
 
     [Parameter]
     public bool? FilterInGroup { get; set; } = false;
@@ -80,5 +85,8 @@
         }
     }
 
-
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
 }

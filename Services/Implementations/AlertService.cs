@@ -1,5 +1,4 @@
 using CurrieTechnologies.Razor.SweetAlert2;
-
 using riwitalentfrontend.Services.Interfaces;
 
 namespace riwitalentfrontend.Services.Implementations

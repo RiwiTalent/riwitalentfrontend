@@ -11,6 +11,7 @@
 <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" groupId="@groupId" FilterInGroup = "@FilterInGroup"/>
 
 
+
 @code {
     [Parameter]
     public string? groupId { get; set; }
@@ -62,5 +63,7 @@
             Console.WriteLine($"Ocurrió un error: {ex.Message}");
         }
     }
+
+    
 
 }

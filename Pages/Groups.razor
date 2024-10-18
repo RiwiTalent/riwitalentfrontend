@@ -3,6 +3,7 @@
 @layout MainLayout
 @inject SweetAlertService Swal;
 @inject IDialogService DialogService
+@inject IAlertService alertService;
 @inject IGroupService GroupServices
 @inject ISnackbar Snackbar
 
@@ -222,6 +223,7 @@
   private async Task DeleteGroupAsync(string groupId)
 {
     // Mostrar alerta de confirmación
+    //var result = await alertService.ConfirmDeleteGroup();
     var result = await Swal.FireAsync(new SweetAlertOptions
     {
         Icon = SweetAlertIcon.Warning,
