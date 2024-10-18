@@ -12,8 +12,7 @@
 }
 
 <MudContainer Class="d-flex flex-column flex-grow-1 justify-center align-content-start">
-
-
+    
     @if (_loading)
     {
     <ProgressComponent/>
@@ -61,9 +60,9 @@
                                     </MudContainer>
                                 </CellTemplate>
                             </PropertyColumn>
-                            <PropertyColumn Property="x => x.Created_At" Title="Fecha de creación">
+                            <PropertyColumn Property="x => x.DateCreation" Title="Fecha de creación">
                                 <CellTemplate Context="coder">
-                                    <MudText><b>@coder.Item.Created_At.ToString("dd/MM/yyyy")</b></MudText>
+                                    <MudText><b>@coder.Item.DateCreation.ToString("dd/MM/yyyy")</b></MudText>
                                 </CellTemplate>
                             </PropertyColumn>
                             <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
@@ -78,9 +77,7 @@
                             <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
                                 <CellTemplate Context="coder">
                                     <MudStack Row>
-                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.ModeEditOutline" Color="Color.Primary" Size="Size.Small" Class="border-solid border-2 mud-border-primary pa-2"></MudIconButton>
-                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Outlined.RemoveRedEye" Color="Color.Warning" Size="Size.Small" Class="border-solid border-2 mud-border-warning pa-2"></MudIconButton>
-                                        <MudIconButton Href="/Home" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.DeleteOutline" Color="Color.Error" Size="Size.Small" Class="border-solid border-2 mud-border-error pa-2"></MudIconButton>
+                                        <MudIconButton Href="/coders" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.DeleteOutline" Color="Color.Error" Size="Size.Small" Class="border-solid border-2 mud-border-error pa-2"></MudIconButton>
                                     </MudStack>
                                 </CellTemplate>
                             </PropertyColumn>
@@ -104,7 +101,7 @@
 
 
 @code {
-    [Parameter] public string? groupId { get; set; }
+    [Parameter] public string? GroupId { get; set; }
     private List<Coder> _coders;
     private string? _searchString;
     private bool _loading = true;
@@ -162,7 +159,7 @@
     private Task OpenDialogAsync()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
-        return DialogService.ShowAsync<DialogComponent>("Creación de grupo", options);
+        return DialogService.ShowAsync<GroupDialogComponent>("Creación de grupo", options);
     }
 
     private Func<Coder, bool> QuickFilter => coder =>
@@ -178,7 +175,7 @@
         return (coder.FirstName != null && coder.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
                (coder.SecondName != null && coder.SecondName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
                (coder.Status != null && coder.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.Created_At != null && coder.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+               (coder.DateCreation != null && coder.DateCreation.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
 
     private Color GetChipColor(string? status)
@@ -186,7 +183,7 @@
         return status switch
         {
             "Active" => Color.Success,
-            "Inactive" => Color.Default,
+            "Inactive" => Color.Dark,
             "Grouped" => Color.Success,
             "Selected" => Color.Info,
             _ => Color.Default,
@@ -201,6 +198,6 @@
     
     private async Task AddCodersToGroup()
     {
-        NavigationManager.NavigateTo($"/home/{groupId}");
+        NavigationManager.NavigateTo($"/home/{GroupId}");
     }
 }

@@ -48,8 +48,7 @@ Snackbar.Add(_errorMessage, Severity.Error);
                                               Variant="Variant.Outlined"
                                               Adornment="Adornment.End"
                                               AdornmentIcon="@Icons.Material.Rounded.Search"
-                                              AdornmentColor="Color.Primary"
-                                />
+                                              AdornmentColor="Color.Primary"/>
 
                                 <MudSpacer/>
                                 <MudButton OnClick="OpenDialogAsync"
@@ -75,6 +74,13 @@ Snackbar.Add(_errorMessage, Severity.Error);
                                 </MudContainer>
                             </CellTemplate>
                         </PropertyColumn>
+                        <PropertyColumn Property="x => x.Status" Title="Creado por" Sortable="true">
+                            <CellTemplate Context="group">
+                                <MudStack Row>
+                                    <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.CreatedBy</MudText>
+                                </MudStack>
+                            </CellTemplate>
+                        </PropertyColumn>
                         <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
                             <CellTemplate Context="group">
                                 <MudStack Row>
@@ -87,7 +93,7 @@ Snackbar.Add(_errorMessage, Severity.Error);
                         </PropertyColumn>
                         <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
                             <CellTemplate Context="group">
-                                <MudStack Row>
+                                <MudStack Row="true">
                                     <MudIconButton Href="@($"/GroupDetails/{group.Item.Id}")"
                                                    Variant="Variant.Outlined"
                                                    Icon="@Icons.Material.Outlined.RemoveRedEye"
@@ -192,7 +198,7 @@ Snackbar.Add(_errorMessage, Severity.Error);
             ["OnGroupCreated"] = EventCallback.Factory.Create<GroupAddDto>(this, async (GroupAddDto groups) => { await LoadGroupsAsync(); })
         };
 
-        var dialog = await DialogService.ShowAsync<DialogComponent>("Crear Grupo", parameters, options);
+        var dialog = await DialogService.ShowAsync<GroupDialogComponent>("Crear Grupo", parameters, options);
 
         if (!dialog.Result.IsCanceled)
         {

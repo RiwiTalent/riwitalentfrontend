@@ -26,7 +26,7 @@ namespace riwitalentfrontend.Models
         
         // Email del creador del grupo
         [Required]
-        public string? CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
 
         // Email de la empresa asociada al grupo
         [Required]
