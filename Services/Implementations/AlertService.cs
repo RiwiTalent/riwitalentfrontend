@@ -208,9 +208,9 @@ namespace riwitalentfrontend.Services.Implementations
             await _swal.FireAsync(new SweetAlertOptions
             {
                 Title = "Agregar Coders",
-                Text = "¿Seguro que quiere agreagar a estos coders al grupo?",
-                Icon = SweetAlertIcon.Warning,
-                ShowConfirmButton = false ,
+                Text = "Se han agregado al grupo correctamente",
+                Icon = SweetAlertIcon.Success,
+                ShowConfirmButton = false,
                 Timer = 1500
             });
         }

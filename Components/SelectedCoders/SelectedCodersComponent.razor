@@ -25,7 +25,7 @@
                     }
                 </MudChipSet>
 
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCodersToGroupAsync">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCoderHandler">
                     Agregar coders
                 </MudButton>
                 
@@ -59,6 +59,17 @@
         _open = !_open;
     } 
 
+
+    public async Task AddCoderHandler()
+    {
+        if(AddCodersToGroupAsync.HasDelegate)
+        {
+            await AddCodersToGroupAsync.InvokeAsync();
+        }
+
+        await alertService.AddCodersToGroup();
+
+    }
     public async Task AddCoderToGroup(Coder coder)
     { 
         if (!SelectedCoders.Contains(coder))
@@ -67,7 +78,7 @@
             await OnCoderAdded.InvokeAsync(coder);
         }
 
-        await alertService.AddCodersToGroup();
+       
     }    
 
     public void RemoveCoderFromGroup(MudChip<string> chip)
