@@ -236,59 +236,88 @@
     }
 
     private async Task DeleteCoderAsync(string Id)
-{
-    // Mostrar alerta de confirmación
-    var result = await Swal.FireAsync(new SweetAlertOptions
     {
-        Icon = SweetAlertIcon.Warning,
-        Title = "¿Estás seguro/a de que deseas eliminar este coder?",
-        Text = "Esta acción no se podrá deshacer.",
-        ShowCancelButton = true,
-        ConfirmButtonColor = "#FE654F",
-        ConfirmButtonText = "Eliminar",
-        CancelButtonColor = "#fff",
-        CancelButtonText = "<button style='color:#FE654F; background-color:#fff'>Cancelar</button>"
-    });
+        // Llamar al servicio para obtener el coder y verificar su estado
+        var coder = await CoderService.GetCoderByIdAsync(Id); // Obtiene el objeto Coder
 
-    // Si el usuario confirma, proceder con la eliminación
-    if (result.IsConfirmed)
-    {
-        await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
+        // Verificar si se pudo obtener el coder
+        if (coder == null)
         {
-            var success = await CoderService.DeleteCodersAsync(Id);
-            if (success)
+            // Mostrar mensaje de que no se encontró el coder
+            await Swal.FireAsync(new SweetAlertOptions
             {
-                await LoadCodersAsync(); // Recargar los coders después de eliminar
-                await Swal.FireAsync(new SweetAlertOptions
-                {
-                    Title = "El codificador ha sido eliminado exitosamente",
-                    Icon = SweetAlertIcon.Success,
-                    ShowConfirmButton = false,
-                    Timer = 1500
-                });
-            }
-            else
+                Title = "No se pudo encontrar el coder",
+                Text = "El coder no existe o ocurrió un error.",
+                Icon = SweetAlertIcon.Error,
+                ConfirmButtonText = "Aceptar"
+            });
+            return; // Salir de la función si no se encuentra el coder
+        }
+
+        // Verificar si el estado del coder es "Inactivo" o "Grouped"
+        if (coder.Status == "Inactive" || coder.Status == "Grouped")
+        {
+            // Mostrar mensaje de que no se puede eliminar el coder debido a su estado
+            await Swal.FireAsync(new SweetAlertOptions
             {
-                _errorMessage = "No se pudo eliminar el coder.";
-                await Swal.FireAsync(new SweetAlertOptions
+                Title = "No se puede eliminar el coder",
+                Text = $"El coder tiene el estado '{coder.Status}' y no se puede eliminar.",
+                Icon = SweetAlertIcon.Warning,
+                ConfirmButtonText = "Aceptar"
+            });
+            return; // Salir de la función si el coder no puede ser eliminado
+        }
+
+        // Mostrar alerta de confirmación
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Icon = SweetAlertIcon.Warning,
+            Title = "¿Estás seguro/a de que deseas eliminar este coder?",
+            Text = "Esta acción no se podrá deshacer.",
+            ShowCancelButton = true,
+            ConfirmButtonColor = "#FE654F",
+            ConfirmButtonText = "Eliminar",
+            CancelButtonColor = "#fff",
+            CancelButtonText = "<button style='color:#FE654F; background-color:#fff'>Cancelar</button>"
+        });
+
+        // Si el usuario confirma, proceder con la eliminación
+        if (result.IsConfirmed)
+        {
+            await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
+            {
+                var success = await CoderService.DeleteCodersAsync(Id); // Eliminar el coder
+                if (success == true)
                 {
-                    Title = "Error",
-                    Text = _errorMessage,
-                    Icon = SweetAlertIcon.Error,
-                    ConfirmButtonText = "Aceptar"
-                });
-            }
-        },
-        errorMessage => _errorMessage = errorMessage);
+                    await LoadCodersAsync(); // Recargar los coders después de eliminar
+                    await Swal.FireAsync(new SweetAlertOptions
+                    {
+                        Title = "El codificador ha sido eliminado exitosamente",
+                        Icon = SweetAlertIcon.Success,
+                        ShowConfirmButton = false,
+                        Timer = 1500
+                    });
+                }
+                else
+                {
+                    _errorMessage = "No se pudo eliminar el coder.";
+                    await Swal.FireAsync(new SweetAlertOptions
+                    {
+                        Title = "Error",
+                        Text = _errorMessage,
+                        Icon = SweetAlertIcon.Error,
+                        ConfirmButtonText = "Aceptar"
+                    });
+                }
+            },
+            errorMessage => _errorMessage = errorMessage);
+        }
+        else
+        {
+            // El usuario canceló la eliminación
+            Console.WriteLine("Eliminación cancelada");
+        }
     }
-    else
-    {
-        // El usuario canceló la eliminación
-        Console.WriteLine("Eliminación cancelada");
-    }
-}
-
-
 
 
 

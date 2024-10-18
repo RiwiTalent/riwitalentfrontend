@@ -25,7 +25,7 @@ namespace riwitalentfrontend.Services.Implementations
         // Obtener un grupo por Id desde la API
         public async Task<Group?> GetGroupByIdAsync(string groupId) // Group? permite que sea null
         {
-             var response = await _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/groups/{groupId}/details");
+            var response = await _httpClient.GetFromJsonAsync<Group>($"http://localhost:5113/groups/{groupId}/details");
             if (response != null)
             {
                 Console.WriteLine("Details successfully fetched");
