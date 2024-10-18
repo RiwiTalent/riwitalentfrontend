@@ -33,7 +33,7 @@
 @code {
     private bool _drawerOpen = true;
     private bool _isDarkMode = false;
-    private MudTheme? _theme = null;
+    private MudTheme _theme;
     
     protected override void OnInitialized()
     {
@@ -44,6 +44,9 @@
             PaletteLight = CustomMudTheme.PaletteLight,
             PaletteDark = CustomMudTheme.PaletteDark,
             LayoutProperties = new LayoutProperties()
+            {
+                DefaultBorderRadius = "30px"
+            }
         };
     }
 

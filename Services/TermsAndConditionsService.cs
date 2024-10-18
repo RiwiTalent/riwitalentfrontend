@@ -29,19 +29,6 @@ namespace riwitalentfrontend.Services
                 return false; // Retorna false si falló
             }
         }
-        // public async Task<bool> UpdateTermsAsync(string GroupId, TermAndCondition updatedTermsDto)
-        // {
-        //     var response = await _client.PutAsync($"http://localhost:5113/terms?Id={updatedTermsDto.Id}&IsActive={updatedTermsDto.IsActive}&Accepted={updatedTermsDto.Accepted}&GroupId={GroupId}&AcceptedEmail={updatedTermsDto.AcceptedEmail}&CreatorEmail={updatedTermsDto}", updatedTermsDto);
 
-        //     if (response.IsSuccessStatusCode)
-        //     {
-        //         return true; // Retorna true si la creación fue exitosa
-        //     }
-        //     else
-        //     {
-        //         Console.WriteLine($"Error creating terms: {response.StatusCode}");
-        //         return false; // Retorna false si falló
-        //     }
-        // }
     }
 }

@@ -1,0 +1,122 @@
+@using Blazored.SessionStorage
+@namespace riwitalentfrontend.Components
+@inject ISessionStorageService _sessionStorage
+
+@inject GroupService GroupService
+@inject ISnackbar Snackbar
+
+    <MudForm @ref="_form">
+        <MudDialog>
+            <DialogContent>
+                <!-- Nombre del Grupo -->
+                <MudStack Spacing="1" Class="mb-2">
+                    <MudTextField T="string"
+                                  Label="Nombre del grupo"
+                                  Required="true"
+                                  RequiredError="El nombre del grupo es obligatorio"
+                                  HelperText="Ingresa un nombre para identificar el grupo"
+                                  HelperTextOnFocus="true"
+                                  @bind-Value="GroupName"
+                                  Placeholder="Ej: Equipo de Desarrollo"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Margin="Margin.Dense"
+                                  AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
+                                  Adornment="Adornment.Start"
+                                  AdornmentColor="Color.Primary"/>
+                </MudStack>
+
+                <!-- Correo Asociado -->
+                <MudStack Spacing="1" Class="mb-2">
+                    <MudTextField T="string"
+                                  Label="Correo asociado"
+                                  Required="true"
+                                  RequiredError="El correo electrónico es obligatorio"
+                                  @bind-Value="AssociateEmail"
+                                  InputType="InputType.Email"
+                                  HelperText="Este correo tendrá acceso al grupo"
+                                  HelperTextOnFocus="true"
+                                  Placeholder="ejemplo@dominio.com"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Margin="Margin.Dense"/>
+                </MudStack>
+
+                <!-- Descripción del Grupo -->
+                <MudStack Spacing="1" Class="mb-2">
+                    <MudTextField T="string"
+                                  Label="Descripción"
+                                  @bind-Value="GroupDescription"
+                                  HelperText="Escribe una breve descripción del grupo"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Lines="3"
+                                  Margin="Margin.Dense"/>
+                </MudStack>
+            </DialogContent>
+            <DialogActions>
+                <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@Cancel">Cancelar</MudButton>
+                <MudButton Variant="Variant.Filled" OnClick="@Submit" Color="Color.Success">Crear</MudButton>
+            </DialogActions>
+        </MudDialog>
+    </MudForm>
+
+
+@code {
+    [CascadingParameter] private MudDialogInstance? MudDialog { get; set; }
+    private MudForm? _form;
+
+    // Propiedades para los datos del grupo
+    private string GroupName { get; set; } = String.Empty;
+    private string GroupDescription { get; set; } = String.Empty;
+    private string AssociateEmail { get; set; } = String.Empty;
+    private string CreatedBy { get; set; } = String.Empty;
+
+    [Parameter] // Parámetro para la página que invoque el modal
+    public EventCallback<GroupAddDto> OnGroupCreated { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtener el valor del session storage
+        var createdBy = await _sessionStorage.GetItemAsync<string>("userEmail");
+        CreatedBy = createdBy ?? "Desconocido";
+    }
+    
+    // Método para manejar la creación del grupo
+    private async Task Submit()
+    {
+        // Valida el formulario antes de proceder
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            var groupAddDto = new GroupAddDto
+            {
+                Name = GroupName,
+                AssociateEmail = AssociateEmail,
+                Description = GroupDescription,
+                CreatedBy = CreatedBy
+            };
+            Console.WriteLine($"Creado por: {groupAddDto.CreatedBy}");
+            
+            var success = await GroupService.AddGroupAsync(groupAddDto);
+
+            if (success)
+            {
+                Snackbar.Add("Grupo creado exitosamente", Severity.Success);
+                
+                await OnGroupCreated.InvokeAsync(groupAddDto);
+                MudDialog?.Close();
+            }
+            else
+            {
+                Snackbar.Add("Error al crear el grupo. Inténtalo de nuevo", Severity.Error);
+            }
+        }
+    }
+    
+    private void Cancel()
+    {
+        MudDialog?.Cancel();
+    }
+    
+}

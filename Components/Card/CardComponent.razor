@@ -5,67 +5,61 @@
 @inject IModalService model;
 @namespace riwitalentfrontend.Components
 
-<!-- <head>
-    <link rel="stylesheet" href="css/Components/CardComponent.css">
-</head> -->
+
 
 <MudContainer Class="d-flex" Style="margin: 15px auto auto auto ; padding: 0; width: 85%;">
     <MudText Class="text-resultado" Typo="Typo.h6">@totalCoders Coders</MudText>
 </MudContainer>
 
 
-<MudPaper Class="container-filter" Elevation="1">
-    <MudPaper Elevation="0" Style="display: flex; justify-content: start; align-items: center; gap: 10px;">
-        <MudTextField StartIcon="@Icons.Material.Filled.Delete"
-                      @bind-Value="searchText"
-                      Placeholder="Buscar aquí..."
-                      Class="search"
-                      Immediate="true"
-                      TextChanged="FilterCoders"/>
-    </MudPaper>
 
+<ToolBarContent Class="d-flex container-filter align-center mt-13 gap-1" Elevation="1" >
+    <MudGrid>
+        <MudItem xs="12" Class="d-flex flex-grow-1 gap-3 justify-space-between">
 
+            <MudTextField Placeholder="Buscar aquí..." @bind-Value="searchText" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Search" AdornmentColor="Color.Primary">
+            </MudTextField>
 
-    <MudPaper Elevation="0" Class="d-flex justify-space-around align-center container-select" Style="padding: 0; gap: 5px">
+            <MudSelect T="string" Label="Tecnología" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" MultiSelection="true" @bind-Value="skills"  @onchange="CleanFilterSkill" @bind-SelectedValues="tecnologies">
+                @foreach (var technology in technologies)
+                {
+                    <MudSelectItem T="string" Value="@technology.Name">@technology.Name</MudSelectItem>
+                }
+            </MudSelect>
 
-        <InputSelect @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
-            <option value="">Estado</option>
-            <option value="JavaScript">JavaScript</option>
-            <option value="CSharp">CSharp</option>
-        </InputSelect>
+            <!-- <MudSelect T="string" Label="Estado" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
+                <MudSelectItem Value="\"JavaScript\"">JavaScript</MudSelectItem>
+                <MudSelectItem Value="\"CSharp\"">CSharp</MudSelectItem>
+            </MudSelect> -->
 
-        <InputSelect @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
-            <option value="">Tecnología</option>
-            <option value="JavaScript">JavaScript</option>
-            <option value="CSharp">CSharp</option>
-            <option value="Python">Python</option>
-            <option value="Java">Java</option>
-            <option value="Ruby">Ruby</option>
-            <option value="PHP">PHP</option>
-            <option value="React">React</option>
-            <option value="clear">Limpiar Filtro</option>
-        </InputSelect>
+            <!-- <MudSelect T="string" Label="Tecnología" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
+                <MudSelectItem Value="\"JavaScript\"">JavaScript</MudSelectItem>
+                <MudSelectItem Value="\"CSharp\"">CSharp</MudSelectItem>
+                <MudSelectItem Value="\"Python\"">Python</MudSelectItem>
+                <MudSelectItem Value="\"Java\"">Java</MudSelectItem>
+                <MudSelectItem Value="\"Ruby\"">Ruby</MudSelectItem>
+                <MudSelectItem Value="\"PHP\"">PHP</MudSelectItem>
+                <MudSelectItem Value="\"React\"">React</MudSelectItem>
+                <MudSelectItem Value="\"clear\"">Limpiar Filtro</MudSelectItem>
+            </MudSelect> -->
 
-        <InputSelect @bind-Value="Language_Level" Class="search-container" @onchange="CleanFilterEnglishLevel">
-            <option value="">Nivel inglés</option>
-            <option value="A1">A1</option>
-            <option value="A2">A2</option>
-            <option value="B1">B1</option>
-            <option value="B2">B2</option>
-            <option value="C1">C1</option>
-            <option value="C2">C2</option>
-            <option value="clear">Limpiar Filtro</option>
-        </InputSelect>
-    </MudPaper>
-    <MudPaper Elevation="0" Class="d-flex align-center justify-space-between" Style="padding: 10px;">
-        <div>
-            <MudButton OnClick="CleanFilters" Class="mr-2"> Limpiar </MudButton>
-            <MudButton Color="Color.Primary" OnClick="FilterCoders"> Filtrar </MudButton>
-        </div>
-    </MudPaper>
-</MudPaper>
+            <!-- <MudSelect T="string" Label="Nivel inglés" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" @bind-Value="Language_Level" Class="search-container" @onchange="CleanFilterEnglishLevel">
+                <MudSelectItem Value="\"A1\"">A1</MudSelectItem>
+                <MudSelectItem Value="\"A2\"">A2</MudSelectItem>
+                <MudSelectItem Value="\"B1\"">B1</MudSelectItem>
+                <MudSelectItem Value="\"B2\"">B2</MudSelectItem>
+                <MudSelectItem Value="\"C1\"">C1</MudSelectItem>
+                <MudSelectItem Value="\"C2\"">C2</MudSelectItem>
+                <MudSelectItem Value="\"clear\"">Limpiar Filtro</MudSelectItem>
+            </MudSelect> -->
 
+           
+            <MudButton OnClick="CleanFilters" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" StartIcon="@Icons.Material.Outlined.FilterAltOff">Limpiar Filtros</MudButton>
 
+            <MudButton OnClick="FilterCoders" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.Tune">Filtrar</MudButton>
+        </MudItem>
+    </MudGrid>
+</ToolBarContent>
 
 
 @if(coders != null)
@@ -73,29 +67,33 @@
     <div class="cards">
         @foreach (var coder in paginatedCoders)
         {
-            <MudCard>
+            <MudCard style="height:300px" class="relative rounded-lg overflow-hidden mud-card">
                 @if (coder.Photo != null)
                 {
                     <MudImage Fluid="true"
                     ObjetctFit="Cover" Src="@ImageNullOrEmpty(coder.Photo)" Alt="Mony the dog" Width="250" Height="300"/>
-
-                    @* <MudImage class=""
-                            Src="@ImageNullOrEmpty(coder.Photo)" 
-                            Alt="profile" 
-                    </MudImage> *@
                 }
                 else
                 {
                     <p>Cargando...</p>
                 }
-                <MudCardContent>
+                <MudCardContent class="d-flex justify-space-between relative  mud-card-content">
                         <div class="cards__container">
+                          
+
                             <div class="cards__profile">
                                 <div class="cards__coder">
                                     <h6 class="">@coder.FirstName @coder.FirstLastName</h6>
                                     <p>@coder.Stack</p>
                                 </div>
-                                    <a><img src="images/group-add.svg" alt="icon"></a>
+                                    <MudContainer Class="d-flex justify-end flex-grow-1">
+
+                                <MudChipSet T="string" @bind-SelectedChips="SelectedCoders" SelectionMode="SelectionMode.MultiSelection" CheckMark>
+                                    <MudChip Style="color:white;" Class="border-solid border-2 mud-b mud-border-white" Icon="@Icons.Material.Rounded.PersonAddAlt1" Variant="Variant.Text" @onclick="() => AddCoderToGroup(coder)">
+                                    </MudChip>
+                                </MudChipSet>
+
+                                    </MudContainer>
                             </div>
                             @*badges*@
                             @if(coder.Skills != null)
@@ -107,10 +105,10 @@
                                         var badgeColor = GetColor(skill);
                                         var badgeIcon = GetIcon(skill);
 
-                                        <MudChip T="string" Style=@($"background-color: {badgeColor}; color: white; margin-right: 5px")>
-                                            <MudIcon Icon="@badgeIcon"/>@skill
+                                        <MudChip T="string" Style=@($"background-color: {badgeColor}; color: white")>
+                                            <i class="@badgeIcon"></i>@skill
                                         </MudChip>
-                                        @* <div class="cards__badge">@coder.Skills[i].Language_Programming</div> *@
+
                                     }
                                 </div>
                             }
@@ -130,7 +128,7 @@
 
     <div class="container-pagination">
         <div class="container-box">
-            <MudPagination Variant="Variant.Filled" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize" TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
+            <MudPagination class="mud-pagination mud-pagination-item mud-button" Variant="Variant.Filled" ShowPreviousButton="false" ShowNextButton="false" Count="@pag" PageSize="@pageSize" TotalItems="@totalCoders" SelectedChanged="@OnPageChanged" Rectangular="true" />
         </div>
     </div>
 }
@@ -197,10 +195,22 @@ else
 }
 
 @code
-{    
-    public bool CheckBox1 { get; set; } = false;
-    public bool CheckBox2 { get; set; } = false;
-    public bool CheckBox3 { get; set; } = false;
+{   
+    //SelectedCoders Component
+    [Parameter]
+    public List<Coder> SelectedCoders { get; set; } = new List<Coder>(); // Parámetro para recibir los coders seleccionados
+
+    [Parameter]
+    public EventCallback<Coder> OnCoderAdded { get; set; } // Callback para notificar cuando se añade un coder
+
+    // Filter bar
+
+    private bool _sortNameByLength;
+    private bool _loading = true;
+    // Technolies list select
+     private string value { get; set; } = "Nothing selected";
+    private IEnumerable<string> tecnologies { get; set; } = new HashSet<string>();
+    private List<Technology> technologies = new List<Technology>();
 
     public string ButtonDetails = "Detalle";
     private List<Coder>? coders;
@@ -215,11 +225,13 @@ else
     //filtrado
     private List<Coder>? filterCoder;
 
+
     // Filtros
+    private bool FilterApplied = false;
     private string? searchText;
     private string? skills;
+    private string? status;
     private string? Language_Level;
-    private bool FilterApplied = false;
 
     //Badges
     private List<Badge> badges = new List<Badge>();
@@ -227,7 +239,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        //Llamado a la api
+        //Llamado a las apis
         try
         {
             coders = await coderService.GetCodersAsync();
@@ -248,10 +260,29 @@ else
                     });
                 }
             }
+            
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error al obtener coders: {ex.Message}");
+        }
+
+        try
+        {
+            technologies = await TechnologiesService.GetTechnologiesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener las Tecnologìas: {ex.Message}");
+        }
+    }
+
+    private void AddCoderToGroup(Coder coder)
+    {
+        if (!SelectedCoders.Contains(coder))
+        {
+            SelectedCoders.Add(coder); // Agregar coder a la lista seleccionada
+            OnCoderAdded.InvokeAsync(coder); // Invocar el evento
         }
     }
 
@@ -259,64 +290,76 @@ else
     {
         return skill switch
         {
-            //Technologies
-            "CSharp" => Colors.Purple.Default,
-            ".Net" => Colors.Purple.Darken3,
-            "Html" => Colors.Red.Default,
-            "Css" => Colors.Blue.Lighten2,
-            "Bootstrap" => Colors.Indigo.Darken2,
-            "JavaScript" => Colors.Yellow.Accent2,
-            "TypeScript" => Colors.Blue.Default,
-            "Node.js" => Colors.Green.Darken2,
-            "React" => Colors.Blue.Lighten2,
-            "Python" => Colors.Blue.Accent3,
-            "PHP" => Colors.Purple.Default,
-            "Java" => Colors.Brown.Default,
-            "Vue.js" => Colors.Green.Lighten1,
-            "Azure" => Colors.Blue.Default,
-            "Ruby" => Colors.Red.Darken1,
+            // Technologies
+            "CSharp" => "#239120",        
+            ".Net" => "#512BD4",          
+            "HTML" => "#FF0000",          
+            "CSS" => "#0000FF",           
+            "Bootstrap" => "#7952B3",    
+            "JavaScript" => "#F7DF1E",    
+            "TypeScript" => "#3178C6",    
+            "Node.js" => "#339933",       
+            "React" => "#61DAFB",         
+            "Python" => "#3776AB",        
+            "PHP" => "#777BB4",           
+            "Java" => "#007396",          
+            "Vue.js" => "#41B883",        
+            "Azure" => "#0078D4",         
+            "Ruby" => "#CC342D",          
+            "Docker" => "#2496ED",
+            "SpringBoot" => "#6DB33F",
+            "Kubernetes" => "#326CE5",
+            "Angular" => "#DD0031",
+            "NextJS" => "#000000",
+            "Flutter" => "#02569B",
+            "Dart" => "#00BFFF",
+            "Kotlin" => "#F44336",
+            "Figma" => "#F24E1E",
+            "VueJS" => "#42b883",
+            "TailwindCSS" => "#38b2ac",
+            "Astro" => "#FF5C7C",
+            "AWS" => "#FF9900",
             
-
-            //Databases
-            "MySQL" => Colors.Cyan.Darken3,
-            "SQL" => Colors.Cyan.Darken3,
-            "PostgresSQL" => Colors.Blue.Darken2,
-            "MongoDb" => Colors.Green.Accent4,
-            _ => Colors.Gray.Default,
+            // Databases
+            "MySQL" => "#4479A1",         
+            "SQL" => "#CC2927",           
+            "PostgresSQL" => "#336791",   
+            "MongoDb" => "#47A248",       
+            _ => "#9E9E9E", 
         };
     }
     private string GetIcon(string skill)
     {
         return skill switch
         {
-            "Terraform" => "devicon-terraform-plain",
-            "Docker" => "devicon-docker-plain",
-            "Astro" => "devicon-astro-plain",
-            "CSharp" => "devicon-csharp-plain",
-            "React" => "devicon-react-original",
-            "Flutter" => "devicon-flutter-plain",
-            "Dart" => "devicon-dart-plain",
-            "Kotlin" => "devicon-kotlin-plain",
-            "Figma" => "devicon-figma-plain",
-            "TypeScript" => "devicon-typescript-plain",
-            "Ruby" => "devicon-ruby-plain",
-            "Java" => "devicon-java-plain",
-            "SpringBoot" => "devicon-spring-original",
-            "Kubernetes" => "devicon-kubernetes-plain",
-            ".Net" => "devicon-dotnetcore-plain",
-            "JavaScript" => "devicon-javascript-plain",
-            "PHP" => "devicon-php-plain",
-            "CSS" => "devicon-css-plain",
-            "Angular" => "devicon-angular-plain",
-            "TailwindCSS" => "devicon-tailwindcss-original",
-            "HTML" => "devicon-html5-plain",
-            "Python" => "devicon-python-plain",
-            "Azure" => "devicon-azure-plain",
-            "SQL" => "devicon-azuresqldatabase-plain",
-            "MySQL" => "devicon-mysql-original",
-            "MongoDb" => "devicon-mongodb-plain",
-            "PostgresSQL" => "devicon-postgresql-plain",
-            _ => Icons.Material.Rounded.Language
+            "Terraform" => "simple-icons:terraform",
+            "Docker" => "simple-icons:docker",
+            "Astro" => "simple-icons:astro",
+            "CSharp" => "simple-icons:csharp",
+            "React" => "simple-icons:react",
+            "Flutter" => "simple-icons:flutter",
+            "Dart" => "simple-icons:dart",
+            "Kotlin" => "simple-icons:kotlin",
+            "Figma" => "simple-icons:figma",
+            "TypeScript" => "simple-icons:typescript",
+            "Ruby" => "simple-icons:ruby",
+            "Java" => "simple-icons:java",
+            "SpringBoot" => "simple-icons:spring",
+            "Kubernetes" => "simple-icons:kubernetes",
+            ".Net" => "simple-icons:.net",
+            "JavaScript" => "simple-icons:javascript",
+            "PHP" => "simple-icons:php",
+            "CSS" => "simple-icons:css3",
+            "Angular" => "simple-icons:angular",
+            "TailwindCSS" => "simple-icons:tailwindcss",
+            "HTML" => "simple-icons:html5",
+            "Python" => "simple-icons:python",
+            "Azure" => "simple-icons:azure",
+            "SQL" => "simple-icons:mysql", 
+            "MySQL" => "simple-icons:mysql",
+            "MongoDb" => "simple-icons:mongodb",
+            "PostgresSQL" => "simple-icons:postgresql",
+            _ => "simple-icons:coder"
         };
     }
 
@@ -358,7 +401,15 @@ else
         // Filtro de Skills
         if (!string.IsNullOrEmpty(skills))
         {
-            coders = coders.Where(c => c.Skills.Any(s => s.Language_Programming.Contains(skills, StringComparison.OrdinalIgnoreCase))).ToList();
+            // Separar las skills por coma, suponiendo que la entrada es "skill1,skill2,skill3"
+            var skillList = skills.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                .Select(s => s.Trim())
+                                .ToList();
+
+            // Filtrar los coders que tienen todas las skills en la lista
+            coders = coders.Where(c => skillList.All(skill => 
+                c.Skills.Any(s => s.Language_Programming.Contains(skill, StringComparison.OrdinalIgnoreCase))
+            )).ToList();
         }
 
         // Filtro de Nivel de Lenguaje

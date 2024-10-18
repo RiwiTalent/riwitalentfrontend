@@ -1,0 +1,203 @@
+@inject ICoderService CoderService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+
+<PageTitle>RiwiTalent: Explora el Mejor Talento de Desarrolladores</PageTitle>
+
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <!-- Muestra una alerta si hay un error -->
+    Snackbar.Add(_errorMessage, Severity.Error);
+}
+
+<MudContainer Class="d-flex flex-column flex-grow-1 justify-center align-content-start">
+    
+    @if (_loading)
+    {
+    <ProgressComponent/>
+    }
+    else
+    {
+        <MudContainer Class="ma-3 w-full h-full">
+            <MudText Typo="Typo.h5"><b>@_coders.Count</b> Coders en el grupo</MudText>
+        </MudContainer>
+        
+            @if (_coders != null && _coders.Any())
+            {
+                <!-- Tabla de coders -->
+                <MudContainer Class="ma-3 w-full h-full">
+                    <MudDataGrid T="Coder"
+                                 Class="flex-grow-1 pa-5"
+                                 LoadingProgressColor="Color.Info"
+                                 Hover="true"
+                                 Items="@_coders"
+                                 MultiSelection="true"
+                                 QuickFilter="@QuickFilter">
+                        
+                        <ToolBarContent>
+                            <MudGrid>
+                                <MudItem xs="12" Class="d-flex flex-grow-1 gap-3 justify-space-between">
+                                    <MudTextField Placeholder="Buscar aquí..." @bind-Value="_searchString" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Search" AdornmentColor="Color.Primary"></MudTextField>
+                                    <MudSpacer />
+                                    <MudButton @onclick="AddCodersToGroup" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.PersonAdd">Agregar Coder</MudButton>
+                                </MudItem>
+                            </MudGrid>
+                        </ToolBarContent>
+
+                        <Columns>
+                            <SelectColumn T="Coder" />
+                            <PropertyColumn Property="x => x.FirstName" Title="Nombre">
+                                <CellTemplate Context="coder">
+                                    <MudContainer Class="d-flex gap-1">
+                                        <MudAvatar>
+                                            <MudImage Src="@coder.Item.Photo"></MudImage>
+                                        </MudAvatar>
+                                        <MudContainer>
+                                            <MudText><b>@coder.Item.FirstName @coder.Item.SecondName</b></MudText>
+                                            <MudText Color="Color.Primary" Typo="Typo.subtitle2">@coder.Item.Stack</MudText>
+                                        </MudContainer>
+                                    </MudContainer>
+                                </CellTemplate>
+                            </PropertyColumn>
+                            <PropertyColumn Property="x => x.DateCreation" Title="Fecha de creación">
+                                <CellTemplate Context="coder">
+                                    <MudText><b>@coder.Item.DateCreation.ToString("dd/MM/yyyy")</b></MudText>
+                                </CellTemplate>
+                            </PropertyColumn>
+                            <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
+                                <CellTemplate Context="coder">
+                                    <MudStack Row>
+                                        <MudChip T="string" Color="@GetChipColor((string)coder.Item.Status)" Variant="Variant.Filled" Size="Size.Small" Class="px-4">
+                                            @coder.Item.Status
+                                        </MudChip>
+                                    </MudStack>
+                                </CellTemplate>
+                            </PropertyColumn>
+                            <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
+                                <CellTemplate Context="coder">
+                                    <MudStack Row>
+                                        <MudIconButton Href="/coders" Variant="Variant.Outlined" Icon="@Icons.Material.Rounded.DeleteOutline" Color="Color.Error" Size="Size.Small" Class="border-solid border-2 mud-border-error pa-2"></MudIconButton>
+                                    </MudStack>
+                                </CellTemplate>
+                            </PropertyColumn>
+                        </Columns>
+
+                        <PagerContent>
+                            <MudDataGridPager T="Coder"
+                                              PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
+                                              RowsPerPageString="@_rowsPerPageString"
+                                              InfoFormat="@_infoFormat" />
+                        </PagerContent>
+                    </MudDataGrid>
+                </MudContainer>
+            }
+            else
+            {
+                <MudText>No hay coders disponibles.</MudText>
+            }
+        }
+    </MudContainer>
+
+
+@code {
+    [Parameter] public string? GroupId { get; set; }
+    private List<Coder> _coders;
+    private string? _searchString;
+    private bool _loading = true;
+    private string _errorMessage;
+    private bool _drawerOpen = false;
+    private string _rowsPerPageString = "Filas por página:";
+    private string _infoFormat = "{first_item}-{last_item} de {all_items}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCodersAsync();
+    }
+
+    private async Task LoadCodersAsync()
+    {
+        _loading = true;
+        _errorMessage = string.Empty; // Limpiar error previo
+
+        try
+        {
+            _coders = await CoderService.GetCodersAsync();
+            _coders = _coders?.Where(c => c != null).ToList() ?? new List<Coder>();
+        }
+        catch (HttpRequestException httpEx)
+        {
+            _errorMessage = "Problema con la conexión a internet. Intente más tarde.";
+            LogError(httpEx);
+        }
+        catch (NullReferenceException nullEx)
+        {
+            _errorMessage = "Ocurrió un error inesperado. Intente más tarde.";
+            LogError(nullEx);
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = "Hubo un error al cargar los coders. Intente nuevamente más tarde.";
+            LogError(ex);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    private void UpdateCoders(List<Coder> filteredCoders)
+    {
+        _coders = filteredCoders;
+    }
+
+    private Task OpenDialogAsync()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        return DialogService.ShowAsync<GroupDialogComponent>("Creación de grupo", options);
+    }
+
+    private Func<Coder, bool> QuickFilter => coder =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        return MatchesSearchCriteria(coder);
+    };
+
+    private bool MatchesSearchCriteria(Coder coder)
+    {
+        return (coder.FirstName != null && coder.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.SecondName != null && coder.SecondName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.Status != null && coder.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+               (coder.DateCreation != null && coder.DateCreation.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private Color GetChipColor(string? status)
+    {
+        return status switch
+        {
+            "Active" => Color.Success,
+            "Inactive" => Color.Dark,
+            "Grouped" => Color.Success,
+            "Selected" => Color.Info,
+            _ => Color.Default,
+        };
+    }
+
+    // Método para loguear errores
+    private void LogError(Exception ex)
+    {
+        Console.WriteLine($"Error: {ex.Message}");
+    }
+    
+    private async Task AddCodersToGroup()
+    {
+        NavigationManager.NavigateTo($"/home/{GroupId}");
+    }
+}
