@@ -31,6 +31,16 @@
                       Variant="Variant.Outlined" FullWidth="true" Lines="3"
                       Margin="Margin.Dense"></MudTextField>
     </MudStack>
+
+    <!--Email staff-->
+    <MudStack>
+        <MudText Typo="Typo.subtitle2"><b>Correo staff</b></MudText>
+        <MudTextField T="string" @bind-Value="CreatedBy"
+                      Placeholder="Escribe una breve descripción del grupo"
+                      Variant="Variant.Outlined" FullWidth="true" Lines="3"
+                      Margin="Margin.Dense"></MudTextField>
+    </MudStack>
+
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="@Cancel">Cancelar</MudButton>
@@ -46,6 +56,7 @@
     // Propiedades para los datos del grupo
     private string GroupName { get; set; } = String.Empty;
     private string GroupDescription { get; set; } = String.Empty;
+    private string CreatedBy { get; set; } = String.Empty;
     private string AssociateEmail { get; set; } = String.Empty;
 
     [Parameter] // Parámetro para la página que invoque el modal
@@ -58,6 +69,7 @@
         {
             Name = GroupName,
             Description = GroupDescription,
+            CreatedBy = CreatedBy,
             AssociateEmail = AssociateEmail
         };
         

@@ -414,12 +414,12 @@ else
         LoadCoders(currentPage);
     }
 
-    private void AddCoderToGroup(Coder coder)
+    private async Task AddCoderToGroup(Coder coder)
     {
         if (!SelectedCoders.Contains(coder))
         {
             SelectedCoders.Add(coder); // Agregar coder a la lista seleccionada
-            OnCoderAdded.InvokeAsync(coder); // Invocar el evento
+            await OnCoderAdded.InvokeAsync(coder); // Invocar el evento
         }
     }
 

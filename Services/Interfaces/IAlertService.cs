@@ -9,11 +9,8 @@ namespace riwitalentfrontend.Services.Interfaces
         Task AcceptTerms();
         Task CancelTerms(); 
         Task ConfirmDeleteCoder(); // Nuevo método
-        
-
-
-    
-        
+        Task ConfirmDeleteGroup();
+        Task AddCodersToGroup();
 
     }
 

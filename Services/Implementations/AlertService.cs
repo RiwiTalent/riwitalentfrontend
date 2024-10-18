@@ -186,5 +186,33 @@ namespace riwitalentfrontend.Services.Implementations
                 CancelButtonText="<button class='btn-eliminar'>Cancelar</button>"
             });
         }
+
+        //Delete group
+        public async Task ConfirmDeleteGroup()
+        {
+            var result = await _swal.FireAsync(new SweetAlertOptions
+            {
+                Icon = SweetAlertIcon.Warning,
+                Title = "¿Estás seguro/a de que deseas eliminar este grupo?",
+                Text = "Esta acción no se podrá deshacer.",
+                ShowCancelButton = true,
+                ConfirmButtonColor = "#FE654F",
+                ConfirmButtonText = "Eliminar",
+                CancelButtonColor = "#fff",
+                CancelButtonText = "<button style='color:#FE654F; background-color:#fff'>Cancelar</button>"
+            });
+        }
+
+        public async Task AddCodersToGroup()
+        {
+            await _swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Agregar Coders",
+                Text = "¿Seguro que quiere agreagar a estos coders al grupo?",
+                Icon = SweetAlertIcon.Warning,
+                ShowConfirmButton = false ,
+                Timer = 1500
+            });
+        }
     }
 }

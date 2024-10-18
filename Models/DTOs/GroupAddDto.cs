@@ -9,6 +9,7 @@ namespace riwitalentfrontend.Models.DTOs
 
         // Descripción del grupo
         public string Description { get; set; } = String.Empty;
+        public string CreatedBy { get; set; } = String.Empty;
 
         // Correo electrónico del asociado al grupo
         public string AssociateEmail { get; set; } = String.Empty;

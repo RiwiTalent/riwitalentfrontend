@@ -4,6 +4,7 @@
 @inject ICoderService coderService;
 @inject IModalService model;
 @inject HttpClient Http
+@inject IAlertService alertService;
 @namespace riwitalentfrontend.Components
 
 
@@ -58,13 +59,15 @@
         _open = !_open;
     } 
 
-    public void AddCoderToGroup(Coder coder)
+    public async Task AddCoderToGroup(Coder coder)
     { 
         if (!SelectedCoders.Contains(coder))
         {
             SelectedCoders.Add(coder); // Agregar el coder a la lista de seleccionados
-            OnCoderAdded.InvokeAsync(coder);
+            await OnCoderAdded.InvokeAsync(coder);
         }
+
+        await alertService.AddCodersToGroup();
     }    
 
     public void RemoveCoderFromGroup(MudChip<string> chip)
