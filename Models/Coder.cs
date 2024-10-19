@@ -32,6 +32,9 @@ namespace riwitalentfrontend.Models
         
         // Puntaje de desempeño
         public float AssessmentScore { get; set; }
+        
+        // fecha de creación del Coder
+        public DateTime Date_Creation { get; set; } = DateTime.UtcNow;
 
         // Estandar Riwi
         public StandarRiwi? StandarRiwi { get; set; }

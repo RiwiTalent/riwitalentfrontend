@@ -6,19 +6,19 @@
                Variant="Variant.Outlined" />
 
 @code {
-    [Parameter] public string groupId { get; set; }
+    [Parameter] public string? GroupId { get; set; }
     [Parameter] public EventCallback<bool> OnTokenRegenerated { get; set; }
     
     private async Task RegenerateToken()
     {
-        if (string.IsNullOrEmpty(groupId))
+        if (string.IsNullOrEmpty(GroupId))
         {
             Console.WriteLine("El ID del grupo es inválido.");
             await OnTokenRegenerated.InvokeAsync(false); 
             return; 
         }
 
-        bool success = await GroupService.RegenerateToken(groupId);
+        bool success = await GroupService.RegenerateToken(GroupId);
         if (success)
         {
             Console.WriteLine("Token regenerado con éxito.");
@@ -27,7 +27,7 @@
         else
         {
             Console.WriteLine("Error al regenerar el token.");
-            await OnTokenRegenerated.InvokeAsync(false); // Notifica que hubo un error
+            await OnTokenRegenerated.InvokeAsync(false);
         }
     }
 }
