@@ -31,13 +31,13 @@
         <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Cargar Coders</MudButton>
     }
 
-<MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;" @bind-Open="_open">
+@* <MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;" @bind-Open="_open">
     @if (!string.IsNullOrEmpty(_errorMessage))
     {
         <MudText Justify="Justify.FlexStart" Color="Color.Error">@_errorMessage</MudText>
     }
     <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Agregar Coders</MudButton>
-</MudStack>
+</MudStack> *@
 
 @code {
 
@@ -50,22 +50,21 @@
     public EventCallback AddCodersToGroupAsync { get; set; }
     [Parameter]
     public EventCallback<Coder> OnCoderAdded { get; set; }
-
-    private bool _open;
+    private string? _errorMessage;
+    private bool _open = true;
     private string groupId;
     private bool sendEmail;
     private int _i = 1;
     private List<string> _values = new();
     public void Add() => _values.Add("Value " + (_i++));
 
-   private void ToggleDrawer()
+    private void ToggleDrawer()
     {
         _open = !_open;
     } 
 
     
-    private string? _errorMessage;
-    private bool _open = true; // Inicialmente abierto
+
 
     public async Task AddCoderHandler()
     {
@@ -109,20 +108,6 @@
             _errorMessage = "No hay coders seleccionados.";
             _open = true; // Mostrar el MudStack para el mensaje
         }
-    }
-
-    public override async Task OnInitializedAsync()
-    {
-        try
-        {
-            sendEmail = await email.SendEmailCompany(groupId);
-
-            if(sendEmail)
-        }
-        catch(Exception ex)
-        {
-            throw new Exception($"{ex.Message}");
-        }
-    }    
+    }   
 
 }
