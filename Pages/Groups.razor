@@ -20,7 +20,7 @@
         <MudContainer Class="d-flex flex-column flex-grow-1 justify-center align-content-start">
             @if (_loading)
             {
-                <ProgressComponent/>
+                <ProgressComponent />
             }
             else
             {
@@ -144,28 +144,17 @@
         _loading = true;
         _errorMessage = null;
 
-        try
+        await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
         {
-            await ErrorHandling.ExecuteWithErrorHandlingAsync(
-                async () =>
-                {
-                    var groups = await GroupService.GetGroupsAsync() ?? new List<Group>();
-                    _groups = groups.OrderByDescending(g => g.Created_At).ToList();
-                },
-                errorMessage =>
-                {
-                    _errorMessage = errorMessage; // Asigna el mensaje de error recibido
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            _errorMessage = ex.Message; // Maneja el error si ocurre una excepción
-        }
-        finally
-        {
-            _loading = false; // Asegúrate de que siempre se establece en falso
-        }
+            var groups = await GroupService.GetGroupsAsync() ?? new List<Group>();
+            _groups = groups
+                .OrderByDescending(g => g.Status == "Active")
+                .ThenByDescending(g => g.Created_At)
+                .ToList();
+        },
+        _errorMessage => _errorMessage = this._errorMessage);
+
+        _loading = false;
     }
 
     
@@ -240,18 +229,18 @@
     if (result.IsConfirmed)
     {
         await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
+        {
+            var success = await GroupService.DeleteGroupAsync(groupId); // Usamos el servicio
+            if (success)
             {
-                var success = await GroupService.DeleteGroupAsync(groupId); // Usamos el servicio
-                if (success)
-                {
-                    await LoadGroupsAsync(); // Recargar los grupos después de eliminar
-                }
-                else
-                {
-                    _errorMessage = "No se pudo eliminar el grupo.";
-                }
-            },
-            errorMessage => _errorMessage = errorMessage);
+                await LoadGroupsAsync(); // Recargar los grupos después de eliminar
+            }
+            else
+            {
+                _errorMessage = "No se pudo eliminar el grupo.";
+            }
+        },
+        errorMessage => _errorMessage = errorMessage);
     }
     else
     {

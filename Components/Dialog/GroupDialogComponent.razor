@@ -1,12 +1,12 @@
 @using Blazored.SessionStorage
 @namespace riwitalentfrontend.Components
-@inject ISessionStorageService _sessionStorage
+@inject ISessionStorageService SessionStorageService
 
 @inject GroupService GroupService
 @inject ISnackbar Snackbar
 
     <MudForm @ref="_form">
-        <MudDialog>
+        <MudDialog Class="pa-2">
             <DialogContent>
                 <!-- Nombre del Grupo -->
                 <MudStack Spacing="1" Class="mb-2">
@@ -46,6 +46,8 @@
                 <MudStack Spacing="1" Class="mb-2">
                     <MudTextField T="string"
                                   Label="Descripción"
+                                  Required="true"
+                                  RequiredError="La descripción es obligatoria"
                                   @bind-Value="GroupDescription"
                                   HelperText="Escribe una breve descripción del grupo"
                                   Variant="Variant.Outlined"
@@ -78,7 +80,7 @@
     protected override async Task OnInitializedAsync()
     {
         // Obtener el valor del session storage
-        var createdBy = await _sessionStorage.GetItemAsync<string>("userEmail");
+        var createdBy = await SessionStorageService.GetItemAsync<string>("userEmail");
         CreatedBy = createdBy ?? "Desconocido";
     }
     
