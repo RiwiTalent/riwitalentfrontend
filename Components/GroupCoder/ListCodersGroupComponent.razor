@@ -20,7 +20,7 @@
     else
     {
         <MudContainer Class="ma-3 w-full h-full">
-            <MudText Typo="Typo.h5"><b>@_coders.Count</b> Coders en el grupo</MudText>
+            <MudText Typo="Typo.h5"><b>@_coders.Count</b> Coders encontrados</MudText>
         </MudContainer>
         
             @if (_coders != null && _coders.Any())
@@ -46,7 +46,6 @@
                         </ToolBarContent>
 
                         <Columns>
-                            <SelectColumn T="Coder" />
                             <PropertyColumn Property="x => x.FirstName" Title="Nombre">
                                 <CellTemplate Context="coder">
                                     <MudContainer Class="d-flex gap-1">
@@ -94,7 +93,12 @@
             }
             else
             {
-                <MudText>No hay coders disponibles.</MudText>
+                <MudGrid Justify="Justify.Center" Spacing="2">
+                    <MudStack AlignItems="AlignItems.Center" Spacing="2" Justify="Justify.Center">
+                        <MudButton @onclick="AddCodersToGroup" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium" StartIcon="@Icons.Material.Rounded.PersonAdd">Agregar Coder</MudButton>
+                        <MudText Typo="Typo.h6" Color="Color.Primary">No hay coders en el grupo.</MudText>
+                    </MudStack>
+                </MudGrid>
             }
         }
     </MudContainer>
@@ -123,7 +127,9 @@
         try
         {
             _coders = await CoderService.GetCodersAsync();
-            _coders = _coders?.Where(c => c != null).ToList() ?? new List<Coder>();
+            _coders = _coders?
+                .Where(c => c != null && c.GroupId != null && c.GroupId.Contains(GroupId))
+                .ToList() ?? new List<Coder>();
         }
         catch (HttpRequestException httpEx)
         {
