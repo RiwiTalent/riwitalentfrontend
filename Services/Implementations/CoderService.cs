@@ -52,6 +52,23 @@ namespace riwitalentfrontend.Services.Implementations
                     return false;     
             }
         }
+        
+        public async Task<bool> DeleteCoderOfGroup(string coderId, string groupId)
+        {
+            
+            try
+                {
+                    var response = await _httpClient.DeleteAsync($"http://localhost:5113/coder-groups?coderId={coderId}&groupId={groupId}");
+                    return response.IsSuccessStatusCode;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al desactivar coder: {ex.Message}");
+                    return false;     
+            }
+        }
+
+        
 
         public async Task<Coder> GetCoderByIdAsync(string Id)
         {
@@ -72,5 +89,6 @@ namespace riwitalentfrontend.Services.Implementations
 
             return response; // Retorna el coder o null si no se encontró
         }
+        
     }
 }
