@@ -14,6 +14,14 @@ namespace riwitalentfrontend.Services.Implementations
             _httpClient = httpClient;
         }
 
+        public async Task<bool> SendEmailCompany(string groupId)
+        {
+            var response = await _httpClient.PostAsync($"http://localhost:5113/email/company-process?id={groupId}", null);
+            response.EnsureSuccessStatusCode();
+
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<bool> SendEmailTest(string groupId)
         {
             try

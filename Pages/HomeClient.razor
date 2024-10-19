@@ -1,4 +1,6 @@
 @page "/HomeClient/{groupId}"
+@inject ICoderService coderService
+@inject IEmailService emailService
 @layout ClientLayout
 
 
@@ -7,12 +9,27 @@
 
 <MudMainContent />
 <BannerCodersComponent />
-<SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" />
+
+<MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true" Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded-t ma-2 py-5 px-2">
+    <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" ButtonText = "@ButtonText"/>
+</MudDrawer>
+
+<MudStack Class="d-flex justify-end">
+    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Code" Size="Size.Medium" OnClick="DrawerToggle" Class="fixed" Style="bottom: 20px; right: 20px;"/>
+</MudStack>
+
+
+@* <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" /> *@
 <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" groupId="@groupId" FilterInGroup = "@FilterInGroup"/>
 
 
 
 @code {
+    private bool _drawerOpen = false;
+
+    [Parameter]
+    public bool ButtonText { get; set; } = true;
+
     [Parameter]
     public string? groupId { get; set; }
 
@@ -21,7 +38,7 @@
 
     private List<Coder> _selectedCoders = new List<Coder>();
 
-        private void AddCoderHandler(Coder coder)
+    private void AddCoderHandler(Coder coder)
     {
         Console.WriteLine($"Coder agregado: {coder.FirstName} {coder.FirstLastName}");
        
@@ -38,30 +55,19 @@
         var coderIds = _selectedCoders.Select(c => c.Id).ToList();
         Console.WriteLine($"Enviando {coderIds.Count} coders al grupo {groupId}: {string.Join(", ", coderIds)}");
 
-        var data = new
+        DataDto data = new DataDto
         {
             GroupId = groupId,
             CoderList = coderIds
         };
 
-        try
-        {
-            Console.WriteLine("Llamada HTTP POST al backend");
-            var response = await Http.PostAsJsonAsync("http://localhost:5113/coders/grouped", data);
+        await coderService.CoderSelectedAsync(data);
+        await emailService.SendEmailCompany(groupId);
+    }
 
-            if (response.IsSuccessStatusCode)
-            {
-                Console.WriteLine("Coders agregados correctamente al grupo.");
-            }
-            else
-            {
-                Console.WriteLine($"Error al agregar los coders: {response.StatusCode}");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Ocurrió un error: {ex.Message}");
-        }
+    public void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
     }
 
     

@@ -1,5 +1,6 @@
 @page "/home/{groupId}"
 @inject IGroupService GroupService
+@inject ICoderService coderService
 @layout MainLayout
 @inject HttpClient Http
 
@@ -14,7 +15,7 @@
 </head>
 
 <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true" Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded-t ma-2 py-5 px-2">
-    <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" />
+    <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" ButtonText = "@ButtonText"/>
 </MudDrawer>
 
 <MudStack Class="d-flex justify-end">
@@ -26,17 +27,21 @@
         <MudText Color="Color.Primary" class="title">
         </MudText>
         <BannerCodersComponent />
-        <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler"  FilterInGroup = "@FilterInGroup" /> 
+        <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler"  FilterInGroup = "@FilterInGroup"/> 
     </Authorized>
 </AuthorizeView>
 
 @code {
     private bool _drawerOpen = false;
 
+    [Parameter] 
+    public bool? ButtonText { get; set; } = false;
+
     [Parameter]
     public bool? FilterInGroup { get; set; } = false;
 
-    [Parameter] public Group? Group { get; set; }
+    [Parameter] 
+    public Group? Group { get; set; }
     [Parameter]
     public string? groupId { get; set; }
 
@@ -59,30 +64,13 @@
         var coderIds = _selectedCoders.Select(c => c.Id).ToList();
         Console.WriteLine($"Enviando {coderIds.Count} coders al grupo {groupId}: {string.Join(", ", coderIds)}");
 
-        var data = new
+        DataDto data = new DataDto
         {
             GroupId = groupId,
             CoderList = coderIds
         };
 
-        try
-        {
-            Console.WriteLine("Llamada HTTP POST al backend");
-            var response = await Http.PostAsJsonAsync("http://localhost:5113/coders/grouped", data);
-
-            if (response.IsSuccessStatusCode)
-            {
-                Console.WriteLine("Coders agregados correctamente al grupo.");
-            }
-            else
-            {
-                Console.WriteLine($"Error al agregar los coders: {response.StatusCode}");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Ocurrió un error: {ex.Message}");
-        }
+        await coderService.CodersGroupedAsync(data);
     }
 
     private void DrawerToggle()

@@ -13,7 +13,7 @@ namespace riwitalentfrontend.Models
         public string Name { get; set; } = string.Empty;
 
         // Photo del grupo
-        public string Photo { get; set; } = null;
+        public string? Photo { get; set; }
 
         // Descripción del grupo
         public string Description { get; set; } = string.Empty;

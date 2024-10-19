@@ -3,6 +3,7 @@
 @using riwitalentfrontend.Models;
 @inject ICoderService coderService;
 @inject IModalService model;
+@inject IEmailService email;
 @inject HttpClient Http
 @inject IAlertService alertService;
 @namespace riwitalentfrontend.Components
@@ -23,12 +24,23 @@
         }
 </MudChipSet>
 
+
 <MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;">
-    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Agregar Coders</MudButton>
+    @if(ButtonText == true)
+    {
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Iniciar Proceso</MudButton>
+    }
+    else if(ButtonText == false)
+    {
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Cargar Coders</MudButton>
+    }
 </MudStack>
 
-
 @code {
+
+    [Parameter] 
+    public bool? ButtonText { get; set; } = true;
+
     [Parameter]
     public List<Coder> SelectedCoders { get; set; } = new List<Coder>();
     [Parameter]
@@ -38,6 +50,7 @@
 
     private bool _open;
     private string groupId;
+    private bool sendEmail;
     private int _i = 1;
     private List<string> _values = new();
     public void Add() => _values.Add("Value " + (_i++));
@@ -56,6 +69,16 @@
         }
 
         await alertService.AddCodersToGroup();
+        sendEmail = await email.SendEmailCompany(groupId);
+
+        if(sendEmail)
+        {
+            Console.WriteLine("El correo se envió de manera correcta");
+        }
+        else
+        {
+            Console.WriteLine("Falló el envío de correo");
+        }
 
     }
     public async Task AddCoderToGroup(Coder coder)
@@ -76,6 +99,6 @@
         {
             SelectedCoders.Remove(coderToRemove); // Eliminar el coder de la lista de seleccionados
         }
-    }    
+    }   
 
 }
