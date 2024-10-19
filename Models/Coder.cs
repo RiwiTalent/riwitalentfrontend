@@ -24,9 +24,6 @@ namespace riwitalentfrontend.Models
         // Fecha de creación del perfil
         public DateTime DateCreation { get; set; }
 
-
-        public List<string>? GroupId { get; set; } = new List<string>();
-
         // Tecnologías en las que el coder es competente
         public string Stack { get; set; } = string.Empty;
         
@@ -35,6 +32,8 @@ namespace riwitalentfrontend.Models
         
         // fecha de creación del Coder
         public DateTime Date_Creation { get; set; } = DateTime.UtcNow;
+        
+        public List<string>? GroupId { get; set; }
 
         // Estandar Riwi
         public StandarRiwi? StandarRiwi { get; set; }

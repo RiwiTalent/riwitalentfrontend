@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using riwitalentfrontend.Services.Interfaces;
 using riwitalentfrontend.Models;
+using riwitalentfrontend.Models.DTOs;
 
 
 
@@ -36,6 +37,7 @@ namespace riwitalentfrontend.Services.Implementations
             var url = $"http://localhost:5113/coders?{queryString}";
             Console.WriteLine($"Request URL: {url}");
             return await _httpClient.GetFromJsonAsync<List<Coder>>(url);
+            
         }
 
         public async Task<bool> DeleteCodersAsync(string Id)
@@ -71,6 +73,39 @@ namespace riwitalentfrontend.Services.Implementations
             }
 
             return response; // Retorna el coder o null si no se encontró
+        }
+
+        public async Task<bool> CodersGroupedAsync(DataDto data)
+        {
+            
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/coders/grouped", data);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Coders agregados correctamente al grupo.");
+            }
+            else
+            {
+                Console.WriteLine($"Error al agregar los coders: {response.StatusCode}");
+            }
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> CoderSelectedAsync(DataDto data)
+        {
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/coders/selected", data);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Coders seleccionados correctamente al grupo.");
+            }
+            else
+            {
+                Console.WriteLine($"Error al agregar los coders: {response.StatusCode}");
+            }
+
+            return response.IsSuccessStatusCode;
         }
     }
 }

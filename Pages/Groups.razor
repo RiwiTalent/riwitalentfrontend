@@ -76,6 +76,15 @@
                                             </MudContainer>
                                         </CellTemplate>
                                     </PropertyColumn>
+
+                                    <PropertyColumn Property="x => x.Status" Title="Creado por" Sortable="true">
+                                        <CellTemplate Context="group">
+                                            <MudStack Row>
+                                                <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.CreatedBy</MudText>
+                                            </MudStack>
+                                        </CellTemplate>
+                                    </PropertyColumn>
+
                                     <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
                                         <CellTemplate Context="group">
                                             <MudStack Row>

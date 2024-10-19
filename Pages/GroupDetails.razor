@@ -53,7 +53,16 @@
                     <!-- Card con Avatar y Nombre del Grupo -->
                     <MudItem xs="12" sm="4" md="4">
                         <MudCard Class="d-flex flex-column align-center justify-center mud-width-full pa-4">
-                            <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary">A</MudAvatar>
+                            @if(!string.IsNullOrEmpty(_group.Photo))
+                            {
+                                <MudAvatar  Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary">
+                                    <MudImage Src="@_group.Photo"></MudImage>
+                                </MudAvatar>
+                            }
+                            else
+                            {
+                                <MudAvatar Icon="@Icons.Material.Filled.Person" Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary"></MudAvatar>
+                            }
                             <MudText Typo="Typo.h6" Color="Color.Primary">@_group.Name</MudText>
                             <MudChip T="string" Color="@GetChipColor(_group.Status)" Value="@_group.Status"></MudChip>
                         </MudCard>
@@ -250,7 +259,7 @@
             _group = await GroupService.GetGroupByIdAsync(groupId);
             if (_group != null)
             {
-                Console.WriteLine($"Grupo obtenido: {_group.Name}, Estado: {_group.Status}");
+                Console.WriteLine($"Grupo obtenido: {_group.Name}, Estado: {_group.Status}, {_group.Photo}");
             }
             else
             {

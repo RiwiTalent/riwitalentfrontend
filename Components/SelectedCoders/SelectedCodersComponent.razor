@@ -3,6 +3,7 @@
 @using riwitalentfrontend.Models;
 @inject ICoderService coderService;
 @inject IModalService model;
+@inject IEmailService email;
 @inject HttpClient Http
 @inject IAlertService alertService;
 @namespace riwitalentfrontend.Components
@@ -19,24 +20,51 @@
     }
 </MudChipSet>
 
-<MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;" @bind-Open="_open">
+
+<MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;"/>
+    @if(ButtonText == true)
+    {
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Iniciar Proceso</MudButton>
+    }
+    else if(ButtonText == false)
+    {
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Cargar Coders</MudButton>
+    }
+
+@* <MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;" @bind-Open="_open">
     @if (!string.IsNullOrEmpty(_errorMessage))
     {
         <MudText Justify="Justify.FlexStart" Color="Color.Error">@_errorMessage</MudText>
     }
     <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Agregar Coders</MudButton>
-</MudStack>
+</MudStack> *@
 
 @code {
+
+    [Parameter] 
+    public bool? ButtonText { get; set; } = true;
+
     [Parameter]
     public List<Coder> SelectedCoders { get; set; } = new List<Coder>();
     [Parameter]
     public EventCallback AddCodersToGroupAsync { get; set; }
     [Parameter]
     public EventCallback<Coder> OnCoderAdded { get; set; }
-    
     private string? _errorMessage;
-    private bool _open = true; // Inicialmente abierto
+    private bool _open = true;
+    private string groupId;
+    private bool sendEmail;
+    private int _i = 1;
+    private List<string> _values = new();
+    public void Add() => _values.Add("Value " + (_i++));
+
+    private void ToggleDrawer()
+    {
+        _open = !_open;
+    } 
+
+    
+
 
     public async Task AddCoderHandler()
     {
@@ -80,5 +108,6 @@
             _errorMessage = "No hay coders seleccionados.";
             _open = true; // Mostrar el MudStack para el mensaje
         }
-    }
+    }   
+
 }
