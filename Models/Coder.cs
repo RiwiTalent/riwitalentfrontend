@@ -35,6 +35,8 @@ namespace riwitalentfrontend.Models
         
         // fecha de creación del Coder
         public DateTime Date_Creation { get; set; } = DateTime.UtcNow;
+        
+        public List<string>? GroupId { get; set; }
 
         // Estandar Riwi
         public StandarRiwi? StandarRiwi { get; set; }

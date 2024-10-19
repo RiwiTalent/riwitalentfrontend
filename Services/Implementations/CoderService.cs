@@ -37,6 +37,7 @@ namespace riwitalentfrontend.Services.Implementations
             var url = $"http://localhost:5113/coders?{queryString}";
             Console.WriteLine($"Request URL: {url}");
             return await _httpClient.GetFromJsonAsync<List<Coder>>(url);
+            
         }
 
         public async Task<bool> DeleteCodersAsync(string Id)
