@@ -3,74 +3,111 @@
 @using riwitalentfrontend.Models;
 @inject ICoderService coderService;
 @inject IModalService model;
+@inject IEmailService email;
 @inject HttpClient Http
+@inject IAlertService alertService;
 @namespace riwitalentfrontend.Components
+<MudChipSet Class="z-100" T="string" AllClosable OnClose="RemoveCoderFromGroup">
+    @foreach (var selectedCoder in SelectedCoders)
+    {
+        <MudChip Text="@($"{selectedCoder.FirstName} {selectedCoder.FirstLastName}")">
+            <AvatarContent>
+                <MudAvatar>
+                    <MudImage Src="@selectedCoder.Photo"></MudImage>
+                </MudAvatar>
+            </AvatarContent>
+        </MudChip>
+    }
+</MudChipSet>
 
 
-<MudPaper Height="200px" class="fixed" Style="overflow:hidden;">
-    <MudDrawerContainer>
-        <MudDrawer @bind-Open="@_open" Anchor="Anchor.End" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
-            <MudNavMenu>
-                <MudChipSet T="string" AllClosable OnClose="RemoveCoderFromGroup">
-                    @foreach (var selectedCoder in SelectedCoders)
-                    {
-                        <MudChip Text="@($"{selectedCoder.FirstName} {selectedCoder.FirstLastName}")">
-                            <AvatarContent>
-                                <MudAvatar>
-                                    <MudImage Src="@selectedCoder.Photo"></MudImage>
-                                </MudAvatar>
-                            </AvatarContent>
-                        </MudChip> 
-                    }
-                </MudChipSet>
+<MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;"/>
+    @if(ButtonText == true)
+    {
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Iniciar Proceso</MudButton>
+    }
+    else if(ButtonText == false)
+    {
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Cargar Coders</MudButton>
+    }
 
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCodersToGroupAsync">
-                    Agregar coders
-                </MudButton>
-                
-            </MudNavMenu>
-        </MudDrawer>
-        <div class="d-flex justify-center align-center mud-height-full">
-            <MudButton OnClick="@ToggleDrawer" Color="Color.Primary">L</MudButton>
-        </div>
-    </MudDrawerContainer>
-</MudPaper>
+@* <MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;" @bind-Open="_open">
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <MudText Justify="Justify.FlexStart" Color="Color.Error">@_errorMessage</MudText>
+    }
+    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Agregar Coders</MudButton>
+</MudStack> *@
 
 @code {
+
+    [Parameter] 
+    public bool? ButtonText { get; set; } = true;
+
     [Parameter]
     public List<Coder> SelectedCoders { get; set; } = new List<Coder>();
     [Parameter]
     public EventCallback AddCodersToGroupAsync { get; set; }
     [Parameter]
     public EventCallback<Coder> OnCoderAdded { get; set; }
-
-    private bool _open;
+    private string? _errorMessage;
+    private bool _open = true;
     private string groupId;
+    private bool sendEmail;
     private int _i = 1;
     private List<string> _values = new();
     public void Add() => _values.Add("Value " + (_i++));
 
-   private void ToggleDrawer()
+    private void ToggleDrawer()
     {
         _open = !_open;
     } 
 
-    public void AddCoderToGroup(Coder coder)
-    { 
+    
+
+
+    public async Task AddCoderHandler()
+    {
+        _errorMessage = null; // Resetea el mensaje de error
+        if (AddCodersToGroupAsync.HasDelegate && SelectedCoders.Count > 0)
+        {
+            await AddCodersToGroupAsync.InvokeAsync();
+            _open = false; // Cerrar el MudStack después de agregar con éxito
+            SelectedCoders.Clear();
+            Console.WriteLine("_open: " + _open);
+            await alertService.AddCodersToGroup();
+        }
+        else
+        {
+            _errorMessage = "No hay coders seleccionados.";
+            _open = true; // Asegura que el MudStack esté visible para mostrar el mensaje
+        }
+    }
+
+    public async Task AddCoderToGroup(Coder coder)
+    {
         if (!SelectedCoders.Contains(coder))
         {
-            SelectedCoders.Add(coder); // Agregar el coder a la lista de seleccionados
-            OnCoderAdded.InvokeAsync(coder);
+            SelectedCoders.Add(coder);
+            await OnCoderAdded.InvokeAsync(coder);
+            _errorMessage = null; // Limpiar el mensaje al añadir un coder
+            _open = true; // Mantener el MudStack abierto
         }
-    }    
+    }
 
     public void RemoveCoderFromGroup(MudChip<string> chip)
     {
         var coderToRemove = SelectedCoders.FirstOrDefault(c => $"{c.FirstName} {c.FirstLastName}" == chip.Text);
         if (coderToRemove != null)
         {
-            SelectedCoders.Remove(coderToRemove); // Eliminar el coder de la lista de seleccionados
+            SelectedCoders.Remove(coderToRemove);
         }
-    }    
+        
+        if (SelectedCoders.Count == 0)
+        {
+            _errorMessage = "No hay coders seleccionados.";
+            _open = true; // Mostrar el MudStack para el mensaje
+        }
+    }   
 
 }

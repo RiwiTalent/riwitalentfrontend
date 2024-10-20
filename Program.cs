@@ -31,6 +31,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<ICoderService, CoderService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAlertService, AlertService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ThemeService>();
 
 // builder.Services.AddScoped<AuthService>();

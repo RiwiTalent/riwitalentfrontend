@@ -16,54 +16,53 @@
         <MudContainer Class="d-flex flex-column flex-grow-1 justify-center align-content-start">
             @if (_loading)
             {
-            <ProgressComponent />
+                <ProgressComponent />
             }
             else
             {
-            <!-- Drawer para filtro -->
-            <MudDrawer @bind-Open="_drawerOpen"
-                       Anchor="Anchor.Right"
-                       Overlay="true"
-                       OverlayAutoClose="true"
-                       Variant="DrawerVariant.Temporary"
-                       ClipMode="DrawerClipMode.Never"
-                       Elevation="1"
-                       Class="rounded ma-2">
-                <CoderFilterComponent OnFiltered="UpdateCoders" />
-            </MudDrawer>
-            
-            <!-- Detalles del grupo  -->
-            <MudContainer Class="ma-3 d-flex flex-column flex-grow-1 justify-center align-content-start">
+                <!-- Drawer para filtro -->
+                <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true"
+                    Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded ma-2">
+                    <CoderFilterComponent OnFiltered="UpdateCoders" />
+                </MudDrawer>
+
+                <!-- Detalles del grupo  -->
+                <MudContainer Class="ma-3 d-flex flex-column flex-grow-1 justify-center align-content-start">
                     <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 py-3 px-0">
                         <!-- Botón Regresar -->
                         <MudTooltip Text="Regresar">
-                            <MudIconButton
-                                Href="/groups"
-                                Variant="Variant.Outlined"
-                                Icon="@Icons.Material.Rounded.ArrowBackIos"
-                                Color="Color.Primary"
-                                Size="Size.Small"
+                            <MudIconButton Href="/groups" Variant="Variant.Outlined"
+                                Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small"
                                 Class="border-solid border-2 mud-border-primary pa-2">
                             </MudIconButton>
                         </MudTooltip>
-                        
+
                         <!-- Botón Editar y Agregar -->
-                        <MudButton
-                            Variant="Variant.Filled"
-                            Color="@((isEditing ? Color.Success : Color.Primary))"
+                        <MudButton Variant="Variant.Filled" Color="@((isEditing ? Color.Success : Color.Primary))"
                             StartIcon="@(isEditing ? Icons.Material.Rounded.Save : Icons.Material.Rounded.Edit)"
                             OnClick="@ToggleEditState">
                             @(isEditing ? "Guardar Grupo" : "Editar Grupo")
                         </MudButton>
                     </MudContainer>
-                    
+
                     <MudGrid Justify="Justify.SpaceBetween" Spacing="3">
                         <!-- Card con Avatar y Nombre del Grupo -->
                         <MudItem xs="12" sm="4" md="4">
+
                             <MudCard Class="d-flex flex-column align-center justify-center mud-width-full pa-4">
-                                <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary">A</MudAvatar>
+                                @if (!string.IsNullOrEmpty(_group.Photo))
+                                {
+                                    <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary">
+                                        <MudImage Src="@_group.Photo"></MudImage>
+                                    </MudAvatar>
+                                }
+                                else
+                                {
+                                    <MudAvatar Icon="@Icons.Material.Filled.Person"
+                                               Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary"></MudAvatar>
+                                }
                                 <MudText Typo="Typo.h6" Color="Color.Primary">@_group.Name</MudText>
-                                <StatusChipComponent Status="@_group.Status"/>
+                                <StatusChipComponent Status="@_group.Status" />
                             </MudCard>
                         </MudItem>
 
@@ -76,21 +75,18 @@
                                         <!-- Título: Información del Grupo -->
                                         <MudGrid>
                                             <MudItem xs="12">
-                                                <MudText Align="Align.Start" Typo="Typo.h5"><b>Información del grupo</b></MudText>
+                                                <MudText Align="Align.Start" Typo="Typo.h5"><b>Información del grupo</b>
+                                                </MudText>
                                             </MudItem>
 
                                             <!-- Nombre del Grupo -->
                                             <MudItem xs="12" sm="6">
                                                 <MudText Typo="Typo.subtitle2"><b>Nombre</b></MudText>
-                                                <MudTextField T="string"
-                                                              @bind-Value="@_group.Name"
-                                                              Placeholder="Ingresa el nombre del grupo"
-                                                              Variant="Variant.Outlined"
-                                                              FullWidth="true"
-                                                              Margin="Margin.Dense"
+                                                <MudTextField T="string" @bind-Value="@_group.Name"
+                                                              Placeholder="Ingresa el nombre del grupo" Variant="Variant.Outlined"
+                                                              FullWidth="true" Margin="Margin.Dense"
                                                               AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
-                                                              Adornment="Adornment.Start"
-                                                              AdornmentColor="Color.Primary"
+                                                              Adornment="Adornment.Start" AdornmentColor="Color.Primary"
                                                               ReadOnly="!isEditing">
                                                 </MudTextField>
                                             </MudItem>
@@ -98,14 +94,10 @@
                                             <!-- Descripción del Grupo -->
                                             <MudItem xs="12">
                                                 <MudText Typo="Typo.subtitle2"><b>Descripción</b></MudText>
-                                                <MudTextField T="string"
-                                                              @bind-Value="@_group.Description"
+                                                <MudTextField T="string" @bind-Value="@_group.Description"
                                                               Placeholder="Escribe una breve descripción del grupo"
-                                                              Variant="Variant.Outlined"
-                                                              FullWidth="true"
-                                                              Lines="3"
-                                                              Margin="Margin.Dense"
-                                                              ReadOnly="!isEditing">
+                                                              Variant="Variant.Outlined" FullWidth="true" Lines="3"
+                                                              Margin="Margin.Dense" ReadOnly="!isEditing">
                                                 </MudTextField>
                                             </MudItem>
 
@@ -118,39 +110,29 @@
                                             <MudItem xs="12" sm="12" md="6">
                                                 <MudText Typo="Typo.subtitle2"><b>Enlace público</b></MudText>
                                                 <MudItem>
-                                                    <MudTextField T="string"
-                                                                  @bind-Value="_group.ExternalKeys[0].Url"
+                                                    <MudTextField T="string" @bind-Value="_group.ExternalKeys[0].Url"
                                                                   Placeholder="Ingresa el enlace público del grupo"
-                                                                  Variant="Variant.Outlined"
-                                                                  Margin="Margin.Dense"
-                                                                  FullWidth="true"
+                                                                  Variant="Variant.Outlined" Margin="Margin.Dense" FullWidth="true"
                                                                   AdornmentIcon="@Icons.Material.Rounded.InsertLink"
-                                                                  Adornment="Adornment.Start"
-                                                                  AdornmentColor="Color.Primary"
+                                                                  Adornment="Adornment.Start" AdornmentColor="Color.Primary"
                                                                   ReadOnly="!isEditing">
                                                     </MudTextField>
                                                 </MudItem>
                                             </MudItem>
 
-                                                <!-- Pin de Acceso -->
-                                                <MudItem xs="12" sm="12" md="6">
-                                                    <MudText Typo="Typo.subtitle2"><b>Token de acceso</b></MudText>
-                                                    <MudItem Class="d-flex flex-row align-center gap-2">
-                                                        <MudTextField T="string"
-                                                                      @bind-Value="_group.ExternalKeys[0].Key"
-                                                                      Margin="Margin.Dense"
-                                                                      Variant="Variant.Outlined" 
-                                                                      InputType="@_passwordInput" 
-                                                                      IconSize="Size.Small" 
-                                                                      Adornment="Adornment.End" 
-                                                                      AdornmentIcon="@_passwordInputIcon"
-                                                                      AdornmentColor="Color.Primary"
-                                                                      OnAdornmentClick="ButtonTestclick" 
-                                                                      AdornmentAriaLabel="Ver Contraseña"
-                                                                      ReadOnly="true"/>
-                                                        <RegenerateTokenComponent GroupId="@_group.Id" OnTokenRegenerated="@OnTokenRegenerated" />
-                                                    </MudItem>
+                                            <!-- Pin de Acceso -->
+                                            <MudItem xs="12" sm="12" md="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Token de acceso</b></MudText>
+                                                <MudItem Class="d-flex flex-row align-center gap-2">
+                                                    <MudTextField T="string" @bind-Value="_group.ExternalKeys[0].Key"
+                                                                  Margin="Margin.Dense" Variant="Variant.Outlined"
+                                                                  InputType="@_passwordInput" IconSize="Size.Small"
+                                                                  Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon"
+                                                                  AdornmentColor="Color.Primary" OnAdornmentClick="ButtonTestclick"
+                                                                  AdornmentAriaLabel="Ver Contraseña" ReadOnly="true" />
+                                                    <RegenerateTokenComponent GroupId="@_group.Id" Disabled="!isEditing" OnTokenRegenerated="@OnTokenRegenerated" />
                                                 </MudItem>
+                                            </MudItem>
                                         </MudGrid>
                                     </MudForm>
                                 </MudCardContent>
@@ -158,9 +140,9 @@
                         </MudItem>
                     </MudGrid>
                 </MudContainer>
-                <MudDivider />
+
                 <!-- Total coders en el grupo -->
-                <ListCodersGroupComponent GroupId="@groupId"/>
+                <ListCodersGroupComponent GroupId="@groupId" />
             }
         </MudContainer>
     </Authorized>
@@ -208,27 +190,27 @@
     {
         _coders = filteredCoders;
     }
-    
+
     // Alternar estado del drawer
     private void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
-    
+
     private async Task UpdateGroup()
     {
         // Mostrar alerta de confirmación
         var result = await Swal.FireAsync(new SweetAlertOptions
-        {
-            Icon = SweetAlertIcon.Success,
-            Title = "¿Estás seguro/a de que deseas guardar los cambios de este registro?",
-            Text = "Esta acción actualizará la información y no podrá recuperarse.",
-            ShowCancelButton = true,
-            ConfirmButtonColor = "#5ACCA4",
-            ConfirmButtonText = "Sí, Confirmar",
-            CancelButtonColor = "#fff",
-            CancelButtonText = "No, Cancelar"
-        });
+            {
+                Icon = SweetAlertIcon.Success,
+                Title = "¿Estás seguro/a de que deseas guardar los cambios de este registro?",
+                Text = "Esta acción actualizará la información y no podrá recuperarse.",
+                ShowCancelButton = true,
+                ConfirmButtonColor = "#5ACCA4",
+                ConfirmButtonText = "Sí, Confirmar",
+                CancelButtonColor = "#fff",
+                CancelButtonText = "No, Cancelar"
+            });
 
 
         // Si el usuario confirma, proceder con la actualización
@@ -244,11 +226,11 @@
 
                 // Mostrar mensaje de éxito
                 await Swal.FireAsync(new SweetAlertOptions
-                {
-                    Title = "Los datos se han guardado exitosamente",
-                    Icon = SweetAlertIcon.Success,
-                    ShowConfirmButton = false
-                });
+                    {
+                        Title = "Los datos se han guardado exitosamente",
+                        Icon = SweetAlertIcon.Success,
+                        ShowConfirmButton = false
+                    });
 
                 // Navegar a otra página si es necesario
                 NavigationManager.NavigateTo($"/GroupDetails/{groupId}");
@@ -308,8 +290,8 @@
     private bool MatchesSearchCriteria(Models.Group group)
     {
         return (group.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
-               (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
-               (group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+        (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
+        (group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
 
     public GroupCoders GetGroupCoders(string? name, string? status)
@@ -326,10 +308,10 @@
         }
 
         GroupCoders groupCoders = new GroupCoders()
-        {
-            Name = name,
-            IsActive = statusBool
-        };
+            {
+                Name = name,
+                IsActive = statusBool
+            };
 
         return groupCoders;
     }

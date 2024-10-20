@@ -6,6 +6,13 @@ namespace riwitalentfrontend.Services.Interfaces
         Task SaveChangesRegister();
         Task NewRegister();
         Task Warning();
+        Task AcceptTerms();
+        Task CancelTerms(); 
+        Task ConfirmDeleteCoder();
+        Task ConfirmDeleteGroup();
+        Task AddCodersToGroup();
+
     }
+
 }
 

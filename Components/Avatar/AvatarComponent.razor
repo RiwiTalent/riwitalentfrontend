@@ -5,24 +5,17 @@
 @inject ISessionStorageService _sessionStorage
 
 
-
-
-@if (Inicial != null)
-{
-    <MudBadge Style="margin-right: 4px" Color="Status" Overlap="true" Bordered="true">
-        <MudAvatar Color="ColorRandom">@Inicial.ToUpper()</MudAvatar>
-    </MudBadge>
-}
-else
-{
-     Console.WriteLine("Cargando");
-    <p>Cargando...</p> 
-}
+<MudBadge Style="margin-right: 4px" Color="Status" Overlap="true" Bordered="true">
+    <MudAvatar Color="ColorRandom">@Inicial.ToUpper()</MudAvatar>
+</MudBadge>
 
 @code {
     private string? Inicial { get; set; }
     private Color ColorRandom { get; set; }
     private Color Status { get; set; } = Color.Success;
+
+    [Parameter]
+    public string? groupId { get; set; }
 
     [Parameter]
     public required string TypeAvatar { get; set; }

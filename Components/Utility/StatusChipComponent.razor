@@ -10,8 +10,8 @@
         return status switch
         {
             "Activo" => Color.Success,
-            "Inactivo" => Color.Default,
-            "Agrupado" => Color.Success,
+            "Inactivo" => Color.Error,
+            "Agrupado" => Color.Warning,
             "Seleccionado" => Color.Info,
             _ => Color.Default,
         };

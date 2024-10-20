@@ -13,17 +13,16 @@ namespace riwitalentfrontend.Models
         public string Name { get; set; } = string.Empty;
 
         // Photo del grupo
-        public string Photo { get; set; } = null;
+        public string? Photo { get; set; }
 
         // Descripción del grupo
         public string Description { get; set; } = string.Empty;
 
         // Estado del grupo (activo, inactivo, etc.)
-        public string Status { get; set; } = "Active";
+        public string Status { get; set; } = "Activo";
 
         // Fecha de creación del grupo
         public DateTime Created_At { get; set; } 
-        
         // Email del creador del grupo
         [Required]
         public string CreatedBy { get; set; }
@@ -31,6 +30,8 @@ namespace riwitalentfrontend.Models
         // Email de la empresa asociada al grupo
         [Required]
         public string? AssociateEmail { get; set; }
+
+        public bool? AcceptedTerms { get; set; }
 
 
         public DateTime ExpirationAt { get; set; }

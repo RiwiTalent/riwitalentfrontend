@@ -1,8 +1,9 @@
 @page "/groups"
+@using riwitalentfrontend.Components.Utility
 @layout MainLayout
-
-@attribute [Authorize]
+@inject SweetAlertService Swal;
 @inject IDialogService DialogService
+@inject IAlertService alertService;
 @inject IGroupService GroupService
 @inject ISnackbar Snackbar
 
@@ -125,22 +126,23 @@
                                 </PropertyColumn>
                             </Columns>
 
-                            <PagerContent>
-                                <MudDataGridPager 
-                                    T="Group"
-                                    PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
-                                    RowsPerPageString="@_rowsPerPageString"
-                                    InfoFormat="@_infoFormat" />
-                            </PagerContent>
-                        </MudDataGrid>
-                    </MudContainer>
-                }
+                                <PagerContent>
+                                    <MudDataGridPager T="Group"
+                                                        PageSizeOptions="new int[] { 10, 25, 50, 100, int.MaxValue }"
+                                                        RowsPerPageString="@_rowsPerPageString"
+                                                        InfoFormat="@_infoFormat"/>
+                                </PagerContent>
+                            
+                            </MudDataGrid>
+                        </MudContainer>
+                    }
                 else
-                {
-                    <MudText>No hay grupos disponibles.</MudText>
-                }
+                    {
+                        <MudText>No hay grupos disponibles.</MudText>
+                    }
             }
         </MudContainer>
+
     </Authorized>
 </AuthorizeView>
 
@@ -151,7 +153,7 @@
     private readonly string _rowsPerPageString = "Filas por página:";
     private readonly string _infoFormat = "{first_item}-{last_item} de {all_items}";
     private string? _errorMessage = null;
-
+    
     protected override async Task OnInitializedAsync()
     {
         await LoadGroupsAsync();
@@ -195,7 +197,8 @@
     private bool MatchesSearchCriteria(Group group)
     {
         return (group.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
-               (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false);
+               (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
+               (group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
 
     public GroupCoders GetGroupCoders(string name, string status)
@@ -215,7 +218,7 @@
             ["OnGroupCreated"] = EventCallback.Factory.Create<GroupAddDto>(this, async (GroupAddDto groups) => { await LoadGroupsAsync(); })
         };
 
-        var dialog = await DialogService.ShowAsync<GroupDialogComponent>("Crear Grupo", parameters, options);
+        var dialog = await DialogService.ShowAsync<DialogComponent>("Crear Grupo", parameters, options);
 
         if (!dialog.Result.IsCanceled)
         {
@@ -223,8 +226,25 @@
             await LoadGroupsAsync();
         }
     }
+    
+  private async Task DeleteGroupAsync(string groupId)
+{
+    // Mostrar alerta de confirmación
+    //var result = await alertService.ConfirmDeleteGroup();
+    var result = await Swal.FireAsync(new SweetAlertOptions
+    {
+        Icon = SweetAlertIcon.Warning,
+        Title = "¿Estás seguro/a de que deseas eliminar este grupo?",
+        Text = "Esta acción no se podrá deshacer.",
+        ShowCancelButton = true,
+        ConfirmButtonColor = "#FE654F",
+        ConfirmButtonText = "Eliminar",
+        CancelButtonColor = "#fff",
+        CancelButtonText = "<button style='color:#FE654F; background-color:#fff'>Cancelar</button>"
+    });
 
-    private async Task DeleteGroupAsync(string groupId)
+    // Si el usuario confirma, proceder con la eliminación
+    if (result.IsConfirmed)
     {
         await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
         {
@@ -240,4 +260,13 @@
         },
         errorMessage => _errorMessage = errorMessage);
     }
+    else
+    {
+        // El usuario canceló la eliminación
+        Console.WriteLine("Eliminación de grupo cancelada");
+    }
+}
+
+
+
 }

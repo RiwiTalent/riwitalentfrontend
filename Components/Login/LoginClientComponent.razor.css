@@ -1,5 +1,8 @@
 /* Estilos globales */
 
+body{
+    overflow: hidden;
+}
 
 .main-container {
     min-width: 100vw;
@@ -7,7 +10,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #F9FAFC; /* Duplicado eliminado */
+    background-color: #F9FAFC; /* Duplicado desactivado */
     overflow: hidden;
 }
 
@@ -137,24 +140,24 @@
 
     .secondary-container {
         display: flex;
-        flex-direction: row; /* Cambio a fila para alinear la imagen y el login lado a lado */
-        width: 100%; /* Asegúrate de que ocupe el 100% del ancho disponible */
+        flex-direction: row; 
+        width: 100%; /
     }
 
     .login-card {
-        width: 50%; /* Ajusta el ancho del login para que ocupe la mitad del contenedor */
+        width: 50%;
         padding: 1rem;
-        box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+        box-sizing: border-box; 
     }
 
     .image-container {
-        width: 50%; /* Ajusta el ancho de la imagen para que ocupe la otra mitad del contenedor */
+        width: 50%; 
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
         background-color: #F9FAFC;
-        /* Puedes agregar más estilos para ajustar la imagen aquí si es necesario */
+
     }
 
     .login-image-cel {

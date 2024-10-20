@@ -6,6 +6,8 @@
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
+@inject SweetAlertService Swal;
+
 
 <PageTitle>RiwiTalent: Explora el Mejor Talento de Desarrolladores</PageTitle>
 
@@ -132,7 +134,7 @@
                                                            Color="Color.Warning" Size="Size.Small"
                                                            Class="border-solid border-2 mud-border-warning pa-2">
                                             </MudIconButton>
-                                            <MudIconButton Href="/Home" Variant="Variant.Outlined"
+                                            <MudIconButton OnClick="@(() => DeleteCoderAsync(coder.Item.Id))" Variant="Variant.Outlined"
                                                            Icon="@Icons.Material.Rounded.DeleteOutline"
                                                            Color="Color.Error" Size="Size.Small"
                                                            Class="border-solid border-2 mud-border-error pa-2">
@@ -255,4 +257,92 @@
                (coder.Status != null && coder.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
                (coder.DateCreation != null && coder.DateCreation.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
+
+    private async Task DeleteCoderAsync(string Id)
+    {
+        // Llamar al servicio para obtener el coder y verificar su estado
+        var coder = await CoderService.GetCoderByIdAsync(Id); // Obtiene el objeto Coder
+
+        // Verificar si se pudo obtener el coder
+        if (coder == null)
+        {
+            // Mostrar mensaje de que no se encontró el coder
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "No se pudo encontrar el coder",
+                Text = "El coder no existe o ocurrió un error.",
+                Icon = SweetAlertIcon.Error,
+                ConfirmButtonText = "Aceptar"
+            });
+            return; 
+        }
+
+        // Verificar si el estado del coder es "Inactivo" o "Agrupado" o "selected".
+        if (coder.Status == "Inactivo" || coder.Status == "Agrupado" || coder.Status == "Seleccionado")
+        {
+            // Mostrar mensaje de que no se puede desactivar el coder debido a su estado
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "No se puede desactivar el coder",
+                Text = $"El coder tiene el estado '{coder.Status}' y no se puede desactivar.",
+                Icon = SweetAlertIcon.Warning,
+                ConfirmButtonText = "Aceptar"
+            });
+            return;
+        }
+
+        // Mostrar alerta de confirmación
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Icon = SweetAlertIcon.Warning,
+            Title = "¿Estás seguro/a de que deseas desactivar este coder?",
+            Text = "Esta acción no se podrá deshacer.",
+            ShowCancelButton = true,
+            ConfirmButtonColor = "#FE654F",
+            ConfirmButtonText = "Eliminar",
+            CancelButtonColor = "#fff",
+            CancelButtonText = "<button style='color:#FE654F; background-color:#fff'>Cancelar</button>"
+        });
+
+        // Si el usuario confirma, proceder con la eliminación
+        if (result.IsConfirmed)
+        {
+            await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
+            {
+                var success = await CoderService.DeleteCodersAsync(Id); // Eliminar el coder
+                if (success == true)
+                {
+                    await LoadCodersAsync(); // Recargar los coders después de desactivar
+                    await Swal.FireAsync(new SweetAlertOptions
+                    {
+                        Title = "El codificador ha sido desactivado exitosamente",
+                        Icon = SweetAlertIcon.Success,
+                        ShowConfirmButton = false,
+                        Timer = 1500
+                    });
+                }
+                else
+                {
+                    _errorMessage = "No se pudo desactivar el coder.";
+                    await Swal.FireAsync(new SweetAlertOptions
+                    {
+                        Title = "Error",
+                        Text = _errorMessage,
+                        Icon = SweetAlertIcon.Error,
+                        ConfirmButtonText = "Aceptar"
+                    });
+                }
+            },
+            errorMessage => _errorMessage = errorMessage);
+        }
+        else
+        {
+            // El usuario canceló la eliminación
+            Console.WriteLine("Eliminación cancelada");
+        }
+    }
+
+
+
+
 }

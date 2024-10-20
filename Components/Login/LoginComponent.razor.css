@@ -8,7 +8,7 @@
     justify-content: center;
     align-items: center;
     background-color: #F9FAFC;
-    /* Duplicado eliminado */
+    /* Duplicado desactivado */
     overflow: hidden;
 }
 
@@ -145,26 +145,26 @@
         flex-direction: row;
         /* Cambio a fila para alinear la imagen y el login lado a lado */
         width: 100%;
-        /* Asegúrate de que ocupe el 100% del ancho disponible */
+
     }
 
     .login-card {
         width: 50%;
-        /* Ajusta el ancho del login para que ocupe la mitad del contenedor */
+
         padding: 1rem;
         box-sizing: border-box;
-        /* Asegura que el padding no afecte el ancho total */
+
     }
 
     .image-container {
         width: 50%;
-        /* Ajusta el ancho de la imagen para que ocupe la otra mitad del contenedor */
+
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
         background-color: #F9FAFC;
-        /* Puedes agregar más estilos para ajustar la imagen aquí si es necesario */
+  
     }
 
     .login-image-cel {

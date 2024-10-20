@@ -19,7 +19,7 @@ namespace riwitalentfrontend.Models
 
         // Datos adicionales
         public int Age { get; set; } = 0;
-        public string Status { get; set; } = "Active";
+        public string Status { get; set; } = "Activo";
 
         // Fecha de creación del perfil
         public DateTime DateCreation { get; set; }
