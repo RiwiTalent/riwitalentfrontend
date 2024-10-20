@@ -1,0 +1,19 @@
+<MudChip T="String" Color="@GetChipColor(Status)" Variant="Variant.Filled" Size="Size.Small" Class="px-4">
+    @Status
+</MudChip>
+
+@code {
+    [Parameter] public String? Status { get; set; }
+
+    private Color GetChipColor(string? status)
+    {
+        return status switch
+        {
+            "Activo" => Color.Success,
+            "Inactivo" => Color.Default,
+            "Agrupado" => Color.Success,
+            "Seleccionado" => Color.Info,
+            _ => Color.Default,
+        };
+    }
+}

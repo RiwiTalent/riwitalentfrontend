@@ -1,9 +1,12 @@
 @inject IGroupService GroupService
 
-<MudIconButton OnClick="@RegenerateToken"
-               Icon="@Icons.Material.Rounded.Autorenew"
-               Color="Color.Primary"
-               Variant="Variant.Outlined" />
+<MudTooltip Text="Regenerar token">
+    <MudIconButton OnClick="@RegenerateToken"
+                   Icon="@Icons.Material.Rounded.Autorenew"
+                   Color="Color.Primary"
+                   Variant="Variant.Outlined" />
+</MudTooltip>
+
 
 @code {
     [Parameter] public string? GroupId { get; set; }
