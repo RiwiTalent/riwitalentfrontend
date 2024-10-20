@@ -64,7 +64,20 @@
                                 <MudAvatar Icon="@Icons.Material.Filled.Person" Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary"></MudAvatar>
                             }
                             <MudText Typo="Typo.h6" Color="Color.Primary">@_group.Name</MudText>
-                            <MudChip T="string" Color="@GetChipColor(_group.Status)" Value="@_group.Status"></MudChip>
+                            <MudItem Class="d-flex mt-3">
+                                <MudChip T="string" Color="@GetChipColor(_group.Status)" Value="@_group.Status"></MudChip>
+
+                                @if(isEditing == true)
+                                {
+                                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhotoGroup" @bind-Value="_files" MaximumFileCount="2000000">
+                                        <ActivatorContent>
+                                            <MudFab Color="Color.Success"
+                                                    Style="width: 40px; height: 32px"
+                                                    StartIcon="@Icons.Material.Filled.AttachFile" />
+                                        </ActivatorContent>
+                                    </MudFileUpload>
+                                }
+                            </MudItem>
                         </MudCard>
                     </MudItem>
 
@@ -169,6 +182,7 @@
 @code {
     [Parameter] public string? groupId { get; set; }
 
+    private IBrowserFile _files;
     private Group _group;
     private string _searchString;
     private bool _loading = true;
@@ -176,6 +190,26 @@
     private string _rowsPerPageString = "Filas por página:";
     private string _infoFormat = "{first_item}-{last_item} de {all_items}";
     private bool isEditing = false;
+
+    private async Task UploadPhotoGroup(IBrowserFile file)
+    {
+
+        if(!string.IsNullOrEmpty(groupId))
+        {
+            if(file != null)
+            {
+                var stream = file.OpenReadStream(2 * 1024 * 1024);
+
+                await GroupService.UploadPhoto(groupId, stream, file.Name);
+                await LoadGroupDetailsAsync();
+            }
+            else
+            {
+                Console.WriteLine("No file selected");
+            }
+        }
+
+    }
 
     protected override async Task OnInitializedAsync()
     {
