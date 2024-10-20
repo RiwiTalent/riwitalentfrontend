@@ -90,5 +90,32 @@ namespace riwitalentfrontend.Services.Implementations
                 return false;
             }
         }
+
+        public async Task<bool> UploadPhoto(string groupId, Stream stream, string fileName)
+        {
+
+            if (stream == null || stream.Length == 0)
+            {
+                throw new ArgumentException("No file uploaded", nameof(stream));
+            }
+
+            using var content = new MultipartFormDataContent();
+
+            var file = new StreamContent(stream);
+            content.Add(new StreamContent(stream), "file", fileName);
+            
+            var response = await _httpClient.PostAsync($"http://localhost:5113/photo/{groupId}", content);
+
+            if(response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Se subió de manera correcta la foto");
+            }
+            else
+            {
+                Console.WriteLine($"Error al carga la foto {response.StatusCode}");
+            }
+
+            return response.IsSuccessStatusCode;
+        }
     }
 }
