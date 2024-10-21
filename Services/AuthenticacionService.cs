@@ -15,25 +15,36 @@ namespace riwitalentfrontend.Services
             _sesionStorage = sessionStorage;
         }
 
-        public async Task ActualizarEstadoAutenticacion(User? sesionUsuario)
-        {
+        public async Task ActualizarEstadoAutenticacion(Coder? sesionUsuario)
+        {   
+            Console.WriteLine($"Nombre: {sesionUsuario.FirstName}, Email: {sesionUsuario.Email}");
+
             ClaimsPrincipal claimsPrincipal;
             Console.WriteLine(sesionUsuario);
             if (sesionUsuario != null)
             {
+                // Agregar las Claims relevantes para la autenticación
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
-                    
-                },"JwtAuth"));
-                await _sesionStorage.GuardarStorage("sesionUsuario",sesionUsuario);
+                    new Claim(ClaimTypes.Name, sesionUsuario.FirstName),
+                    new Claim(ClaimTypes.Email, sesionUsuario.Email),
+                    // Agrega cualquier otra Claim relevante para tu lógica de autorización
+                }, "JwtAuth"));
+                
+                // Guardar la sesión del usuario en el almacenamiento
+                await _sesionStorage.GuardarStorage("sesionUsuario", sesionUsuario);
             }
-            else{
+            else
+            {
+                // Si no hay usuario, establecer un ClaimsPrincipal vacío
                 claimsPrincipal = _sinInformacion;
                 await _sesionStorage.RemoveItemAsync("sesionUsuario");
             }
 
+            // Notificar el cambio en el estado de autenticación
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
         }
+
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {

@@ -1,22 +1,29 @@
 @using riwitalentfrontend.Pages
 
-<CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(App).Assembly">
-        <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData">
-                <NotAuthorized>
-                    <LayoutView  Layout="@typeof(DefaultLayout)">
-                        <NotAuthorized />
-                    </LayoutView>
-                </NotAuthorized>
-            </AuthorizeRouteView>
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-        </Found>
+<MudPopoverProvide/>
+    <CascadingAuthenticationState>
+        <Router AppAssembly="@typeof(App).Assembly">
+            <Found Context="routeData">
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(DefaultLayout)">
+                    <Authorizing>
+                        <LayoutView Layout="@typeof(DefaultLayout)">
+                            <MudText Typo="Typo.h4" Align="Align.Center">Cargando...</MudText>
+                        </LayoutView>
+                    </Authorizing>
+                    <NotAuthorized>
+                        <LayoutView Layout="@typeof(DefaultLayout)">
+                            <NotAuthorized />
+                        </LayoutView>
+                    </NotAuthorized>
+                </AuthorizeRouteView>
+                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            </Found>
 
-        <NotFound>
-            <LayoutView Layout="@typeof(DefaultLayout)">
-                <NotFound />
-            </LayoutView>
-        </NotFound>
-    </Router>
-</CascadingAuthenticationState>
+            <NotFound>
+                <LayoutView Layout="@typeof(DefaultLayout)">
+                    <NotFound />
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingAuthenticationState>
+
