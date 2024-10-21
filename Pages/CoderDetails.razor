@@ -2,6 +2,7 @@
 @using riwitalentfrontend.Components.GroupCoder
 @layout MainLayout
 @inject ICoderService CoderService
+@inject IJSRuntime JSRuntime;
 @inject SweetAlertService Swal;
 @inject AlertService AlertService;
 @inject NavigationManager NavigationManager
@@ -66,12 +67,29 @@
                                 <StatusChipComponent Status="@_coder.StandarRiwi.Standar"/>
 
                                 <!-- Botón Descargar y Cargar Cv -->
-                                <MudTooltip Text="@(isEditing ? "Cargar Cv" : "Descargar Cv")">
-                                    <MudButton Variant="Variant.Filled" Color="@((isEditing ? Color.Success : Color.Primary))"
-                                               StartIcon="@(isEditing ? @Icons.Material.Rounded.UploadFile : Icons.Material.Rounded.SimCardDownload)">
-                                        @(isEditing ? "Cargar Cv" : "Descargar Cv")
-                                    </MudButton>
-                                </MudTooltip>
+                                @if(isEditing == true)
+                                {
+                                    <MudFileUpload T="IBrowserFile" Accept=".pdf" FilesChanged="UploadCv" @bind-Value="_files" MaximumFileCount="2000000">
+                                        <ActivatorContent>
+                                        <MudTooltip Text="Cargar Cv">
+                                            <MudButton Variant="Variant.Filled" Color="Color.Success"
+                                                    StartIcon="@Icons.Material.Rounded.UploadFile">
+                                                    Cargar Cv
+                                            </MudButton>
+                                        </MudTooltip>
+                                        </ActivatorContent>
+                                    </MudFileUpload>
+                                }
+
+                                @if(isEditing == false)
+                                {
+                                    <MudTooltip Text="Descargar Cv">
+                                        <MudButton OnClick="DownloadCoderCV" Variant="Variant.Filled" Color="Color.Primary"
+                                                StartIcon="@Icons.Material.Rounded.SimCardDownload">
+                                                Descargar Cv
+                                        </MudButton>
+                                    </MudTooltip>
+                                }
 
                                 <!-- Componente de subida de archivos, sobrepuesto al avatar -->
                                 <MudItem Class="d-flex mt-3">
@@ -322,6 +340,42 @@
             }
         }
 
+    }
+
+    private async Task UploadCv(IBrowserFile file)
+    {
+
+        if(!string.IsNullOrEmpty(coderId))
+        {
+            if(file != null)
+            {
+                var stream = file.OpenReadStream(2 * 1024 * 1024);
+
+                await CoderService.UploadCvCoder(coderId, stream, file.Name);
+                await LoadCoderDetailsAsync();
+            }
+            else
+            {
+                Console.WriteLine("No file selected");
+            }
+        }
+
+    }
+
+    //download cv
+    private async Task DownloadCoderCV()
+    {
+        var coderCv = await CoderService.DownloadCv(coderId);
+
+        if (coderCv != null && coderCv.Length > 0)
+        {
+            Console.WriteLine($"Tamaño del CV: {coderCv.Length} bytes");
+            await JSRuntime.InvokeVoidAsync("Blazor.downloadFile", "cv", "application/pdf", coderCv);
+        }
+        else
+        {
+            Console.WriteLine("La descarga falló o el archivo está vacío.");
+        }
     }
 
     protected override async Task OnInitializedAsync()
