@@ -12,23 +12,26 @@ namespace riwitalentfrontend.Models
         // Apellidos del coder
         public string FirstLastName { get; set; } = string.Empty;
         public string SecondLastName { get; set; } = string.Empty;
-
+        
         // Información de contacto
         public string Email { get; set; } = string.Empty;
-        public string Photo { get; set; } = string.Empty;
-
+        public string? Phone { get; set; }
+        
         // Datos adicionales
+        public string Photo { get; set; } = string.Empty;
         public int Age { get; set; } = 0;
+        
+        // Perfil
+        public string? Cv { get; set; }
+        public string? ProfessionalDescription { get; set; }
         public string Status { get; set; } = "Activo";
+        public float AssessmentScore { get; set; }
 
         // Fecha de creación del perfil
         public DateTime DateCreation { get; set; }
 
         // Tecnologías en las que el coder es competente
         public string Stack { get; set; } = string.Empty;
-        
-        // Puntaje de desempeño
-        public float AssessmentScore { get; set; }
         
         // fecha de creación del Coder
         public DateTime Date_Creation { get; set; } = DateTime.UtcNow;

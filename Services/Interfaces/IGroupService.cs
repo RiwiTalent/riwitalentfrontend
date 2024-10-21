@@ -13,6 +13,6 @@ namespace riwitalentfrontend.Services.Interfaces
                 Task<bool> DeleteGroupAsync(string groupId);
                 Task<bool> AddGroupAsync(GroupAddDto groupAddDto);
                 Task<bool> RegenerateToken(string groupId);
-                Task<bool> UploadPhoto(string groupId, Stream stream, string fileName);
+                Task<bool> UploadGroupPhoto(string groupId, Stream stream, string fileName);
         } 
 }

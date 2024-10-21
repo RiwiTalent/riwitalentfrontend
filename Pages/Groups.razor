@@ -1,4 +1,4 @@
-@page "/groups"
+@page "/Groups"
 @using riwitalentfrontend.Components.Utility
 @layout MainLayout
 @inject SweetAlertService Swal;
@@ -24,96 +24,107 @@
             }
             else
             {
-                <MudContainer Class="ma-3 w-full h-full">
-                    <MudText Typo="Typo.h5"><b>@_groups.Count</b> Grupos encontrados</MudText>
-                </MudContainer>
 
                 @if (_groups != null && _groups.Any())
-                    {
-                        <MudContainer Class="ma-3 w-full h-full">
-                            <!-- Grid de grupos -->
-                            <MudDataGrid
-                                    Class="flex-grow-1 pa-5"
-                                    LoadingProgressColor="Color.Info"
-                                    Hover="true"
-                                    Items="@_groups"
-                                    MultiSelection="true"
-                                    QuickFilter="@QuickFilter">
+                {
+                    <MudContainer Class="ma-3 d-flex flex-grow-1 justify-center align-content-start">
+                        <!-- Resultados encontrados -->
+                        <MudContainer Class="d-flex align-end px-0 justify-star gap-2">
+                            <MudText Color="Color.Primary" Typo="Typo.h5"><b>@_groups.Count</b></MudText>
+                            <MudText Typo="Typo.h5"><b>Resultados encontrados</b></MudText>
+                        </MudContainer>
 
-                                    <ToolBarContent>
-                                        <MudGrid>
-                                            <MudItem xs="12" Class="d-flex flex-grow-1 gap-3 justify-space-between">
-                                                <MudTextField Placeholder="Buscar aquí..."
-                                                              @bind-Value="_searchString"
-                                                              Immediate="true"
-                                                              Variant="Variant.Outlined"
-                                                              Adornment="Adornment.End"
-                                                              AdornmentIcon="@Icons.Material.Rounded.Search"
-                                                              AdornmentColor="Color.Primary"
-                                                />
+                        <!-- Botón Agregar -->
+                        <MudContainer Class="d-flex flex-grow-1 px-0 justify-end align-content-start">
+                            <MudTooltip Text="Crear grupo">
+                                <MudFab Color="Color.Primary"
+                                        @onclick="OpenDialogAsync"
+                                        Size="Size.Medium"
+                                        StartIcon="@Icons.Material.Rounded.GroupAdd">
+                                </MudFab>
+                            </MudTooltip>
+                        </MudContainer>
+                    </MudContainer>
+                    
+                    <MudContainer Class="ma-3 w-full h-full">
+                        <!-- Grid de grupos -->
+                        <MudDataGrid
+                            Class="flex-grow-1 pa-5"
+                            LoadingProgressColor="Color.Info"
+                            Hover="true"
+                            Items="@_groups"
+                            MultiSelection="true"
+                            QuickFilter="@QuickFilter">
 
-                                                <MudSpacer/>
-                                                <MudButton OnClick="OpenDialogAsync"
-                                                           Color="Color.Primary"
-                                                           Variant="Variant.Filled"
-                                                           Size="Size.Medium"
-                                                           StartIcon="@Icons.Material.Rounded.GroupAdd">Nuevo</MudButton>
-                                            </MudItem>
-                                        </MudGrid>
-                                    </ToolBarContent>
+                            <ToolBarContent>
+                                <MudGrid>
+                                    <MudItem xs="12" sm="6" Class="d-flex gap-2">
+                                        <MudTextField Placeholder="Buscar aquí..."
+                                                      @bind-Value="_searchString"
+                                                      Immediate="true"
+                                                      FullWidth="true"
+                                                      Variant="Variant.Outlined"
+                                                      Adornment="Adornment.End"
+                                                      AdornmentIcon="@Icons.Material.Rounded.Search"
+                                                      AdornmentColor="Color.Primary"
+                                                      Margin="Margin.Dense">
+                                        </MudTextField>
+                                    </MudItem>
+                                </MudGrid>
+                            </ToolBarContent>
 
-                                <Columns>
-                                    <SelectColumn T="Models.Group"/>
-                                    <PropertyColumn Property="x => x.Name" Title="Nombre del grupo">
-                                        <CellTemplate Context="group">
-                                            <MudContainer Class="d-flex gap-2 align-center">
-                                                <AvatarComponent TypeAvatar="GrupoCoders"
-                                                                GroupCoders="GetGroupCoders(group.Item.Name, group.Item.Status)"/>
-                                                <MudContainer>
-                                                    <MudText><b>@group.Item.Name</b></MudText>
-                                                    <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.Description</MudText>
-                                                </MudContainer>
+                            <Columns>
+                                <PropertyColumn Property="x => x.Name" Title="Nombre del grupo">
+                                    <CellTemplate Context="group">
+                                        <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                            <AvatarComponent
+                                                AvatarUrl="@group.Item.Photo"
+                                                FirstName="@group.Item.Name"
+                                                TypeAvatar="Group" />
+                                            <MudContainer>
+                                                <MudText><b>@group.Item.Name</b></MudText>
+                                                <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.Description</MudText>
                                             </MudContainer>
-                                        </CellTemplate>
-                                    </PropertyColumn>
+                                        </MudStack>
+                                    </CellTemplate>
+                                </PropertyColumn>
 
-                                    <PropertyColumn Property="x => x.Status" Title="Creado por" Sortable="true">
-                                        <CellTemplate Context="group">
-                                            <MudStack Row>
-                                                <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.CreatedBy</MudText>
-                                            </MudStack>
-                                        </CellTemplate>
-                                    </PropertyColumn>
+                                <PropertyColumn Property="x => x.Status" Title="Creado por" Sortable="true">
+                                    <CellTemplate Context="group">
+                                        <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.CreatedBy</MudText>
+                                    </CellTemplate>
+                                </PropertyColumn>
 
-                                    <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
-                                        <CellTemplate Context="group">
-                                            <MudStack Row>
-                                                <MudChip T="string" Color="@GetChipColor(group.Item.Status)"
-                                                        Variant="Variant.Filled" Size="Size.Small" Class="px-4">
-                                                    @group.Item.Status
-                                                </MudChip>
-                                            </MudStack>
-                                        </CellTemplate>
-                                    </PropertyColumn>
-                                    <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
-                                        <CellTemplate Context="group">
-                                            <MudStack Row>
-                                                <MudIconButton Href="@($"/GroupDetails/{group.Item.Id}")"
-                                                            Variant="Variant.Outlined"
-                                                            Icon="@Icons.Material.Outlined.RemoveRedEye"
-                                                            Color="Color.Warning" Size="Size.Small"
-                                                            Class="border-solid border-2 mud-border-warning pa-2">
-                                                </MudIconButton>
-                                                <MudIconButton OnClick="@(() => DeleteGroupAsync(group.Item.Id))"
-                                                            Variant="Variant.Outlined"
-                                                            Icon="@Icons.Material.Rounded.DeleteOutline"
-                                                            Color="Color.Error" Size="Size.Small"
-                                                            Class="border-solid border-2 mud-border-error pa-2">
-                                                </MudIconButton>
-                                            </MudStack>
-                                        </CellTemplate>
-                                    </PropertyColumn>
-                                </Columns>
+                                <PropertyColumn Property="x => x.Status" Title="Estado" Sortable="true">
+                                    <CellTemplate Context="group">
+                                        <StatusChipComponent Status="@group.Item.Status"/>
+                                    </CellTemplate>
+                                </PropertyColumn>
+
+                                <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
+                                    <CellTemplate Context="group">
+                                        <MudStack Row="true">
+                                            <MudIconButton 
+                                                Href="@($"/GroupDetails/{group.Item.Id}")"
+                                                Variant="Variant.Outlined"
+                                                Icon="@Icons.Material.Outlined.RemoveRedEye"
+                                                Color="Color.Warning" 
+                                                Size="Size.Small"
+                                                Class="border-solid border-2 mud-border-warning pa-2">
+                                            </MudIconButton>
+                                            
+                                            <MudIconButton 
+                                                OnClick="@(() => DeleteGroupAsync(group.Item.Id))"
+                                                Variant="Variant.Outlined"
+                                                Icon="@Icons.Material.Rounded.DeleteOutline"
+                                                Color="Color.Error" 
+                                                Size="Size.Small"
+                                                Class="border-solid border-2 mud-border-error pa-2">
+                                            </MudIconButton>
+                                        </MudStack>
+                                    </CellTemplate>
+                                </PropertyColumn>
+                            </Columns>
 
                                 <PagerContent>
                                     <MudDataGridPager T="Group"
@@ -136,7 +147,7 @@
 </AuthorizeView>
 
 @code {
-    private List<Group> _groups = new();
+    private List<Group?> _groups = new();
     private string _searchString = string.Empty;
     private bool _loading = true;
     private readonly string _rowsPerPageString = "Filas por página:";
@@ -154,19 +165,27 @@
         _errorMessage = null;
 
         await ErrorHandling.ExecuteWithErrorHandlingAsync(async () =>
-        {
-            var groups = await GroupService.GetGroupsAsync() ?? new List<Group>();
-            _groups = groups
-                .OrderByDescending(g => g.Status == "Active")
-                .ThenByDescending(g => g.Created_At)
-                .ToList();
-        },
-        _errorMessage => _errorMessage = this._errorMessage);
+            {
+                // Intentar obtener los grupos
+                var groups = await GroupService.GetGroupsAsync() ?? new List<Group>();
+
+                // Asegurarse de que no haya grupos nulos, filtrar y ordenar
+                _groups = groups
+                    .Where(g => g != null)
+                    .OrderByDescending(g => g.Status == "Activo")
+                    .ThenByDescending(g => g.Created_At)
+                    .ToList();
+            },
+            (ex) => 
+            {
+                // Capturar y asignar el mensaje de error en caso de excepción
+                _errorMessage = "Hubo un error al cargar los grupos. intenta mas tarde.";
+            });
 
         _loading = false;
     }
 
-    
+
     private Func<Group, bool> QuickFilter => group =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
@@ -180,16 +199,6 @@
         return (group.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
                (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
                (group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private Color GetChipColor(string? status)
-    {
-        return status switch
-        {
-            "Active" => Color.Success,
-            "Inactive" => Color.Error,
-            _ => Color.Default,
-        };
     }
 
     public GroupCoders GetGroupCoders(string name, string status)
@@ -209,7 +218,7 @@
             ["OnGroupCreated"] = EventCallback.Factory.Create<GroupAddDto>(this, async (GroupAddDto groups) => { await LoadGroupsAsync(); })
         };
 
-        var dialog = await DialogService.ShowAsync<DialogComponent>("Crear Grupo", parameters, options);
+        var dialog = await DialogService.ShowAsync<GroupDialogComponent>("Crear Grupo", parameters, options);
 
         if (!dialog.Result.IsCanceled)
         {
@@ -228,9 +237,7 @@
         Title = "¿Estás seguro/a de que deseas eliminar este grupo?",
         Text = "Esta acción no se podrá deshacer.",
         ShowCancelButton = true,
-        ConfirmButtonColor = "#FE654F",
         ConfirmButtonText = "Eliminar",
-        CancelButtonColor = "#fff",
         CancelButtonText = "<button style='color:#FE654F; background-color:#fff'>Cancelar</button>"
     });
 
