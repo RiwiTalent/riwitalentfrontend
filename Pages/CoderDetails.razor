@@ -96,13 +96,15 @@
                             <MudForm Spacing="2">
                                 
                                 <!-- Título: Información del Coder -->
-                                <MudCard Class="d-flex pa-4">
+                                <MudCard Class="d-flex pa-4 my-2">
                                     <MudCardContent Class="FullWidth">
                                         <MudGrid>
                                             <MudItem xs="12">
                                                 <MudText Align="Align.Start" Typo="Typo.h5"><b>Información del coder</b></MudText>
                                             </MudItem>
 
+                                            @* Campos de información del coder *@
+                                            
                                             <!-- Nombres del Coder -->
                                             <MudItem xs="12" sm="6">
                                                 <MudText Typo="Typo.subtitle2"><b>Primer Nombre</b></MudText>
@@ -183,8 +185,41 @@
                                                               ReadOnly="!isEditing">
                                                 </MudTextField>
                                             </MudItem>
-
-
+                                            
+                                            <!-- información del puntaje del Coder -->
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Puntaje</b></MudText>
+                                                <MudNumericField T="float"
+                                                                 @bind-Value="@_coder.AssessmentScore"
+                                                                 Placeholder="ingrese su puntaje"
+                                                                 Variant="Variant.Outlined"
+                                                                 FullWidth="true"
+                                                                 Margin="Margin.Dense"
+                                                                 AdornmentIcon="@Icons.Material.Outlined.EmojiEvents"
+                                                                 Adornment="Adornment.Start"
+                                                                 AdornmentColor="Color.Primary"
+                                                                 ReadOnly="!isEditing">
+                                                </MudNumericField>
+                                            </MudItem>
+                                            
+                                            <!-- información del Stack -->
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Stack</b></MudText>
+                                                <MudSelect T="string" @bind-Value="_coder.Stack"
+                                                           AnchorOrigin="Origin.CenterCenter"
+                                                           TransformOrigin="Origin.CenterCenter"
+                                                           Placeholder="Selecciona su Stack"
+                                                           Variant="Variant.Outlined"
+                                                           FullWidth="true"
+                                                           Margin="Margin.Dense"
+                                                           Required="true"
+                                                           Disabled="!isEditing">
+                                                    @foreach (var role in developmentRoles)
+                                                    {
+                                                        <MudSelectItem Value="@role">@role</MudSelectItem>
+                                                    }
+                                                </MudSelect>
+                                            </MudItem>
                                         </MudGrid>
                                     </MudCardContent>
                                 </MudCard>
@@ -220,10 +255,10 @@
                                             <MudItem xs="12">
                                                 <MudText Typo="Typo.subtitle2"><b>Lenguajes de programación</b></MudText>
                                                 <MudChipSet T="string" SelectionMode="SelectionMode.MultiSelection"
-                                                            CheckMark="true" Variant="Variant.Text" Color="Color.Primary">
+                                                            CheckMark="true" Variant="Variant.Filled" Color="Color.Primary">
                                                     @foreach (var skill in _coder.Skills)
                                                     {
-                                                        <MudChip T="string" Value="@skill.Language_Programming">@skill.language_Programming</MudChip>
+                                                        <MudChip T="string">@skill.Language_Programming</MudChip>
                                                     }
                                                 </MudChipSet>
                                             </MudItem>
@@ -232,10 +267,14 @@
                                             <MudItem xs="12">
                                                 <MudText Typo="Typo.subtitle2"><b>Idiomas</b></MudText>
                                                 <MudChipSet T="string" SelectionMode="SelectionMode.MultiSelection"
-                                                            CheckMark="true" Variant="Variant.Text" Color="Color.Primary">
-                                                    @foreach (var skill in _coder.LanguageSkills.Language)
+                                                            CheckMark="true" Variant="Variant.Filled" Color="Color.Primary">
+                                                    @if (_coder.LanguageSkills != null)
                                                     {
-                                                        <MudChip T="string" Value="@_coder.LanguageSkills.Language">@_coder.LanguageSkills.Language</MudChip>
+                                                        <MudChip T="string">@_coder.LanguageSkills.Language</MudChip>
+                                                    }
+                                                    else
+                                                    {
+                                                        <MudText>No se encontraron idiomas.</MudText>
                                                     }
                                                 </MudChipSet>
                                             </MudItem>
@@ -254,7 +293,7 @@
     [Parameter] public string? coderId { get; set; }
 
     private IBrowserFile _files;
-    private Coder _coder;
+    private Coder _coder = new Coder();
     private List<Group> _groups;
     private string _searchString;
     private bool _loading = true;
@@ -333,9 +372,7 @@
             ConfirmButtonColor = RiwiPalette.Secondary500,
             ConfirmButtonText = "Si, Confirmar",
             CancelButtonColor = RiwiPalette.FeedbackDanger500,
-            
         });
-
 
         // Si el usuario confirma, proceder con la actualización
         if (result.IsConfirmed)
@@ -474,5 +511,18 @@
             Console.WriteLine("No se pudo regenerar el token.");
         }
     }
+    
+    private List<string> developmentRoles = new List<string>
+    {
+        "Frontend",
+        "Backend",
+        "FullStack",
+        "DevOps",
+        "Mobile",
+        "Data Science",
+        "UI/UX",
+        "Game Development",
+        "Embedded Systems"
+    };
 }
 }

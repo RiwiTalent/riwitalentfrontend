@@ -25,14 +25,42 @@ namespace riwitalentfrontend.Services.Implementations
                 "https://backend-riwitalent-9pv2.onrender.com/coders");
         }
 
+        
+        // Metodo para actualizar un Coder :C pendiente de refactorizar 
         public async Task<bool> UpdateCoderAsync(Coder coder)
         {
-            var url =
-                $"https://backend-riwitalent-9pv2.onrender.com/coders?Id={coder.Id}&FirstName={coder.FirstName}&SecondName={coder.SecondName}&FirstLastName={coder.FirstLastName}&SecondLastName={coder.SecondLastName}&Email={coder.Email}&Age={coder.Age}";
+            // Construir la URL utilizando el método BuildCoderLink
+            var url = BuildCoderLink(coder);
 
+            // Realizar la llamada PUT al backend
             var response = await _httpClient.PutAsync(url, null);
             return response.IsSuccessStatusCode;
         }
+
+// Método privado para construir el enlace
+        private string BuildCoderLink(Coder coder)
+        {
+            return $"https://backend-riwitalent-9pv2.onrender.com/coders?" +
+                   $"Id={Uri.EscapeDataString(coder.Id)}&" +
+                   $"FirstName={Uri.EscapeDataString(coder.FirstName)}&" +
+                   $"SecondName={Uri.EscapeDataString(coder.SecondName)}&" +
+                   $"FirstLastName={Uri.EscapeDataString(coder.FirstLastName)}&" +
+                   $"ProfessionalDescription={Uri.EscapeDataString(coder.ProfessionalDescription)}&" +
+                   $"Age={coder.Age}&" +
+                   $"Email={Uri.EscapeDataString(coder.Email)}&" +
+                   $"Age={coder.Age}&" +
+                   $"Photo={Uri.EscapeDataString(coder.Photo)}&" +
+                   $"Phone={Uri.EscapeDataString(coder.Phone)}&" +
+                   $"AssessmentScore={coder.AssessmentScore}&" +
+                   $"Cv={Uri.EscapeDataString(coder.Cv)}&" +
+                   $"Status={Uri.EscapeDataString(coder.Status)}&" +
+                   $"Stack={Uri.EscapeDataString(coder.Stack)}";
+                   // $"GroupId={Uri.EscapeDataString(coder.GroupId.ToString())}";
+                   // $"StandarRiwi={Uri.EscapeDataString(coder.StandarRiwi.ToString())}&" + // Agrega el estándar
+                   // $"Skills={Uri.EscapeDataString(())} &" + // Agrega habilidades
+                   // $"LanguageSkills={Uri.EscapeDataString(coder.LanguageSkills.Language)}"; // Agrega habilidades lingüísticas
+        }
+
 
         public async Task<List<Coder>?> FilterCodersBySkillsAsync(List<string> skills)
         {
