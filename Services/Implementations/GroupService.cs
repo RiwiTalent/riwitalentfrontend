@@ -42,7 +42,7 @@ namespace riwitalentfrontend.Services.Implementations
             try
             {
                 var response = await _httpClient.PutAsJsonAsync($"http://localhost:5113/groups?Id={group.Id}&Name={group.Name}&Photo={group.Photo}&Description={group.Description}&Status={group.Status}&CreatedBy={group.CreatedBy}&AssociateEmail={group.AssociateEmail}&AcceptedTerms={group.AcceptedTerms}", group);
-                response.EnsureSuccessStatusCode(); // Lanza una excepción si la solicitud no es exitosa
+                response.EnsureSuccessStatusCode(); 
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -91,7 +91,7 @@ namespace riwitalentfrontend.Services.Implementations
             }
         }
 
-        public async Task<bool> UploadPhoto(string groupId, Stream stream, string fileName)
+        public async Task<bool> UploadGroupPhoto(string groupId, Stream stream, string fileName)
         {
 
             if (stream == null || stream.Length == 0)

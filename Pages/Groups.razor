@@ -1,4 +1,4 @@
-@page "/groups"
+@page "/Groups"
 @using riwitalentfrontend.Components.Utility
 @layout MainLayout
 @inject SweetAlertService Swal;
@@ -218,7 +218,7 @@
             ["OnGroupCreated"] = EventCallback.Factory.Create<GroupAddDto>(this, async (GroupAddDto groups) => { await LoadGroupsAsync(); })
         };
 
-        var dialog = await DialogService.ShowAsync<DialogComponent>("Crear Grupo", parameters, options);
+        var dialog = await DialogService.ShowAsync<GroupDialogComponent>("Crear Grupo", parameters, options);
 
         if (!dialog.Result.IsCanceled)
         {
@@ -237,9 +237,7 @@
         Title = "¿Estás seguro/a de que deseas eliminar este grupo?",
         Text = "Esta acción no se podrá deshacer.",
         ShowCancelButton = true,
-        ConfirmButtonColor = "#FE654F",
         ConfirmButtonText = "Eliminar",
-        CancelButtonColor = "#fff",
         CancelButtonText = "<button style='color:#FE654F; background-color:#fff'>Cancelar</button>"
     });
 

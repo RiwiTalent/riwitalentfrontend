@@ -1,0 +1,480 @@
+@page "/CoderDetails/{coderId}"
+@using riwitalentfrontend.Components.GroupCoder
+@layout MainLayout
+@inject ICoderService CoderService
+@inject SweetAlertService Swal;
+@inject AlertService AlertService;
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize]
+
+
+<PageTitle>RiwiTalent: Detalles del Coder</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+            @if (_loading)
+            {
+                <ProgressComponent />
+            }
+            else
+            {
+                <!-- Drawer para filtro -->
+                <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true"
+                    Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded ma-2">
+                    <CoderFilterComponent OnFiltered="UpdateCoder" />
+                </MudDrawer>
+
+                <!-- Detalles del coder  -->
+                <MudContainer Class="ma-3 d-flex flex-column flex-grow-1 justify-center align-content-start">
+                    <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 py-3 px-0">
+                        <!-- Botón Regresar -->
+                        <MudTooltip Text="Regresar">
+                            <MudIconButton Href="/Coders" Variant="Variant.Outlined"
+                                Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small"
+                                Class="border-solid border-2 mud-border-primary pa-2">
+                            </MudIconButton>
+                        </MudTooltip>
+
+                        <!-- Botón Editar y Agregar -->
+                        <MudTooltip Text="@(isEditing ? "Guardar Coder" : "Editar Coder")">
+                            <MudButton Variant="Variant.Filled" Color="@((isEditing ? Color.Success : Color.Primary))"
+                                       StartIcon="@(isEditing ? Icons.Material.Rounded.Save : Icons.Material.Rounded.Edit)"
+                                       OnClick="@ToggleEditState">
+                                @(isEditing ? "Guardar Coder" : "Editar Coder")
+                            </MudButton>
+                        </MudTooltip>
+                    </MudContainer>
+
+                    <MudGrid Justify="Justify.SpaceBetween" Spacing="3">
+                        <!-- Card con Avatar y Nombre del Coder -->
+                        <MudItem xs="12" sm="4" md="4">
+                            <MudCard Class="d-flex flex-column align-center justify-center mud-width-full pa-4">
+
+                                @if (!string.IsNullOrEmpty(_coder.Photo))
+                                {
+                                    <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary">
+                                        <MudImage Src="@_coder.Photo"></MudImage>
+                                    </MudAvatar>
+                                }
+                                else
+                                {
+                                    <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Inherit">
+                                        <MudIcon Color="Color.Inherit" Icon="@Icons.Material.Filled.AddPhotoAlternate" Size="Size.Large"/>
+                                    </MudAvatar>
+                                }
+                                <MudText Color="Color.Primary" Typo="Typo.h5"><b>@_coder.Stack</b></MudText>
+                                <StatusChipComponent Status="@_coder.StandarRiwi.Standar"/>
+
+                                <!-- Botón Descargar Cv -->
+                                <MudTooltip Text="Descargar Cv">
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                               StartIcon="@Icons.Material.Rounded.SimCardDownload">
+                                        Descargar CV
+                                    </MudButton>
+                                </MudTooltip>
+                                
+                                <MudItem Class="d-flex mt-3">
+
+                                    <!-- Componente de subida de archivos, sobrepuesto al avatar -->
+                                    @if (isEditing == true)
+                                    {
+                                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhotoGroup" @bind-Value="_files" MaximumFileCount="2000000">
+                                            <ActivatorContent>
+                                                <MudTooltip Text="Sube una imagen">
+                                                    <MudFab Color="Color.Success" Size="Size.Medium"
+                                                            StartIcon="@Icons.Material.Filled.AddPhotoAlternate"/>
+                                                </MudTooltip>
+                                            </ActivatorContent>
+                                        </MudFileUpload>
+                                    }
+                                </MudItem>
+                            </MudCard>
+                        </MudItem>
+
+                        <!-- Card con Información del Coder -->
+                        <MudItem xs="12" sm="8" md="8">
+                            <MudForm Spacing="2">
+                                
+                                <!-- Título: Información del Coder -->
+                                <MudCard Class="d-flex pa-4">
+                                    <MudCardContent Class="FullWidth">
+                                        <MudGrid>
+                                            <MudItem xs="12">
+                                                <MudText Align="Align.Start" Typo="Typo.h5"><b>Información del coder</b></MudText>
+                                            </MudItem>
+
+                                            <!-- Nombres del Coder -->
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Primer Nombre</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.FirstName"
+                                                              Placeholder="Ingresa el primer nombre"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
+                                                              Adornment="Adornment.Start"
+                                                              AdornmentColor="Color.Primary"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Segundo Nombre</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.SecondName"
+                                                              Placeholder="Ingresa el segundo nombre"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
+
+                                            <!-- Apellidos del Coder -->
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Primer Apellido</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.FirstLastName"
+                                                              Placeholder="Ingresa el primer apellido"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Segundo Apellido</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.SecondLastName"
+                                                              Placeholder="Ingresa el segundo apellido"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
+
+                                            <!-- información de contacto del Coder -->
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Correo electrónico</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.Email"
+                                                              Placeholder="Ingresa el email"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              AdornmentIcon="@Icons.Material.Rounded.AlternateEmail"
+                                                              Adornment="Adornment.Start"
+                                                              AdornmentColor="Color.Primary"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Celular</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.Phone"
+                                                              Placeholder="Ingresa el numero de telefono"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              AdornmentIcon="@Icons.Material.Rounded.LocalPhone"
+                                                              Adornment="Adornment.Start"
+                                                              AdornmentColor="Color.Primary"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
+
+
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </MudCard>
+                                
+                                <!-- Título: Información del perfil del Coder -->
+                                <MudCard Class="d-flex pa-4">
+                                    <MudCardContent Class="FullWidth">
+                                        <MudGrid>
+                                            <MudItem xs="12">
+                                                <MudText Align="Align.Start" Typo="Typo.h5"><b>Perfil</b></MudText>
+                                            </MudItem>
+
+                                            <!-- Descripción del Coder -->
+                                            <MudItem xs="12">
+                                                <MudText Typo="Typo.subtitle2"><b>Descripción</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.ProfessionalDescription"
+                                                              Placeholder="Escribe una breve descripción del coder"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Lines="7"
+                                                              Margin="Margin.Dense"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
+
+                                            <!-- Habilidades tecnicas del Coder -->
+                                            <MudItem xs="12">
+                                                <MudText Align="Align.Start" Typo="Typo.h5"><b>Habilidades Tecnicas</b></MudText>
+                                            </MudItem>
+
+                                            <!-- Lenguajes de programación -->
+                                            <MudItem xs="12">
+                                                <MudText Typo="Typo.subtitle2"><b>Lenguajes de programación</b></MudText>
+                                                <MudChipSet T="string" SelectionMode="SelectionMode.MultiSelection"
+                                                            CheckMark="true" Variant="Variant.Text" Color="Color.Primary">
+                                                    @foreach (var skill in _coder.Skills)
+                                                    {
+                                                        <MudChip T="string" Value="@skill.Language_Programming">@skill.language_Programming</MudChip>
+                                                    }
+                                                </MudChipSet>
+                                            </MudItem>
+
+                                            <!-- Idiomas -->
+                                            <MudItem xs="12">
+                                                <MudText Typo="Typo.subtitle2"><b>Idiomas</b></MudText>
+                                                <MudChipSet T="string" SelectionMode="SelectionMode.MultiSelection"
+                                                            CheckMark="true" Variant="Variant.Text" Color="Color.Primary">
+                                                    @foreach (var skill in _coder.LanguageSkills.Language)
+                                                    {
+                                                        <MudChip T="string" Value="@_coder.LanguageSkills.Language">@_coder.LanguageSkills.Language</MudChip>
+                                                    }
+                                                </MudChipSet>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </MudCard>
+                            </MudForm>
+                        </MudItem>
+                    </MudGrid>
+                </MudContainer>
+            }
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [Parameter] public string? coderId { get; set; }
+
+    private IBrowserFile _files;
+    private Coder _coder;
+    private List<Group> _groups;
+    private string _searchString;
+    private bool _loading = true;
+    private string _errorMessage;
+    private string _rowsPerPageString = "Filas por página:";
+    private string _infoFormat = "{first_item}-{last_item} de {all_items}";
+    private bool isEditing = false;
+    private bool _drawerOpen = false;
+    
+
+
+    private async Task UploadPhotoGroup(IBrowserFile file)
+    {
+
+        if(!string.IsNullOrEmpty(coderId))
+        {
+            if(file != null)
+            {
+                var stream = file.OpenReadStream(2 * 1024 * 1024);
+
+                await CoderService.UploadCoderPhoto(coderId, stream, file.Name);
+                await LoadCoderDetailsAsync();
+            }
+            else
+            {
+                Console.WriteLine("No file selected");
+            }
+        }
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCoderDetailsAsync();
+    }
+
+    private void ToggleEditState()
+    {
+        if (isEditing)
+        {
+            UpdateCoder();
+        }
+        else
+        {
+            EnableEditMode();
+        }
+
+        isEditing = !isEditing;
+    }
+
+    private void EnableEditMode()
+    {
+        Console.WriteLine("Modo de edición habilitado");
+    }
+
+    // Actualiza la lista de coders filtrados
+    private void UpdateGroups(List<Group> filteredGroups)
+    {
+        _groups = filteredGroups;
+    }
+
+    // Alternar estado del drawer
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    private async Task UpdateCoder()
+    {
+        // Mostrar alerta de confirmación
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "¿Estás seguro/a de guardar los cambios?",
+            Text = "Esta acción actualizará la información y no podrá recuperarse.",
+            ShowCancelButton = true,
+            ShowConfirmButton = true,
+            ConfirmButtonColor = RiwiPalette.Secondary500,
+            ConfirmButtonText = "Si, Confirmar",
+            CancelButtonColor = RiwiPalette.FeedbackDanger500,
+            
+        });
+
+
+        // Si el usuario confirma, proceder con la actualización
+        if (result.IsConfirmed)
+        {
+            // Llamada al servicio para actualizar el _coder
+            var response = await CoderService.UpdateCoderAsync(_coder);
+
+            if (response)
+            {
+                // Cambiar de vuelta al modo de visualización
+                isEditing = false;
+
+                // Mostrar mensaje de éxito
+                await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Los cambios guardados exitosamente",
+                    Icon = SweetAlertIcon.Success,
+                    ShowConfirmButton = false,
+                    Timer = 1500
+                });
+
+                // Navegar a otra página si es necesario
+                NavigationManager.NavigateTo($"/CoderDetails/{coderId}");
+            }
+            else
+            {
+                await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Error al intentar guardar los cambios",
+                    Icon = SweetAlertIcon.Error,
+                    ShowConfirmButton = false,
+                    Timer = 1500
+                });            
+            }
+        }
+    }
+
+    private async Task LoadCoderDetailsAsync()
+    {
+        try
+        {
+            _coder = await CoderService.GetCoderByIdAsync(coderId);
+            if (_coder != null)
+            {
+                Console.WriteLine($"Coder obtenido: {_coder.FirstName}, Estado: {_coder.Status}, {_coder.Photo}");
+            }
+            else
+            {
+                _errorMessage = "No se encontró el coder.";
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            _errorMessage = "Error de red al obtener los detalles del coder.";
+            Console.WriteLine($"Error de red: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Hubo un error al obtener los detalles del coder: {ex.Message}";
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+
+    // Filtro de búsqueda
+    private Func<Models.Coder, bool> QuickFilter => group =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        return MatchesSearchCriteria(group);
+    };
+
+    private bool MatchesSearchCriteria(Models.Coder group)
+    {
+        return (group.FirstName?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
+               (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
+               (group.Date_Creation.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public GroupCoders GetGroupCoders(string? name, string? status)
+    {
+        bool statusBool;
+
+        if (status == "Activo")
+        {
+            statusBool = true;
+        }
+        else
+        {
+            statusBool = false;
+        }
+
+        GroupCoders groupCoders = new GroupCoders()
+        {
+            Name = name,
+            IsActive = statusBool
+        };
+
+        return groupCoders;
+    }
+
+    bool _isShow;
+    InputType _passwordInput = InputType.Password;
+    string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        if (_isShow)
+        {
+            _isShow = false;
+            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+            _passwordInput = InputType.Password;
+        }
+        else
+        {
+            _isShow = true;
+            _passwordInputIcon = Icons.Material.Filled.Visibility;
+            _passwordInput = InputType.Text;
+        }
+    }
+
+    private async Task OnTokenRegenerated(bool isRegenerated)
+    {
+        if (isRegenerated)
+        {
+            await LoadCoderDetailsAsync(); // Cargar nuevamente los detalles del coder
+        }
+        else
+        {
+            // Aquí podrías mostrar un mensaje de error al usuario
+            Console.WriteLine("No se pudo regenerar el token.");
+        }
+    }
+}
+}

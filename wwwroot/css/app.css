@@ -59,22 +59,3 @@ a, .btn-link {
 .blazor-error-boundary::after {
     content: "An error has occurred."
 }
-
-.swal2-styled.swal2-cancel {
-    border: 0;
-    border-radius: 0.25em;
-    background: initial;
-    background-color: #6e7881;
-    color: #5ACCA4 !important;
-    font-size: 1em;
-    background-color: white !important;
-    border: 2px solid #5ACCA4 !important;
-}
-
-.swal2-styled.swal2-cancel .btn-eliminar{
-    background: initial;
-    background-color: #6e7881;
-    color: #FE654F !important;
-    font-size: 1em;
-    background-color: white !important;
-}

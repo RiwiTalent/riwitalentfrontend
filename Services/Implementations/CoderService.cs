@@ -40,6 +40,11 @@ namespace riwitalentfrontend.Services.Implementations
             
         }
 
+        public Task<bool> UploadPhoto(string coderId, Stream stream, string fileName)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<bool> DeleteCodersAsync(string Id)
         {
             
@@ -103,6 +108,33 @@ namespace riwitalentfrontend.Services.Implementations
             else
             {
                 Console.WriteLine($"Error al agregar los coders: {response.StatusCode}");
+            }
+
+            return response.IsSuccessStatusCode;
+        }
+        
+        public async Task<bool> UploadCoderPhoto(string coderId, Stream stream, string fileName)
+        {
+
+            if (stream == null || stream.Length == 0)
+            {
+                throw new ArgumentException("No file uploaded", nameof(stream));
+            }
+
+            using var content = new MultipartFormDataContent();
+
+            var file = new StreamContent(stream);
+            content.Add(new StreamContent(stream), "file", fileName);
+            
+            var response = await _httpClient.PostAsync($"http://localhost:5113/upload-photo/{coderId}", content);
+
+            if(response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Se subió de manera correcta la foto");
+            }
+            else
+            {
+                Console.WriteLine($"Error al carga la foto {response.StatusCode}");
             }
 
             return response.IsSuccessStatusCode;

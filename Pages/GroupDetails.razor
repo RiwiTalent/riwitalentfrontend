@@ -30,7 +30,7 @@
                     <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 py-3 px-0">
                         <!-- Botón Regresar -->
                         <MudTooltip Text="Regresar">
-                            <MudIconButton Href="/groups" Variant="Variant.Outlined"
+                            <MudIconButton Href="/Groups" Variant="Variant.Outlined"
                                 Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small"
                                 Class="border-solid border-2 mud-border-primary pa-2">
                             </MudIconButton>
@@ -205,7 +205,7 @@
             {
                 var stream = file.OpenReadStream(2 * 1024 * 1024);
 
-                await GroupService.UploadPhoto(groupId, stream, file.Name);
+                await GroupService.UploadGroupPhoto(groupId, stream, file.Name);
                 await LoadGroupDetailsAsync();
             }
             else
@@ -257,14 +257,14 @@
         // Mostrar alerta de confirmación
         var result = await Swal.FireAsync(new SweetAlertOptions
         {
-            Icon = SweetAlertIcon.Success,
-            Title = "¿Estás seguro/a de que deseas guardar los cambios de este registro?",
+            Title = "¿Estás seguro/a de guardar los cambios?",
             Text = "Esta acción actualizará la información y no podrá recuperarse.",
             ShowCancelButton = true,
-            ConfirmButtonColor = "#5ACCA4",
-            ConfirmButtonText = "Sí, Confirmar",
-            CancelButtonColor = "#fff",
-            CancelButtonText = "No, Cancelar"
+            ShowConfirmButton = true,
+            ConfirmButtonColor = RiwiPalette.Secondary500,
+            ConfirmButtonText = "Si, Confirmar",
+            CancelButtonColor = RiwiPalette.FeedbackDanger500,
+            
         });
 
 
@@ -282,7 +282,7 @@
                 // Mostrar mensaje de éxito
                 await Swal.FireAsync(new SweetAlertOptions
                 {
-                    Title = "Los datos se han guardado exitosamente",
+                    Title = "Los cambios guardados exitosamente",
                     Icon = SweetAlertIcon.Success,
                     ShowConfirmButton = false,
                     Timer = 1500
@@ -293,13 +293,14 @@
             }
             else
             {
-                Console.WriteLine("Error al actualizar el grupo");
+                await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Error al intentar guardar los cambios",
+                    Icon = SweetAlertIcon.Error,
+                    ShowConfirmButton = false,
+                    Timer = 1500
+                });            
             }
-        }
-        else
-        {
-
-            Console.WriteLine("Actualización cancelada");
         }
     }
 
