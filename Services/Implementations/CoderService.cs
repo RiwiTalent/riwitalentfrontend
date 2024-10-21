@@ -49,13 +49,12 @@ namespace riwitalentfrontend.Services.Implementations
                    $"Age={coder.Age}&" +
                    $"Email={Uri.EscapeDataString(coder.Email)}&" +
                    $"Age={coder.Age}&" +
-                   $"Photo={Uri.EscapeDataString(coder.Photo)}&" +
+                   $"Photo={coder.Photo}&" +
                    $"Phone={Uri.EscapeDataString(coder.Phone)}&" +
                    $"AssessmentScore={coder.AssessmentScore}&" +
                    $"Cv={Uri.EscapeDataString(coder.Cv)}&" +
                    $"Status={Uri.EscapeDataString(coder.Status)}&" +
                    $"Stack={Uri.EscapeDataString(coder.Stack)}";
-                   // $"GroupId={Uri.EscapeDataString(coder.GroupId.ToString())}";
                    // $"StandarRiwi={Uri.EscapeDataString(coder.StandarRiwi.ToString())}&" + // Agrega el estándar
                    // $"Skills={Uri.EscapeDataString(())} &" + // Agrega habilidades
                    // $"LanguageSkills={Uri.EscapeDataString(coder.LanguageSkills.Language)}"; // Agrega habilidades lingüísticas
@@ -156,7 +155,7 @@ namespace riwitalentfrontend.Services.Implementations
             var fileContent = new StreamContent(stream);
             content.Add(fileContent, "file", fileName);
 
-            var response = await _httpClient.PostAsync($"http://localhost:5113/coders/photo/{coderId}", content);
+            var response = await _httpClient.PostAsync($"http://localhost:5113/coder/photo/{coderId}", content);
 
             if (response.IsSuccessStatusCode)
             {
