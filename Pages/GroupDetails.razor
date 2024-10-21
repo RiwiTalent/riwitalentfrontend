@@ -65,14 +65,14 @@
                                     <!-- Componente de subida de archivos, sobrepuesto al avatar -->
                                     @if(isEditing == true)
                                     {
-                                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" @bind-Value="_files" MaximumFileCount="2000000">
-                                        <ActivatorContent>
-                                            <MudTooltip Text="Sube una imagen">
-                                                <MudFab Color="Color.Success" Size="Size.Medium"
-                                                        StartIcon="@Icons.Material.Filled.AddPhotoAlternate"/>
-                                            </MudTooltip>
-                                        </ActivatorContent>
-                                    </MudFileUpload>
+                                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" @bind-Value="_files" MaximumFileCount="2000000">
+                                            <ActivatorContent>
+                                                <MudTooltip Text="Sube una imagen">
+                                                    <MudFab Color="Color.Success" Size="Size.Medium"
+                                                            StartIcon="@Icons.Material.Filled.AddPhotoAlternate"/>
+                                                </MudTooltip>
+                                            </ActivatorContent>
+                                        </MudFileUpload>
                                     }
                                 </MudItem>
                             </MudCard>

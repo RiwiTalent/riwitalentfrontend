@@ -156,7 +156,7 @@ namespace riwitalentfrontend.Services.Implementations
             var fileContent = new StreamContent(stream);
             content.Add(fileContent, "file", fileName);
 
-            var response = await _httpClient.PostAsync($"http://localhost:5113/coders/photo/{coderId}", content);
+            var response = await _httpClient.PostAsync($"http://localhost:5113/upload-photo/{coderId}", content);
 
             if (response.IsSuccessStatusCode)
             {
