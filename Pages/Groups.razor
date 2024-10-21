@@ -78,9 +78,9 @@
                                     <CellTemplate Context="group">
                                         <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
                                             <AvatarComponent
-                                                TypeAvatar="GrupoCoders"
-                                                GroupCoders="GetGroupCoders(group.Item.Name, group.Item.Status)">
-                                            </AvatarComponent>
+                                                AvatarUrl="@group.Item.Photo"
+                                                FirstName="@group.Item.Name"
+                                                TypeAvatar="Group" />
                                             <MudContainer>
                                                 <MudText><b>@group.Item.Name</b></MudText>
                                                 <MudText Color="Color.Primary" Typo="Typo.subtitle2">@group.Item.Description</MudText>

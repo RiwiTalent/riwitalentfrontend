@@ -102,9 +102,15 @@
                                 <PropertyColumn Property="x => x.FirstName" Title="Nombre">
                                     <CellTemplate Context="coder">
                                         <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
-                                            <MudAvatar>
-                                                <MudImage Src="@coder.Item.Photo"></MudImage>
-                                            </MudAvatar>
+
+
+
+                                            <AvatarComponent
+                                                AvatarUrl="@coder.Item.Photo"
+                                                FirstName="@coder.Item.FirstName"
+                                                LastName="@coder.Item.FirstLastName"
+                                                TypeAvatar="Coder" />
+                                            
                                             <MudContainer>
                                                 <MudText ><b>@coder.Item.FirstName @coder.Item.SecondName</b></MudText>
                                                 <MudText Color="Color.Primary" Typo="Typo.subtitle2">@coder.Item.Stack</MudText>

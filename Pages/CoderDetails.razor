@@ -49,46 +49,45 @@
                     <MudGrid Justify="Justify.SpaceBetween" Spacing="3">
                         <!-- Card con Avatar y Nombre del Coder -->
                         <MudItem xs="12" sm="4" md="4">
-                            <MudCard Class="d-flex flex-column align-center justify-center mud-width-full pa-4">
+                            <MudCard Class="d-flex flex-column align-center justify-center mud-width-full pa-4 gap-2">
 
-                                @if (!string.IsNullOrEmpty(_coder.Photo))
-                                {
-                                    <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary">
-                                        <MudImage Src="@_coder.Photo"></MudImage>
-                                    </MudAvatar>
-                                }
-                                else
-                                {
-                                    <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Inherit">
-                                        <MudIcon Color="Color.Inherit" Icon="@Icons.Material.Filled.AddPhotoAlternate" Size="Size.Large"/>
-                                    </MudAvatar>
-                                }
-                                <MudText Color="Color.Primary" Typo="Typo.h5"><b>@_coder.Stack</b></MudText>
+                                <!-- Avatar -->
+                                <AvatarComponent
+                                    AvatarUrl="@_coder.Photo"
+                                    TypeAvatar="Coder"
+                                    FirstName="@_coder.FirstName"
+                                    LastName="@_coder.FirstLastName" 
+                                    Style="height:150px; width:150px; font-size:2rem;"/>
+                                
+                                <!-- Standar Riwi del Coder-->
+                                <MudText Color="Color.Primary" Typo="Typo.h4"><b>@_coder.Stack</b></MudText>
+
+                                <!-- Chip de estado del Coder -->
                                 <StatusChipComponent Status="@_coder.StandarRiwi.Standar"/>
 
-                                <!-- Botón Descargar Cv -->
-                                <MudTooltip Text="Descargar Cv">
-                                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                                               StartIcon="@Icons.Material.Rounded.SimCardDownload">
-                                        Descargar CV
+                                <!-- Botón Descargar y Cargar Cv -->
+                                <MudTooltip Text="@(isEditing ? "Cargar Cv" : "Descargar Cv")">
+                                    <MudButton Variant="Variant.Filled" Color="@((isEditing ? Color.Success : Color.Primary))"
+                                               StartIcon="@(isEditing ? @Icons.Material.Rounded.UploadFile : Icons.Material.Rounded.SimCardDownload)">
+                                        @(isEditing ? "Cargar Cv" : "Descargar Cv")
                                     </MudButton>
                                 </MudTooltip>
-                                
-                                <MudItem Class="d-flex mt-3">
 
-                                    <!-- Componente de subida de archivos, sobrepuesto al avatar -->
+                                <!-- Componente de subida de archivos, sobrepuesto al avatar -->
+                                <MudItem Class="d-flex mt-3">
                                     @if (isEditing == true)
                                     {
-                                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhotoGroup" @bind-Value="_files" MaximumFileCount="2000000">
+                                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" @bind-Value="_files" MaximumFileCount="2000000">
                                             <ActivatorContent>
                                                 <MudTooltip Text="Sube una imagen">
                                                     <MudFab Color="Color.Success" Size="Size.Medium"
-                                                            StartIcon="@Icons.Material.Filled.AddPhotoAlternate"/>
+                                                            StartIcon="@Icons.Material.Rounded.AddPhotoAlternate"/>
                                                 </MudTooltip>
                                             </ActivatorContent>
                                         </MudFileUpload>
                                     }
                                 </MudItem>
+                                
                             </MudCard>
                         </MudItem>
 
@@ -265,9 +264,8 @@
     private bool isEditing = false;
     private bool _drawerOpen = false;
     
-
-
-    private async Task UploadPhotoGroup(IBrowserFile file)
+    
+    private async Task UploadPhoto(IBrowserFile file)
     {
 
         if(!string.IsNullOrEmpty(coderId))

@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Avatar\" />
     <Folder Include="Components\BannerCoders\" />
     <Folder Include="Components\Login\" />
     <Folder Include="wwwroot\assets\" />

@@ -22,7 +22,10 @@
         </NavLink>
         <MudSpacer/>
         <MudStack Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center" Spacing="2">
-            <AvatarComponent TypeAvatar="Usuario" KeySesionStorage="userEmail"></AvatarComponent>
+            <AvatarComponent
+                TypeAvatar="Usuario"
+                KeySesionStorage="userEmail"/>
+
             <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Primary" OnClick="@DarkModeToggle"/>
         </MudStack>
     </MudAppBar>

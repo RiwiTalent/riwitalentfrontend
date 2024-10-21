@@ -51,19 +51,13 @@
                         <MudItem xs="12" sm="4" md="4">
 
                             <MudCard Class="d-flex flex-column align-center justify-center mud-width-full pa-4">
-         
-                                @if (!string.IsNullOrEmpty(_group.Photo))
-                                {
-                                    <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Primary">
-                                        <MudImage Src="@_group.Photo"></MudImage>
-                                    </MudAvatar>
-                                }
-                                else
-                                {
-                                    <MudAvatar Style="height:150px; width:150px; font-size:2rem;" Color="Color.Inherit">
-                                        <MudIcon Color="Color.Inherit"  Icon="@Icons.Material.Filled.AddPhotoAlternate" Size="Size.Large" />
-                                    </MudAvatar>
-                                }
+
+                                <AvatarComponent
+                                    AvatarUrl="@_group.Photo"
+                                    TypeAvatar="Group"
+                                    FirstName="@_group.Name"
+                                    Style="height:150px; width:150px; font-size:2rem;"/>
+                                
                                 <MudText Typo="Typo.h6" Color="Color.Primary">@_group.Name</MudText>
                                 <StatusChipComponent Status="@_group.Status"/>
                                 <MudItem Class="d-flex mt-3">
@@ -71,7 +65,7 @@
                                     <!-- Componente de subida de archivos, sobrepuesto al avatar -->
                                     @if(isEditing == true)
                                     {
-                                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhotoGroup" @bind-Value="_files" MaximumFileCount="2000000">
+                                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" @bind-Value="_files" MaximumFileCount="2000000">
                                         <ActivatorContent>
                                             <MudTooltip Text="Sube una imagen">
                                                 <MudFab Color="Color.Success" Size="Size.Medium"
@@ -196,7 +190,9 @@
     private bool isEditing = false;
     private bool _drawerOpen = false;
 
-    private async Task UploadPhotoGroup(IBrowserFile file)
+    
+    // Logica para la carga de la foto del grupo
+    private async Task UploadPhoto(IBrowserFile file)
     {
 
         if(!string.IsNullOrEmpty(groupId))

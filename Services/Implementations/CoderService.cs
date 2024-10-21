@@ -12,21 +12,24 @@ namespace riwitalentfrontend.Services.Implementations
     {
         // Inyección de HttpClient para realizar peticiones HTTP
         private readonly HttpClient _httpClient;
+
         public CoderService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-        } 
+        }
 
         // Método para obtener una lista de coders desde la API
         public async Task<List<Coder>> GetCodersAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<Coder>>("https://backend-riwitalent-9pv2.onrender.com/coders");
+            return await _httpClient.GetFromJsonAsync<List<Coder>>(
+                "https://backend-riwitalent-9pv2.onrender.com/coders");
         }
 
         public async Task<bool> UpdateCoderAsync(Coder coder)
         {
-            var url = $"https://backend-riwitalent-9pv2.onrender.com/coders?Id={coder.Id}&FirstName={coder.FirstName}&SecondName={coder.SecondName}&FirstLastName={coder.FirstLastName}&SecondLastName={coder.SecondLastName}&Email={coder.Email}&Age={coder.Age}";
-            
+            var url =
+                $"https://backend-riwitalent-9pv2.onrender.com/coders?Id={coder.Id}&FirstName={coder.FirstName}&SecondName={coder.SecondName}&FirstLastName={coder.FirstLastName}&SecondLastName={coder.SecondLastName}&Email={coder.Email}&Age={coder.Age}";
+
             var response = await _httpClient.PutAsync(url, null);
             return response.IsSuccessStatusCode;
         }
@@ -37,7 +40,7 @@ namespace riwitalentfrontend.Services.Implementations
             var url = $"http://localhost:5113/coders?{queryString}";
             Console.WriteLine($"Request URL: {url}");
             return await _httpClient.GetFromJsonAsync<List<Coder>>(url);
-            
+
         }
 
         public Task<bool> UploadPhoto(string coderId, Stream stream, string fileName)
@@ -45,27 +48,27 @@ namespace riwitalentfrontend.Services.Implementations
             throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteCodersAsync(string Id)
+        public async Task<bool> DeleteCodersAsync(string coderId)
         {
-            
+
             try
-                {
-                    var response = await _httpClient.DeleteAsync($"http://localhost:5113/coders/{Id}");
-                    return response.IsSuccessStatusCode;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error al desactivar coder: {ex.Message}");
-                    return false;     
+            {
+                var response = await _httpClient.DeleteAsync($"http://localhost:5113/coders/{coderId}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al desactivar coder: {ex.Message}");
+                return false;
             }
         }
 
-        public async Task<Coder> GetCoderByIdAsync(string Id)
+        public async Task<Coder> GetCoderByIdAsync(string coderId)
         {
-                // Realiza la solicitud GET para obtener los detalles del coder
-                Console.WriteLine("entra a get coder BY id");
-            var response = await _httpClient.GetFromJsonAsync<Coder>($"http://localhost:5113/coder/{Id}");
-            
+            // Realiza la solicitud GET para obtener los detalles del coder
+            Console.WriteLine("entra a get coder BY id");
+            var response = await _httpClient.GetFromJsonAsync<Coder>($"http://localhost:5113/coder/{coderId}");
+
             if (response != null)
             {
                 // Mensaje de éxito si el coder fue encontrado
@@ -82,7 +85,7 @@ namespace riwitalentfrontend.Services.Implementations
 
         public async Task<bool> CodersGroupedAsync(DataDto data)
         {
-            
+
             var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/coders/grouped", data);
 
             if (response.IsSuccessStatusCode)
@@ -112,10 +115,9 @@ namespace riwitalentfrontend.Services.Implementations
 
             return response.IsSuccessStatusCode;
         }
-        
+
         public async Task<bool> UploadCoderPhoto(string coderId, Stream stream, string fileName)
         {
-
             if (stream == null || stream.Length == 0)
             {
                 throw new ArgumentException("No file uploaded", nameof(stream));
@@ -123,21 +125,23 @@ namespace riwitalentfrontend.Services.Implementations
 
             using var content = new MultipartFormDataContent();
 
-            var file = new StreamContent(stream);
-            content.Add(new StreamContent(stream), "file", fileName);
-            
-            var response = await _httpClient.PostAsync($"http://localhost:5113/upload-photo/{coderId}", content);
+            var fileContent = new StreamContent(stream);
+            content.Add(fileContent, "file", fileName);
 
-            if(response.IsSuccessStatusCode)
+            var response = await _httpClient.PostAsync($"http://localhost:5113/coders/photo/{coderId}", content);
+
+            if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Se subió de manera correcta la foto");
+                return true;
             }
             else
             {
-                Console.WriteLine($"Error al carga la foto {response.StatusCode}");
-            }
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(coderId);
 
-            return response.IsSuccessStatusCode;
+                throw new Exception($"Error al cargar la foto: {response.StatusCode}, Detalle: {errorMessage}");
+            }
         }
     }
 }

@@ -46,5 +46,8 @@ namespace riwitalentfrontend.Models
 
         // Habilidades lingüísticas del coder
         public LanguageSkill? LanguageSkills { get; set; }
+        
+        
     }
 }
+
