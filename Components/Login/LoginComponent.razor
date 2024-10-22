@@ -9,30 +9,44 @@
 @inject SweetAlertService Swal;
 @inject AlertService AlertService;
 
-<MudGrid Class="pa-0 ma-0">
-    <MudContainer Class="d-flex justify-center align-center pa-2 flex-grow-1">
-        <MudCard Class="pa-6 d-flex justify-center align-center">
-            <MudCardHeader>
-                <MudItem Class="d-flex justify-center align-center">
-                    <LogoComponent IsDarkMode="@IsDarkMode" />
+<MudGrid Class="pa-0 ma-0" Spacing="0" Style="height: 100vh;">
+    <!-- Imagen en la parte superior en móviles -->
+    <MudItem xs="12" sm="6" Class="pa-0 ma-0" Style="height: 50vh;" Hidden="smAndUp">
+        <MudImage Src="images/login.png" Alt="Swedish Farm House" Class="rounded-lg" Style="width: 100%; height: 100%; object-fit: cover;" />
+    </MudItem>
+
+    <!-- Contenido de la tarjeta de login -->
+    <MudItem xs="12" sm="6" Class="d-flex justify-center align-center pa-2" Style="height: 100%;">
+        <MudContainer Class="d-flex justify-center align-center pa-2 flex-grow-1">
+            <MudCard Class="pa-6 d-flex justify-center align-center" Style="width: 50%;">
+                <MudCardHeader>
+                    <MudItem Class="d-flex justify-center align-center">
+                        <LogoComponent IsDarkMode="@IsDarkMode" />
+                    </MudItem>
+                </MudCardHeader>
+                <MudItem>
+                    <MudText Align="Align.Center" Typo="Typo.h5"><b>¡Bienvenido/a de nuevo!</b></MudText>
+                    <MudText Align="Align.Center" Typo="Typo.subtitle1">Ingresa con tu cuenta para continuar</MudText>
                 </MudItem>
-            </MudCardHeader>
-            <MudItem>
-                <MudText Align="Align.Center" Typo="Typo.h5"><b>¡Bienvenido/a de nuevo!</b></MudText>
-                <MudText Align="Align.Center" Typo="Typo.subtitle1">Ingresa con tu cuenta para continuar</MudText>
-            </MudItem>
-            <MudCardContent Class="FullWidth" Style="width: 100%;">
-                <MudForm Spacing="2">
-                    <MudTextField T="string" Label="Correo" @bind-value="_email" Variant="Variant.Outlined" InputType="InputType.Email"/>
-                    <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@_passwordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
-                </MudForm>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="Login" Class="rounded">Continuar</MudButton>
-            </MudCardActions>
-        </MudCard>
-    </MudContainer>
+                <MudCardContent Class="FullWidth" Style="width: 100%;">
+                    <MudForm Spacing="2">
+                        <MudTextField T="string" Label="Correo" @bind-value="_email" Variant="Variant.Outlined" InputType="InputType.Email"/>
+                        <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@_passwordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
+                    </MudForm>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="Login" Class="rounded">Continuar</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudContainer>
+    </MudItem>
+
+    <!-- Imagen para pantallas más grandes -->
+    <MudItem xs="12" sm="6" Class="pa-0 ma-0" Style="height: 100%;">
+        <MudImage Src="images/login.png" Alt="Swedish Farm House" Class="rounded-lg" Style="width: 100%; height: 100%; object-fit: cover;" />
+    </MudItem>
 </MudGrid>
+
 
 @code {
     private string? _email;
