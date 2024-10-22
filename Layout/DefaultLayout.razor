@@ -15,23 +15,15 @@
 <MudPopoverProvider />
 
 <MudLayout>
-    <MudAppBar Elevation="1" Class="rounded-br-lg">
-        <MudIconButton Icon="@Icons.Material.Rounded.Menu"  Edge="Edge.Start" OnClick="@(DrawerToggle)"/>
+    <MudAppBar Elevation="1" Class="rounded-b-lg">
         <NavLink Icon="@Icons.Material.Rounded.Menu" href="/coders" Match="NavLinkMatch.All">
             <MudImage ObjectFit="ObjectFit.ScaleDown" Width="100" Fluid="true" Src="@(DarkLightModeImgLogo)"></MudImage>
         </NavLink>
         <MudSpacer/>
         <MudStack Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center" Spacing="2">
-            <AvatarComponent
-                TypeAvatar="Usuario"
-                KeySesionStorage="userEmail"/>
-
             <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Primary" OnClick="@DarkModeToggle"/>
         </MudStack>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Variant="DrawerVariant.Mini" Overlay="false" ClipMode="DrawerClipMode.Always" Elevation="1" Class="rounded ma-2">
-        <NavMenu/>
-    </MudDrawer>
     <MudMainContent>
         @Body
     </MudMainContent>
@@ -41,11 +33,9 @@
 
 <CascadingBlazoredModal></CascadingBlazoredModal>
 
-
 @code {
-    private bool _drawerOpen = true; 
     private bool _isDarkMode; 
-    private MudTheme _currentTheme;
+    private MudTheme? _currentTheme;
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,16 +46,11 @@
         _currentTheme = await ThemeService.GetThemeAsync();
     }
 
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-
     private async Task DarkModeToggle()
     {
         _isDarkMode = !_isDarkMode;
         await ThemeService.SetDarkModeAsync(_isDarkMode);
-        _currentTheme = await ThemeService.GetThemeAsync(); // Actualizar el tema al cambiar el modo
+        _currentTheme = await ThemeService.GetThemeAsync();
     }
     
     public string DarkLightModeButtonIcon => _isDarkMode 

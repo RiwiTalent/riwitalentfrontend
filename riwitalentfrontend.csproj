@@ -21,10 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Avatar\" />
     <Folder Include="Components\BannerCoders\" />
-    <Folder Include="Components\Dialog\" />
     <Folder Include="Components\Login\" />
+    <Folder Include="wwwroot\assets\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Layout\Footer\FooterComponent.razor" />
   </ItemGroup>
 
 </Project>

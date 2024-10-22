@@ -25,37 +25,6 @@
                                   Adornment="Adornment.Start"
                                   AdornmentColor="Color.Primary"/>
                 </MudStack>
-
-                <!-- Correo Asociado -->
-                <MudStack Spacing="1" Class="mb-2">
-                    <MudTextField T="string"
-                                  Label="Correo asociado"
-                                  Required="true"
-                                  RequiredError="El correo electrónico es obligatorio"
-                                  @bind-Value="AssociateEmail"
-                                  InputType="InputType.Email"
-                                  HelperText="Este correo tendrá acceso al grupo"
-                                  HelperTextOnFocus="true"
-                                  Placeholder="ejemplo@dominio.com"
-                                  Variant="Variant.Outlined"
-                                  FullWidth="true"
-                                  Margin="Margin.Dense"/>
-                </MudStack>
-
-                <!-- Descripción del Grupo -->
-                <MudStack Spacing="1" Class="mb-2">
-                    <MudTextField T="string"
-                                  Label="Descripción"
-                                  Required="true"
-                                  RequiredError="La descripción es obligatoria"
-                                  @bind-Value="GroupDescription"
-                                  HelperTextOnFocus="true"
-                                  HelperText="Escribe una breve descripción del grupo"
-                                  Variant="Variant.Outlined"
-                                  FullWidth="true"
-                                  Lines="3"
-                                  Margin="Margin.Dense"/>
-                </MudStack>
             </DialogContent>
             <DialogActions>
                 <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@Cancel">Cancelar</MudButton>

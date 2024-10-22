@@ -48,3 +48,4 @@ namespace riwitalentfrontend.Models
         public LanguageSkill? LanguageSkills { get; set; }
     }
 }
+

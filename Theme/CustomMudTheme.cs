@@ -4,12 +4,12 @@ namespace riwitalentfrontend.Theme;
 
     public static class CustomMudTheme
     {
-        public static PaletteLight PaletteLight = new PaletteLight
+        public static PaletteLight PaletteLight { get; set; } = new PaletteLight
         {
             // AppBar (Barra de Aplicación)
             AppbarText = RiwiPalette.NeutralBlack,
             AppbarBackground = RiwiPalette.NeutralWhite,
-
+            
             // Drawer (Panel Lateral)
             DrawerBackground = RiwiPalette.NeutralWhite,
             DrawerText = RiwiPalette.Primary500,
@@ -17,7 +17,9 @@ namespace riwitalentfrontend.Theme;
 
             // Background (Fondo)
             Background = RiwiPalette.NeutralWhite,
-
+            
+            // Hover Table
+            TableHover = RiwiPalette.FeedbackInfo50,
             // Colors (Colores)
             // neutral
             Black = RiwiPalette.NeutralBlack,
@@ -64,7 +66,7 @@ namespace riwitalentfrontend.Theme;
         };
 
         // Definición de la paleta de colores para el tema oscuro
-        public static PaletteDark PaletteDark = new PaletteDark
+        public static PaletteDark PaletteDark { get; } = new PaletteDark
         {
             // AppBar (Barra de Aplicación)
             AppbarText = RiwiPalette.NeutralWhite,
@@ -121,16 +123,19 @@ namespace riwitalentfrontend.Theme;
             ErrorContrastText = RiwiPalette.NeutralWhite,
         };
 
-        public static LayoutProperties LayoutProperties = new LayoutProperties
+        // Definición de las propiedades del layout
+        public static LayoutProperties LayoutPropertiesRiwi = new LayoutProperties
         {
             DrawerWidthLeft = "240px",
             AppbarHeight = "64px",
-            DefaultBorderRadius = "20px"
+            DefaultBorderRadius = "10px",
         };
-        // Tipografía personalizada
-        public static Typography Typography = new()
+        
+        
+        // Definición de las tipografías personalizadas
+        public static Typography TypographyRiwi = new Typography
         {
-            Default = new Default()
+            Default = new Default
             {
                 FontFamily = new[] { "Ubuntu", "sans-serif" },
                 FontSize = "1rem",
@@ -211,7 +216,8 @@ namespace riwitalentfrontend.Theme;
                 FontFamily = new[] { "Ubuntu", "sans-serif" },
                 FontSize = "0.875rem",
                 FontWeight = 500,
-                LineHeight = 1.75
+                LineHeight = 1.75,
+                TextTransform = "none"
             },
             Caption = new Caption()
             {
@@ -226,6 +232,6 @@ namespace riwitalentfrontend.Theme;
                 FontSize = "0.75rem",
                 FontWeight = 400,
                 LineHeight = 2.66
-            }
+            },
         };
     }

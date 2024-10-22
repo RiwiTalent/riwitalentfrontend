@@ -43,6 +43,7 @@ namespace riwitalentfrontend.Services.Implementations
             {
                 var response = await _httpClient.PutAsJsonAsync($"http://localhost:5113/groups?Id={group.Id}&Name={group.Name}&Photo={group.Photo}&Description={group.Description}&Status={group.Status}&CreatedBy={group.CreatedBy}&AssociateEmail={group.AssociateEmail}&AcceptedTerms={group.AcceptedTerms}", group);
                 response.EnsureSuccessStatusCode(); 
+                response.EnsureSuccessStatusCode(); 
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -104,7 +105,7 @@ namespace riwitalentfrontend.Services.Implementations
             var file = new StreamContent(stream);
             content.Add(new StreamContent(stream), "file", fileName);
             
-            var response = await _httpClient.PostAsync($"http://localhost:5113/groups/photo/{groupId}", content);
+            var response = await _httpClient.PostAsync($"http://localhost:5113/group/photo/{groupId}", content);
 
             if(response.IsSuccessStatusCode)
             {

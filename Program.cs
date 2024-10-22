@@ -10,12 +10,14 @@ using Blazored.Modal;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Blazored.SessionStorage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 // Espacios de nombres de la aplicación
 using riwitalentfrontend;
 using riwitalentfrontend.Services.Implementations;
 using riwitalentfrontend.Services.Interfaces;
 using riwitalentfrontend.Services;
+using riwitalentfrontend.Theme;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -33,6 +35,8 @@ builder.Services.AddScoped<ICoderService, CoderService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ThemeService>();
+
 // builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<CustomHttpHandler>();

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="utf-8" />
@@ -8,18 +8,17 @@
 
     <!-- Base URL -->
     <base href="/" />
-
+    
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="riwitalentfrontend.styles.css" />
+    <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="_content/MudBlazor/MudBlazor.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Stylesheets Sweetalert -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../images/Isotipo.png" />
+    <link rel="icon" type="image/png" href="../images/FaviconRiwi.png" />
 
     <!-- Ubuntu Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -28,45 +27,23 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.14.0/devicon.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-icons@latest/font/simple-icons.min.css"> <!--Simple icons-->
-
-
 </head>
 
 <body>
     <!-- Blazor Application Container -->
-    <div id="app">
-    </div>
-    <!-- Blazor Application Container -->
-    <div id="app">
-    </div>
-
-    <!-- Blazor Error UI -->
-    <div id="blazor-error-ui">
-        Se ha producido un error no controlado.
-        <a href="" class="reload">Recargar</a>
-        <a class="dismiss">🗙</a>
-    </div>
-    <!-- Blazor Error UI -->
-    <div id="blazor-error-ui">
-        Se ha producido un error no controlado.
-        <a href="" class="reload">Recargar</a>
-        <a class="dismiss">🗙</a>
-    </div>
-
+    <div id="app"></div>
+    
     <!-- Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
     <script type="module" src="js/firebaseAuth.js"></script>
-    
+    <script src="js/downloadCv.js"></script>
+
     
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-    <!-- Scripts -->
-    
-    
-    
-    <!-- SweetAlert2 Script -->
-    <script src="_content/CurrieTechnologies.Razor.SweetAlert2/sweetAlert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- SweetAlert2 Script -->
     <script src="_content/CurrieTechnologies.Razor.SweetAlert2/sweetAlert2.min.js"></script>
     <script src="js/tokenManager.js"></script>

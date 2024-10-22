@@ -22,7 +22,7 @@
 <BlazoredModalTitle class="text-center d-flex justify-center">
     Por favor, acepte los términos y condiciones para continuar.
 </BlazoredModalTitle>
-<BlazoredModalContent class="d-block overflow-scroll p-3" style="height=500px; max-height:500px">
+<BlazoredModalContent class="d-block overflow-scroll p-3">
     <h3 class="text-center d-flex justify-center">POLÍTICA MANEJO DE INFORMACIÓN Y DATOS PERSONALES DE RISE CLUSTER S.A.S.</h3>
 
         <h4>GENERALIDADES</h4>
@@ -325,7 +325,7 @@
         bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
         if (success)
         {
-            NavigationManager.NavigateTo($"external-access/{groupId}");
+            NavigationManager.NavigateTo($"LoginClient/{groupId}");
         }
         else
         {

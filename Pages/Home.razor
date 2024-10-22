@@ -1,4 +1,4 @@
-@page "/home/{groupId}"
+@page "/Coders/{groupId}"
 @inject IGroupService GroupService
 @inject ICoderService coderService
 @layout MainLayout
@@ -10,7 +10,7 @@
 <PageTitle>RiwiTalent: Conecta Empresas con los Mejores Coders</PageTitle>
 
 <head>
-    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/Coders.css">
     <link rel="stylesheet" href="css/Components/PaginationComponent.css">   
 </head>
 
@@ -27,7 +27,8 @@
         <MudText Color="Color.Primary" class="title">
         </MudText>
         <BannerCodersComponent />
-        <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler"  FilterInGroup = "@FilterInGroup"/> 
+        <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" />
+        <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" /> 
     </Authorized>
 </AuthorizeView>
 

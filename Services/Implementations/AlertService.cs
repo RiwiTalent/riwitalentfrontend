@@ -1,5 +1,7 @@
 using CurrieTechnologies.Razor.SweetAlert2;
+using MudBlazor;
 using riwitalentfrontend.Services.Interfaces;
+using riwitalentfrontend.Theme;
 
 namespace riwitalentfrontend.Services.Implementations
 {
@@ -11,6 +13,10 @@ namespace riwitalentfrontend.Services.Implementations
             _swal = swal;
         }
 
+        
+        
+        
+        
         public async Task DeleteRegister(){
             var result = await _swal.FireAsync(new SweetAlertOptions
             {
@@ -38,14 +44,13 @@ namespace riwitalentfrontend.Services.Implementations
         public async Task SaveChangesRegister(){
             var result = await _swal.FireAsync(new SweetAlertOptions
             {
-                Icon = SweetAlertIcon.Success,
+                Icon = SweetAlertIcon.Warning,
                 Title = "¿Estás seguro/a de que deseas guardar los cambios de este registro?",
                 Text = "Esta acción actualizará la información y no podrá recuperarse.",
                 ShowCancelButton = true,
-                ConfirmButtonColor = "#5ACCA4",
+                ConfirmButtonColor = Color.Dark.ToString(),
                 ConfirmButtonText = "Si, Confirmar",
-                CancelButtonColor = "#fff",
-                CancelButtonText="<button style='color:#5ACCA4, background-color:#fff'>No, Cancelar</button>"
+                CancelButtonColor = Color.Dark.ToString(),
             });
 
             if (result.IsConfirmed)
