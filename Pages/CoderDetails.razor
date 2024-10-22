@@ -370,13 +370,13 @@
         if (coderCv != null && coderCv.Length > 0)
         {
             Console.WriteLine($"Tamaño del CV: {coderCv.Length} bytes");
-            await JSRuntime.InvokeVoidAsync("Blazor.downloadFile", "cv", "application/pdf", coderCv);
+            @* await JSRuntime.InvokeVoidAsync("Blazor.downloadFile", "file.raw", "application/octet-stream", coderCv); *@
         }
         else
         {
             Console.WriteLine("La descarga falló o el archivo está vacío.");
         }
-    }
+    }   
 
     protected override async Task OnInitializedAsync()
     {
