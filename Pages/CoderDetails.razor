@@ -367,10 +367,10 @@
     {
         var coderCv = await CoderService.DownloadCv(coderId);
 
-        if (coderCv != null && coderCv.Length > 0)
+        if (!string.IsNullOrEmpty(coderCv))
         {
             Console.WriteLine($"Tamaño del CV: {coderCv.Length} bytes");
-            @* await JSRuntime.InvokeVoidAsync("Blazor.downloadFile", "file.raw", "application/octet-stream", coderCv); *@
+            await JSRuntime.InvokeVoidAsync("Blazor.downloadFromUrl", coderCv);
         }
         else
         {

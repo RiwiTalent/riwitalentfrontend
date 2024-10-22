@@ -198,13 +198,13 @@ namespace riwitalentfrontend.Services.Implementations
             }
         }
 
-        public async Task<byte[]> DownloadCv(string coderId)
+        public async Task<string> DownloadCv(string coderId)
         {
             var response = await _httpClient.GetAsync($"http://localhost:5113/{coderId}/cv");
 
             if(response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadAsByteArrayAsync();
+                return await response.Content.ReadAsStringAsync();
             }
             else
             {

@@ -16,3 +16,20 @@ window.Blazor.downloadFile = (fileName, contentType, byteArray) => {
     a.remove();
     URL.revokeObjectURL(url);
 };
+
+window.Blazor = window.Blazor || {};
+
+// Nueva función para abrir una URL
+window.Blazor.downloadFromUrl = (url) => {
+    if (!url) {
+        console.error("URL is undefined or null.");
+        return;
+    }
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank'; // Abre en nueva pestaña
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+};
+
