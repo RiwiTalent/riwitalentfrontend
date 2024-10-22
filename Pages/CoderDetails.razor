@@ -2,9 +2,10 @@
 @using riwitalentfrontend.Components.GroupCoder
 @layout MainLayout
 @inject ICoderService CoderService
+@inject IJSRuntime JSRuntime;
 @inject SweetAlertService Swal;
 @inject AlertService AlertService;
-@inject NavigationManager NavigationManager
+@inject NavigationManager NavigationManager;
 
 @attribute [Authorize]
 
@@ -51,14 +52,15 @@
                         <!-- Card con Avatar y Nombre del Coder -->
                         <MudItem xs="12" sm="4" md="4">
                             <MudCard Class="d-flex flex-column align-center justify-center mud-width-full pa-4 gap-2">
+
                                 <!-- Avatar -->
                                 <AvatarComponent
                                     AvatarUrl="@_coder.Photo"
                                     TypeAvatar="Coder"
                                     FirstName="@_coder.FirstName"
-                                    LastName="@_coder.FirstLastName"
+                                    LastName="@_coder.FirstLastName" 
                                     Style="height:150px; width:150px; font-size:2rem;"/>
-
+                                
                                 <!-- Standar Riwi del Coder-->
                                 <MudText Typo="Typo.h4" Color="Color.Primary"><b>@_coder.Stack</b></MudText>
 
@@ -66,12 +68,29 @@
                                 <StatusChipComponent Status="@_coder.StandarRiwi.Standar"/>
 
                                 <!-- Botón Descargar y Cargar Cv -->
-                                <MudTooltip Text="@(isEditing ? "Cargar Cv" : "Descargar Cv")">
-                                    <MudButton Variant="Variant.Filled" Color="@((isEditing ? Color.Success : Color.Primary))"
-                                               StartIcon="@(isEditing ? @Icons.Material.Rounded.UploadFile : Icons.Material.Rounded.SimCardDownload)">
-                                        @(isEditing ? "Cargar Cv" : "Descargar Cv")
-                                    </MudButton>
-                                </MudTooltip>
+                                @if(isEditing == true)
+                                {
+                                    <MudFileUpload T="IBrowserFile" Accept=".pdf" FilesChanged="UploadCv" @bind-Value="_files" MaximumFileCount="2000000">
+                                        <ActivatorContent>
+                                        <MudTooltip Text="Cargar Cv">
+                                            <MudButton Variant="Variant.Filled" Color="Color.Success"
+                                                    StartIcon="@Icons.Material.Rounded.UploadFile">
+                                                    Cargar Cv
+                                            </MudButton>
+                                        </MudTooltip>
+                                        </ActivatorContent>
+                                    </MudFileUpload>
+                                }
+
+                                @if(isEditing == false)
+                                {
+                                    <MudTooltip Text="Descargar Cv">
+                                        <MudButton OnClick="DownloadCoderCV" Variant="Variant.Filled" Color="Color.Primary"
+                                                StartIcon="@Icons.Material.Rounded.SimCardDownload">
+                                                Descargar Cv
+                                        </MudButton>
+                                    </MudTooltip>
+                                }
 
                                 <!-- Componente de subida de archivos, sobrepuesto al avatar -->
                                 <MudItem Class="d-flex mt-3">
@@ -87,6 +106,7 @@
                                         </MudFileUpload>
                                     }
                                 </MudItem>
+                                
                             </MudCard>
                             
                             <!-- Título: Información del los procesos -->
@@ -114,199 +134,199 @@
                             </MudCard>
                             </MudItem>
 
-                    <!-- Card con Información del Coder -->
-                    <MudItem xs="12" sm="8" md="8">
-                        <MudForm Spacing="2">
+                        <!-- Card con Información del Coder -->
+                        <MudItem xs="12" sm="8" md="8">
+                            <MudForm Spacing="2">
                                 
-                            <!-- Título: Información del Coder -->
-                            <MudCard Class="d-flex pa-4 my-2">
-                                <MudCardContent Class="FullWidth">
-                                    <MudGrid>
-                                        <MudItem xs="12">
-                                            <MudText Align="Align.Start" Typo="Typo.h5"><b>Información del coder</b></MudText>
-                                        </MudItem>
+                                <!-- Título: Información del Coder -->
+                                <MudCard Class="d-flex pa-4 my-2">
+                                    <MudCardContent Class="FullWidth">
+                                        <MudGrid>
+                                            <MudItem xs="12">
+                                                <MudText Align="Align.Start" Typo="Typo.h5"><b>Información del coder</b></MudText>
+                                            </MudItem>
 
-                                        @* Campos de información del coder *@
+                                            @* Campos de información del coder *@
                                             
-                                        <!-- Nombres del Coder -->
-                                        <MudItem xs="12" sm="6">
-                                            <MudText Typo="Typo.subtitle2"><b>Primer Nombre</b></MudText>
-                                            <MudTextField T="string"
-                                                          @bind-Value="@_coder.FirstName"
-                                                          Placeholder="Ingresa el primer nombre"
-                                                          Variant="Variant.Outlined"
-                                                          FullWidth="true"
-                                                          Margin="Margin.Dense"
-                                                          AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
-                                                          Adornment="Adornment.Start"
-                                                          AdornmentColor="Color.Primary"
-                                                          ReadOnly="!isEditing">
-                                            </MudTextField>
-                                        </MudItem>
-                                        <MudItem xs="12" sm="6">
-                                            <MudText Typo="Typo.subtitle2"><b>Segundo Nombre</b></MudText>
-                                            <MudTextField T="string"
-                                                          @bind-Value="@_coder.SecondName"
-                                                          Placeholder="Ingresa el segundo nombre"
-                                                          Variant="Variant.Outlined"
-                                                          FullWidth="true"
-                                                          Margin="Margin.Dense"
-                                                          ReadOnly="!isEditing">
-                                            </MudTextField>
-                                        </MudItem>
+                                            <!-- Nombres del Coder -->
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Primer Nombre</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.FirstName"
+                                                              Placeholder="Ingresa el primer nombre"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
+                                                              Adornment="Adornment.Start"
+                                                              AdornmentColor="Color.Primary"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Segundo Nombre</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.SecondName"
+                                                              Placeholder="Ingresa el segundo nombre"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
 
-                                        <!-- Apellidos del Coder -->
-                                        <MudItem xs="12" sm="6">
-                                            <MudText Typo="Typo.subtitle2"><b>Primer Apellido</b></MudText>
-                                            <MudTextField T="string"
-                                                          @bind-Value="@_coder.FirstLastName"
-                                                          Placeholder="Ingresa el primer apellido"
-                                                          Variant="Variant.Outlined"
-                                                          FullWidth="true"
-                                                          Margin="Margin.Dense"
-                                                          ReadOnly="!isEditing">
-                                            </MudTextField>
-                                        </MudItem>
-                                        <MudItem xs="12" sm="6">
-                                            <MudText Typo="Typo.subtitle2"><b>Segundo Apellido</b></MudText>
-                                            <MudTextField T="string"
-                                                          @bind-Value="@_coder.SecondLastName"
-                                                          Placeholder="Ingresa el segundo apellido"
-                                                          Variant="Variant.Outlined"
-                                                          FullWidth="true"
-                                                          Margin="Margin.Dense"
-                                                          ReadOnly="!isEditing">
-                                            </MudTextField>
-                                        </MudItem>
+                                            <!-- Apellidos del Coder -->
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Primer Apellido</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.FirstLastName"
+                                                              Placeholder="Ingresa el primer apellido"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Segundo Apellido</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.SecondLastName"
+                                                              Placeholder="Ingresa el segundo apellido"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
 
-                                        <!-- información de contacto del Coder -->
-                                        <MudItem xs="12" sm="6">
-                                            <MudText Typo="Typo.subtitle2"><b>Correo electrónico</b></MudText>
-                                            <MudTextField T="string"
-                                                          @bind-Value="@_coder.Email"
-                                                          Placeholder="Ingresa el email"
-                                                          Variant="Variant.Outlined"
-                                                          FullWidth="true"
-                                                          Margin="Margin.Dense"
-                                                          AdornmentIcon="@Icons.Material.Rounded.AlternateEmail"
-                                                          Adornment="Adornment.Start"
-                                                          AdornmentColor="Color.Primary"
-                                                          ReadOnly="!isEditing">
-                                            </MudTextField>
-                                        </MudItem>
-                                        <MudItem xs="12" sm="6">
-                                            <MudText Typo="Typo.subtitle2"><b>Celular</b></MudText>
-                                            <MudTextField T="string"
-                                                          @bind-Value="@_coder.Phone"
-                                                          Placeholder="Ingresa el numero de telefono"
-                                                          Variant="Variant.Outlined"
-                                                          FullWidth="true"
-                                                          Margin="Margin.Dense"
-                                                          AdornmentIcon="@Icons.Material.Rounded.LocalPhone"
-                                                          Adornment="Adornment.Start"
-                                                          AdornmentColor="Color.Primary"
-                                                          ReadOnly="!isEditing">
-                                            </MudTextField>
-                                        </MudItem>
+                                            <!-- información de contacto del Coder -->
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Correo electrónico</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.Email"
+                                                              Placeholder="Ingresa el email"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              AdornmentIcon="@Icons.Material.Rounded.AlternateEmail"
+                                                              Adornment="Adornment.Start"
+                                                              AdornmentColor="Color.Primary"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Celular</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.Phone"
+                                                              Placeholder="Ingresa el numero de telefono"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Margin="Margin.Dense"
+                                                              AdornmentIcon="@Icons.Material.Rounded.LocalPhone"
+                                                              Adornment="Adornment.Start"
+                                                              AdornmentColor="Color.Primary"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
                                             
-                                        <!-- información del puntaje del Coder -->
-                                        <MudItem xs="12" sm="6">
-                                            <MudText Typo="Typo.subtitle2"><b>Puntaje</b></MudText>
-                                            <MudNumericField T="float"
-                                                             @bind-Value="@_coder.AssessmentScore"
-                                                             Placeholder="ingrese su puntaje"
-                                                             Variant="Variant.Outlined"
-                                                             FullWidth="true"
-                                                             Margin="Margin.Dense"
-                                                             AdornmentIcon="@Icons.Material.Outlined.EmojiEvents"
-                                                             Adornment="Adornment.Start"
-                                                             AdornmentColor="Color.Primary"
-                                                             ReadOnly="!isEditing">
-                                            </MudNumericField>
-                                        </MudItem>
+                                            <!-- información del puntaje del Coder -->
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Puntaje</b></MudText>
+                                                <MudNumericField T="float"
+                                                                 @bind-Value="@_coder.AssessmentScore"
+                                                                 Placeholder="ingrese su puntaje"
+                                                                 Variant="Variant.Outlined"
+                                                                 FullWidth="true"
+                                                                 Margin="Margin.Dense"
+                                                                 AdornmentIcon="@Icons.Material.Outlined.EmojiEvents"
+                                                                 Adornment="Adornment.Start"
+                                                                 AdornmentColor="Color.Primary"
+                                                                 ReadOnly="!isEditing">
+                                                </MudNumericField>
+                                            </MudItem>
                                             
-                                        <!-- información del Stack -->
-                                        <MudItem xs="12" sm="6">
-                                            <MudText Typo="Typo.subtitle2"><b>Stack</b></MudText>
-                                            <MudSelect T="string" @bind-Value="_coder.Stack"
-                                                       AnchorOrigin="Origin.CenterCenter"
-                                                       TransformOrigin="Origin.CenterCenter"
-                                                       Placeholder="Selecciona su Stack"
-                                                       Variant="Variant.Outlined"
-                                                       FullWidth="true"
-                                                       Margin="Margin.Dense"
-                                                       Required="true"
-                                                       Disabled="!isEditing">
-                                                @foreach (var role in developmentRoles)
-                                                {
-                                                    <MudSelectItem Value="@role">@role</MudSelectItem>
-                                                }
-                                            </MudSelect>
-                                        </MudItem>
-                                    </MudGrid>
-                                </MudCardContent>
-                            </MudCard>
+                                            <!-- información del Stack -->
+                                            <MudItem xs="12" sm="6">
+                                                <MudText Typo="Typo.subtitle2"><b>Stack</b></MudText>
+                                                <MudSelect T="string" @bind-Value="_coder.Stack"
+                                                           AnchorOrigin="Origin.CenterCenter"
+                                                           TransformOrigin="Origin.CenterCenter"
+                                                           Placeholder="Selecciona su Stack"
+                                                           Variant="Variant.Outlined"
+                                                           FullWidth="true"
+                                                           Margin="Margin.Dense"
+                                                           Required="true"
+                                                           Disabled="!isEditing">
+                                                    @foreach (var role in developmentRoles)
+                                                    {
+                                                        <MudSelectItem Value="@role">@role</MudSelectItem>
+                                                    }
+                                                </MudSelect>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </MudCard>
                                 
-                            <!-- Título: Información del perfil del Coder -->
-                            <MudCard Class="d-flex pa-4">
-                                <MudCardContent Class="FullWidth">
-                                    <MudGrid>
-                                        <MudItem xs="12">
-                                            <MudText Align="Align.Start" Typo="Typo.h5"><b>Perfil</b></MudText>
-                                        </MudItem>
+                                <!-- Título: Información del perfil del Coder -->
+                                <MudCard Class="d-flex pa-4">
+                                    <MudCardContent Class="FullWidth">
+                                        <MudGrid>
+                                            <MudItem xs="12">
+                                                <MudText Align="Align.Start" Typo="Typo.h5"><b>Perfil</b></MudText>
+                                            </MudItem>
 
-                                        <!-- Descripción del Coder -->
-                                        <MudItem xs="12">
-                                            <MudText Typo="Typo.subtitle2"><b>Descripción</b></MudText>
-                                            <MudTextField T="string"
-                                                          @bind-Value="@_coder.ProfessionalDescription"
-                                                          Placeholder="Escribe una breve descripción del coder"
-                                                          Variant="Variant.Outlined"
-                                                          FullWidth="true"
-                                                          Lines="7"
-                                                          Margin="Margin.Dense"
-                                                          ReadOnly="!isEditing">
-                                            </MudTextField>
-                                        </MudItem>
+                                            <!-- Descripción del Coder -->
+                                            <MudItem xs="12">
+                                                <MudText Typo="Typo.subtitle2"><b>Descripción</b></MudText>
+                                                <MudTextField T="string"
+                                                              @bind-Value="@_coder.ProfessionalDescription"
+                                                              Placeholder="Escribe una breve descripción del coder"
+                                                              Variant="Variant.Outlined"
+                                                              FullWidth="true"
+                                                              Lines="7"
+                                                              Margin="Margin.Dense"
+                                                              ReadOnly="!isEditing">
+                                                </MudTextField>
+                                            </MudItem>
 
-                                        <!-- Habilidades tecnicas del Coder -->
-                                        <MudItem xs="12">
-                                            <MudText Align="Align.Start" Typo="Typo.h5"><b>Habilidades Tecnicas</b></MudText>
-                                        </MudItem>
+                                            <!-- Habilidades tecnicas del Coder -->
+                                            <MudItem xs="12">
+                                                <MudText Align="Align.Start" Typo="Typo.h5"><b>Habilidades Tecnicas</b></MudText>
+                                            </MudItem>
 
-                                        <!-- Lenguajes de programación -->
-                                        <MudItem xs="12">
-                                            <MudText Typo="Typo.subtitle2"><b>Lenguajes de programación</b></MudText>
-                                            <MudChipSet T="string" SelectionMode="SelectionMode.MultiSelection"
-                                                        CheckMark="true" Variant="Variant.Filled" Color="Color.Primary">
-                                                @foreach (var skill in _coder.Skills)
-                                                {
-                                                    <MudChip T="string">@skill.Language_Programming</MudChip>
-                                                }
-                                            </MudChipSet>
-                                        </MudItem>
+                                            <!-- Lenguajes de programación -->
+                                            <MudItem xs="12">
+                                                <MudText Typo="Typo.subtitle2"><b>Lenguajes de programación</b></MudText>
+                                                <MudChipSet T="string" SelectionMode="SelectionMode.MultiSelection"
+                                                            CheckMark="true" Variant="Variant.Filled" Color="Color.Primary">
+                                                    @foreach (var skill in _coder.Skills)
+                                                    {
+                                                        <MudChip T="string">@skill.Language_Programming</MudChip>
+                                                    }
+                                                </MudChipSet>
+                                            </MudItem>
 
-                                        <!-- Idiomas -->
-                                        <MudItem xs="12">
-                                            <MudText Typo="Typo.subtitle2"><b>Idiomas</b></MudText>
-                                            <MudChipSet T="string" SelectionMode="SelectionMode.MultiSelection"
-                                                        CheckMark="true" Variant="Variant.Filled" Color="Color.Primary">
-                                                @if (_coder.LanguageSkills != null)
-                                                {
-                                                    <MudChip T="string">@_coder.LanguageSkills.Language</MudChip>
-                                                }
-                                                else
-                                                {
-                                                    <MudText>No se encontraron idiomas.</MudText>
-                                                }
-                                            </MudChipSet>
-                                        </MudItem>
-                                    </MudGrid>
-                                </MudCardContent>
-                            </MudCard>
-                        </MudForm>
-                    </MudItem>
-                </MudGrid>
+                                            <!-- Idiomas -->
+                                            <MudItem xs="12">
+                                                <MudText Typo="Typo.subtitle2"><b>Idiomas</b></MudText>
+                                                <MudChipSet T="string" SelectionMode="SelectionMode.MultiSelection"
+                                                            CheckMark="true" Variant="Variant.Filled" Color="Color.Primary">
+                                                    @if (_coder.LanguageSkills != null)
+                                                    {
+                                                        <MudChip T="string">@_coder.LanguageSkills.Language</MudChip>
+                                                    }
+                                                    else
+                                                    {
+                                                        <MudText>No se encontraron idiomas.</MudText>
+                                                    }
+                                                </MudChipSet>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudCardContent>
+                                </MudCard>
+                            </MudForm>
+                        </MudItem>
+                    </MudGrid>
                 </MudContainer>
             }
     </Authorized>
@@ -345,6 +365,42 @@
             }
         }
 
+    }
+
+    private async Task UploadCv(IBrowserFile file)
+    {
+
+        if(!string.IsNullOrEmpty(coderId))
+        {
+            if(file != null)
+            {
+                var stream = file.OpenReadStream(2 * 1024 * 1024);
+
+                await CoderService.UploadCvCoder(coderId, stream, file.Name);
+                await LoadCoderDetailsAsync();
+            }
+            else
+            {
+                Console.WriteLine("No file selected");
+            }
+        }
+
+    }
+
+    //download cv
+    private async Task DownloadCoderCV()
+    {
+        var coderCv = await CoderService.DownloadCv(coderId);
+
+        if (coderCv != null && coderCv.Length > 0)
+        {
+            Console.WriteLine($"Tamaño del CV: {coderCv.Length} bytes");
+            await JSRuntime.InvokeVoidAsync("Blazor.downloadFile", "cv", "application/pdf", coderCv);
+        }
+        else
+        {
+            Console.WriteLine("La descarga falló o el archivo está vacío.");
+        }
     }
 
     protected override async Task OnInitializedAsync()
@@ -544,8 +600,6 @@
         "Mobile",
         "Data Science",
         "UI/UX",
-        "Game Development",
-        "Embedded Systems"
     };
 }
 }

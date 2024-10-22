@@ -11,6 +11,11 @@
 
 <PageTitle>RiwiTalent: Detalles del Grupo</PageTitle>
 
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <!-- Muestra alerta si se produce un error -->
+    <MudAlert Severity="Severity.Error">@_errorMessage</MudAlert>
+}
 <AuthorizeView>
     <Authorized>
             @if (_loading)
@@ -58,24 +63,25 @@
                                     FirstName="@_group.Name"
                                     Style="height:150px; width:150px; font-size:2rem;"/>
                                 
-                                <MudText Typo="Typo.h4" Color="Color.Primary"><b>@_group.Name</b></MudText>
-
+                                <MudText Typo="Typo.h6" Color="Color.Primary">@_group.Name</MudText>
+                                
                                 <!-- Componente de status del grupo -->
                                 <StatusChipComponent Status="@_group.Status"/>
                                 
+                                <!-- Componente de status del grupo -->
                                 <MudItem Class="d-flex mt-3">
                                     
-                                    <!-- Componente de subida de archivo -->
+                                    <!-- Componente de subida de archivos, sobrepuesto al avatar -->
                                     @if(isEditing == true)
                                     {
-                                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" @bind-Value="_files" MaximumFileCount="2000000">
-                                        <ActivatorContent>
-                                            <MudTooltip Text="Sube una imagen">
-                                                <MudFab Color="Color.Success" Size="Size.Medium"
-                                                        StartIcon="@Icons.Material.Filled.AddPhotoAlternate"/>
-                                            </MudTooltip>
-                                        </ActivatorContent>
-                                    </MudFileUpload>
+                                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" @bind-Value="_files" MaximumFileCount="2000000">
+                                            <ActivatorContent>
+                                                <MudTooltip Text="Sube una imagen">
+                                                    <MudFab Color="Color.Success" Size="Size.Medium"
+                                                            StartIcon="@Icons.Material.Filled.AddPhotoAlternate"/>
+                                                </MudTooltip>
+                                            </ActivatorContent>
+                                        </MudFileUpload>
                                     }
                                 </MudItem>
                             </MudCard>

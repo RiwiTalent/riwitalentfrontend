@@ -190,6 +190,11 @@ else
             _errorMessage = "Hubo un problema con la conexión a internet. Intente nuevamente más tarde.";
             LogError(httpEx);
         }
+        catch (NullReferenceException nullEx)
+        {
+            _errorMessage = "Ocurrió un error inesperado. Intente más tarde.";
+            LogError(nullEx);
+        }
         catch (Exception ex)
         {
             _errorMessage = "Hubo un error al cargar los coders. Intente nuevamente más tarde.";

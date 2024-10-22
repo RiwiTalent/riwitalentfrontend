@@ -170,5 +170,51 @@ namespace riwitalentfrontend.Services.Implementations
                 throw new Exception($"Error al cargar la foto: {response.StatusCode}, Detalle: {errorMessage}");
             }
         }
+        public async Task<bool> UploadCvCoder(string coderId, Stream stream, string fileName)
+        {
+            if (stream == null || stream.Length == 0)
+            {
+                throw new ArgumentException("No file uploaded", nameof(stream));
+            }
+
+            using var content = new MultipartFormDataContent();
+
+            var fileContent = new StreamContent(stream);
+            content.Add(fileContent, "file", fileName);
+
+            var response = await _httpClient.PostAsync($"http://localhost:5113/upload-pdf/{coderId}", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Se subió de manera correcta la Cv");
+                return true;
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(coderId);
+
+                throw new Exception($"Error al cargar Cv: {response.StatusCode}, Detalle: {errorMessage}");
+            }
+        }
+
+        public async Task<byte[]> DownloadCv(string coderId)
+        {
+            var response = await _httpClient.GetAsync($"http://localhost:5113/{coderId}/cv");
+
+            if(response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsByteArrayAsync();
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(coderId);
+
+                throw new Exception($"Error al cargar Cv: {response.StatusCode}, Detalle: {errorMessage}");
+            }
+
+        }
     }
 }
+
