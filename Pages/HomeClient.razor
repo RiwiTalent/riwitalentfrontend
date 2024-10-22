@@ -1,6 +1,8 @@
-@page "/HomeClient/{groupId}"
+@page "/external-access/{groupId}"
 @inject ICoderService coderService
 @inject IEmailService emailService
+@inject NavigationManager Navigation
+
 
 @layout DefaultLayout
 
@@ -11,17 +13,26 @@
 <MudMainContent />
 <BannerCodersComponent />
 
-<MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true" Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded-t ma-2 py-5 px-2">
-    <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" ButtonText = "@ButtonText"/>
+
+<MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true"
+    Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded-t ma-2 py-5 px-2">
+    <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders"
+        OnCoderAdded="AddCoderHandler" ButtonText="@ButtonText" />
 </MudDrawer>
 
 <MudStack Class="d-flex justify-end">
-    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Code" Size="Size.Medium" OnClick="DrawerToggle" Class="fixed" Style="bottom: 20px; right: 20px;"/>
+    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Code" Size="Size.Medium" OnClick="DrawerToggle"
+        Class="fixed" Style="bottom: 20px; right: 20px;" />
 </MudStack>
 
+<MudButton Color="Color.Error" OnClick="Logout">
+    Cerrar Sesión
+</MudButton>
 
-@* <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" /> *@
-<CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" groupId="@groupId" FilterInGroup = "@FilterInGroup"/>
+@* <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders"
+OnCoderAdded="AddCoderHandler" /> *@
+<CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" groupId="@groupId"
+    FilterInGroup="@FilterInGroup" />
 
 
 
@@ -42,10 +53,9 @@
     private void AddCoderHandler(Coder coder)
     {
         Console.WriteLine($"Coder agregado: {coder.FirstName} {coder.FirstLastName}");
-       
     }
 
-     private async Task AddCodersToGroupAsync()
+    private async Task AddCodersToGroupAsync()
     {
         if (string.IsNullOrEmpty(groupId) || _selectedCoders.Count == 0)
         {
@@ -57,10 +67,10 @@
         Console.WriteLine($"Enviando {coderIds.Count} coders al grupo {groupId}: {string.Join(", ", coderIds)}");
 
         DataDto data = new DataDto
-        {
-            GroupId = groupId,
-            CoderList = coderIds
-        };
+            {
+                GroupId = groupId,
+                CoderList = coderIds
+            };
 
         await coderService.CoderSelectedAsync(data);
         await emailService.SendEmailCompany(groupId);
@@ -71,6 +81,12 @@
         _drawerOpen = !_drawerOpen;
     }
 
-    
+    private async Task Logout()
+    {
+        //Borrar almacenamiento del historial siguiendo el orden del login para externo
+        
 
+        // Redirigimos al login del externo para loguearse de nuevo si es necesario
+        Navigation.NavigateTo("/LoginClient");
+    }
 }
