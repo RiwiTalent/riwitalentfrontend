@@ -7,6 +7,7 @@
 @inject HttpClient Http
 @inject IAlertService alertService;
 @namespace riwitalentfrontend.Components
+
 <MudChipSet Class="z-100" T="string" AllClosable OnClose="RemoveCoderFromGroup">
     @foreach (var selectedCoder in SelectedCoders)
         
@@ -22,23 +23,17 @@
 </MudChipSet>
 
 
-<MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;"/>
+<MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;">
     @if(ButtonText == true)
     {
         <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Iniciar Proceso</MudButton>
     }
     else if(ButtonText == false)
     {
-        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Cargar Coders</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Agregar Coders</MudButton>
     }
 
-@* <MudStack Justify="Justify.FlexEnd" Class="gap-2 ma-2 pa-2" Style="height: 100vh;" @bind-Open="_open">
-    @if (!string.IsNullOrEmpty(_errorMessage))
-    {
-        <MudText Justify="Justify.FlexStart" Color="Color.Error">@_errorMessage</MudText>
-    }
-    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCoderHandler">Agregar Coders</MudButton>
-</MudStack> *@
+</MudStack> 
 
 @code {
 
@@ -72,11 +67,12 @@
         _errorMessage = null; // Resetea el mensaje de error
         if (AddCodersToGroupAsync.HasDelegate && SelectedCoders.Count > 0)
         {
-            await AddCodersToGroupAsync.InvokeAsync();
             _open = false; // Cerrar el MudStack después de agregar con éxito
             SelectedCoders.Clear();
-            Console.WriteLine("_open: " + _open);
+            await AddCodersToGroupAsync.InvokeAsync();
             await alertService.AddCodersToGroup();
+            Console.WriteLine("_open: " + _open);
+            Console.WriteLine("buttonText: " + ButtonText);
         }
         else
         {

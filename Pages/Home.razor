@@ -1,7 +1,8 @@
-@page "/Coders/{groupId}"
+@page "/coders/{groupId}"
 @inject IGroupService GroupService
 @inject ICoderService coderService
 @layout MainLayout
+@inject ISnackbar Snackbar
 @inject HttpClient Http
 
 @attribute [Authorize]
@@ -13,6 +14,14 @@
     <link rel="stylesheet" href="css/Coders.css">
     <link rel="stylesheet" href="css/Components/PaginationComponent.css">   
 </head>
+
+
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <!-- Muestra alerta si se produce un error -->
+    Snackbar.Add(_errorMessage, Severity.Error);
+}
+
 
 <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true" Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded-t ma-2 py-5 px-2">
     <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" ButtonText = "@ButtonText"/>
@@ -26,14 +35,18 @@
     <Authorized>
         <MudText Color="Color.Primary" class="title">
         </MudText>
+
+        
         <BannerCodersComponent />
-        <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" />
+        <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" ButtonText = "@ButtonText" />
         <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" /> 
     </Authorized>
 </AuthorizeView>
 
 @code {
     private bool _drawerOpen = false;
+
+    private string _errorMessage;
 
     [Parameter] 
     public bool? ButtonText { get; set; } = false;
@@ -56,14 +69,18 @@
 
      private async Task AddCodersToGroupAsync()
     {
+
+
+        _errorMessage = string.Empty; // Limpiar el mensaje de error al comenzar
+        
         if (string.IsNullOrEmpty(groupId) || _selectedCoders.Count == 0)
         {
-            Console.WriteLine("Debes ingresar un ID de grupo y seleccionar coders.");
+           _errorMessage ="Debes ingresar un ID de grupo y seleccionar coders.";
             return;
         }
 
         var coderIds = _selectedCoders.Select(c => c.Id).ToList();
-        Console.WriteLine($"Enviando {coderIds.Count} coders al grupo {groupId}: {string.Join(", ", coderIds)}");
+       _errorMessage = $"Agregando {coderIds.Count} coders al grupo {groupId}: {string.Join(", ", coderIds)}";
 
         DataDto data = new DataDto
         {

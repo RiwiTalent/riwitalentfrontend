@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using riwitalentfrontend.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using riwitalentfrontend.Services.Interfaces;
 using System.Net.Http.Headers;
@@ -18,14 +19,16 @@ namespace riwitalentfrontend.Services.Implementations
         private readonly IJSRuntime _jsRuntime;
         private AuthenticationStateProvider _authenticationStateProvider;
         private readonly ISessionStorageService _sessionStorage;
+        private readonly NavigationManager _navigationManager;
 
         // Constructor corregido sin la coma final
-        public AuthService(HttpClient httpClient, IJSRuntime jsRuntime, AuthenticationStateProvider authenticationStateProvider, ISessionStorageService sessionStorage)
+        public AuthService(HttpClient httpClient, IJSRuntime jsRuntime, AuthenticationStateProvider authenticationStateProvider, ISessionStorageService sessionStorage, NavigationManager navigationManager)
         {
             _httpClient = httpClient;
             _jsRuntime = jsRuntime;
             _authenticationStateProvider = authenticationStateProvider;
             _sessionStorage = sessionStorage;
+            _navigationManager = navigationManager;
         }
 
         // Obtiene el endpoint y recibe los parametros enviados desde el login verificandolos
@@ -40,6 +43,7 @@ namespace riwitalentfrontend.Services.Implementations
                 Console.WriteLine(token);
 
                 await LoginBack(token);
+                _navigationManager.NavigateTo($"/coders");
 
                 return true;
             }

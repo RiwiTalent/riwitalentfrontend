@@ -1,44 +1,73 @@
 @inject ICoderService CoderService
 @inject ISkillService SkillService
 
-
 <MudDrawerContainer Class="ma-2">
-    <MudChipSet @bind-SelectedValues="_selectedSkills" SelectionMode="SelectionMode.MultiSelection"
-                CheckMark="true" Variant="Variant.Text" Color="Color.Primary">
+        <MudText T="string" Variant="Variant.Text" Color="Color.Primary">Por Tecnologìas:</MudText>
+        <MudChipSet @bind-SelectedValues="_selectedSkills" SelectionMode="SelectionMode.MultiSelection"
+                    CheckMark="true" Variant="Variant.Text" Color="Color.Primary">
+            @foreach (var skill in _availableSkills)
+            {
+                <MudChip T="string" Value="@skill">@skill</MudChip>
+            }
+        </MudChipSet>
 
-        @foreach (var skill in _availableSkills)
-        {
-        <MudChip T="string" Value="@skill">@skill</MudChip>
-        }
-    </MudChipSet>
+        <MudText T="string" Variant="Variant.Text" Color="Color.Primary">Por Nivèl de Inglès:</MudText>
+        <MudChipSet @bind-SelectedValues="_selectedLanguage" SelectionMode="SelectionMode.MultiSelection"
+                    CheckMark="true" Variant="Variant.Text" Color="Color.Primary">
+            @if (_englishLevels.Any())
+            {
+                @foreach (var level in _englishLevels)
+                {
+                    <MudChip T="string" Value="@level">@level</MudChip>
+                }
+            }
+            else
+            {
+                <p>No hay niveles de inglés disponibles.</p>
+            }
+        </MudChipSet>
+
+    
+    <MudStack Class="gap-2 ma-2 pa-2">
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="ApplyFilter">Filtrar Coders</MudButton>
+    </MudStack>
 </MudDrawerContainer>
-
-
-<MudStack Class="gap-2 ma-2 pa-2">
-    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="ApplyFilter">Filtrar Coders</MudButton>
-</MudStack>
-
-
 
 @code {
     private List<Coder> _coders;
     private List<string> _availableSkills = new List<string>();
+    private List<string> _englishLevels = new List<string> { "A1", "A2", "B1", "B2", "C1", "C2","Avanzado", "Nativo" };
+
     private IReadOnlyCollection<string> _selectedSkills = new List<string>();
-    
-    [Parameter] public EventCallback<bool> OnDrawerToggle { get; set; }
+    private IReadOnlyCollection<string> _selectedLanguage = new List<string>();
+
     [Parameter] public EventCallback<List<Coder>> OnFiltered { get; set; }
-    
+    [Parameter] public bool _drawerOpen { get; set; }
+
+
     protected override async Task OnInitializedAsync()
     {
         _coders = await CoderService.GetCodersAsync();
         _availableSkills = SkillService.GetUniqueSkills(_coders);
     }
-    
+
     private async Task ApplyFilter()
     {
-        if (_selectedSkills != null && _selectedSkills.Any())
+        if (_selectedSkills.Any() && _selectedLanguage.Any())
+        {
+            // Filtrar coders por habilidades seleccionadas
+            var filteredCoders = await CoderService.FilterCodersBySkillsAsync(_selectedSkills.ToList());
+            
+            // Filtrar aún más por niveles de inglés seleccionados
+            _coders = filteredCoders.Where(coder => _selectedLanguage.Contains(coder.LanguageSkills.Language_Level)).ToList();
+        }
+        else if (_selectedSkills.Any())
         {
             _coders = await CoderService.FilterCodersBySkillsAsync(_selectedSkills.ToList());
+        }
+        else if (_selectedLanguage.Any())
+        {
+            _coders = await CoderService.GetCodersByLanguage(_selectedLanguage.ToList());
         }
         else
         {
@@ -48,9 +77,4 @@
         await OnFiltered.InvokeAsync(_coders);
     }
 
-    private async Task OnSelectedValuesChanged(IReadOnlyCollection<string>? newValues)
-    {
-        _selectedSkills = newValues.ToList();
-        await ApplyFilter();
-    }
 }
