@@ -9,30 +9,78 @@
 @inject SweetAlertService Swal;
 @inject AlertService AlertService;
 
-<MudGrid Class="pa-0 ma-0">
-    <MudContainer Class="d-flex justify-center align-center pa-2 flex-grow-1">
-        <MudCard Class="pa-6 d-flex justify-center align-center">
-            <MudCardHeader>
-                <MudItem Class="d-flex justify-center align-center">
-                    <LogoComponent IsDarkMode="@IsDarkMode" />
+<MudGrid Class="ma-0" Spacing="0" Style="height: 100vh; padding: 0 !important;">
+
+    <!-- Contenedor relativo para la imagen y el formulario en móviles -->
+    <MudItem xs="12" sm="6" Class="pa-0 ma-0 d-block d-sm-none" Style="position: relative;">
+        <!-- Imagen que se muestra solo en móviles (pantallas pequeñas) -->
+        <MudImage Src="images/login.jpeg" Alt="Imagen de login móvil" Class="d-flex justify-center align-center rounded-lg d-block d-sm-none"
+                  Style="width: 100%; height: 50%; object-fit: cover; margin-top: -75px; clip-path: polygon(100% 0%, 100% 0%, 100% 125%, 0% 65%, 0% 0%, 0% 0%);" />
+        <!-- Imagen que se muestra solo en móviles (pantallas pequeñas) -->
+        <MudImage Src="images/Forms.png"
+                  Width="200"
+                  Height="150"
+                  Alt="Swedish Farm House"
+                  Elevation="25"
+                  Class="rounded-lg ma-4"
+                  Style="position: absolute; bottom: 1px; right: 0px; margin: 0 !important;" />
+        <!-- Formulario centrado encima de la imagen -->
+        <MudContainer Class="d-flex justify-center align-center" Style="position: absolute; top: 0; left: 0; width: 100%; height: 96%;">
+            <MudCard Class="pa-6 d-flex justify-center align-center" Style="width: 98%; height: 70%; margin-top:30px;  background-color: white;">
+                <MudCardHeader>
+                    <MudItem Class="d-flex justify-center align-center">
+                        <LogoComponent IsDarkMode="@IsDarkMode" />
+                    </MudItem>
+                </MudCardHeader>
+                <MudItem>
+                    <MudText Align="Align.Center" Color="Color.Primary" Typo="Typo.h5"><b>¡Bienvenido/a de nuevo!</b></MudText>
+                    <MudText Align="Align.Center" Typo="Typo.subtitle1">Ingresa con tu cuenta para continuar</MudText>
                 </MudItem>
-            </MudCardHeader>
-            <MudItem>
-                <MudText Align="Align.Center" Typo="Typo.h5"><b>¡Bienvenido/a de nuevo!</b></MudText>
-                <MudText Align="Align.Center" Typo="Typo.subtitle1">Ingresa con tu cuenta para continuar</MudText>
-            </MudItem>
-            <MudCardContent Class="FullWidth" Style="width: 100%;">
-                <MudForm Spacing="2">
-                    <MudTextField T="string" Label="Correo" @bind-value="_email" Variant="Variant.Outlined" InputType="InputType.Email"/>
-                    <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@_passwordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
-                </MudForm>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="Login" Class="rounded">Continuar</MudButton>
-            </MudCardActions>
-        </MudCard>
-    </MudContainer>
+                <MudCardContent Class="FullWidth" Style="width: 100%;">
+                    <MudStack Justify="Justify.Center" Spacing="2" StretchItems="StretchItems.All">
+                        <MudForm Spacing="2">
+                            <MudTextField T="string" Label="Correo" @bind-value="_email" Variant="Variant.Outlined" InputType="InputType.Email"/>
+                            <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@_passwordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
+                        </MudForm>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="Login" Class="rounded">Continuar</MudButton>
+                    </MudStack>
+                </MudCardContent>
+            </MudCard>
+        </MudContainer>
+    </MudItem>
+
+    <!-- Formulario para pantallas grandes (el formulario está al lado de la imagen) -->
+    <MudItem xs="12" sm="6" Class="d-none d-sm-flex justify-center align-center pa-2" Style="height: 100%;">
+        <MudContainer Class="d-flex justify-center align-center pa-2 flex-grow-1">
+            <MudCard Class="pa-4 d-flex justify-center align-center" Style="width: 50%;">
+                <MudCardHeader>
+                    <MudItem Class="d-flex justify-center align-center">
+                        <LogoComponent IsDarkMode="@IsDarkMode" />
+                    </MudItem>
+                </MudCardHeader>
+                <MudItem>
+                    <MudText Align="Align.Center" Color="Color.Primary" Typo="Typo.h4"><b>¡Bienvenido/a de nuevo!</b></MudText>
+                    <MudText Align="Align.Center" Typo="Typo.subtitle1">Ingresa con tu cuenta para continuar</MudText>
+                </MudItem>
+                <MudStack Justify="Justify.Center" Spacing="2" StretchItems="StretchItems.All">
+                    <MudForm Spacing="2">
+                        <MudTextField T="string" Label="Correo" @bind-value="_email" Variant="Variant.Outlined" InputType="InputType.Email"/>
+                        <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@_passwordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
+                    </MudForm>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="Login" Class="rounded">Continuar</MudButton>
+                </MudStack>
+            </MudCard>
+        </MudContainer>
+    </MudItem>
+
+    <!-- Imagen para pantallas grandes (pantallas medianas y más grandes) -->
+    <MudItem xs="12" sm="6" Class="pa-0 ma-0 d-none d-sm-block" Style="height: 100%;">
+        <MudImage Src="images/login.png" Alt="Imagen de login grande" Class="rounded-lg d-none d-sm-block"
+                  Style="width: 100%; height: 100%; object-fit: scale-down;" />
+    </MudItem>
+
 </MudGrid>
+
 
 @code {
     private string? _email;
@@ -67,7 +115,7 @@
             // Guardar el correo en SessionStorage
             await SessionStorage.SetItemAsync("userEmail", _email);
 
-            <!-- NavigationManager.NavigateTo("/coders"); -->
+            NavigationManager.NavigateTo("/coders");
             await Swal.FireAsync(new SweetAlertOptions
             {   
                 Title = "¡Bienvenido",
