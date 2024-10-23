@@ -51,10 +51,9 @@
     private void AddCoderHandler(Coder coder)
     {
         Console.WriteLine($"Coder agregado: {coder.FirstName} {coder.FirstLastName}");
-
     }
 
-     private async Task AddCodersToGroupAsync()
+    private async Task AddCodersToGroupAsync()
     {
         if (string.IsNullOrEmpty(groupId) || _selectedCoders.Count == 0)
         {

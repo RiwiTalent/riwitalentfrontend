@@ -3,8 +3,7 @@
 @inject IEmailService emailService
 @inject NavigationManager Navigation
 
-
-@layout DefaultLayout
+@layout ClientLayout
 
 
 <PageTitle>RiwiTalent: Software de gestión talento Riwi</PageTitle>
@@ -25,12 +24,7 @@
         Class="fixed" Style="bottom: 20px; right: 20px;" />
 </MudStack>
 
-<MudButton Color="Color.Error" OnClick="Logout">
-    Cerrar Sesión
-</MudButton>
 
-@* <SelectedCodersComponent AddCodersToGroupAsync="AddCodersToGroupAsync" SelectedCoders="@_selectedCoders"
-OnCoderAdded="AddCoderHandler" /> *@
 <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" groupId="@groupId"
     FilterInGroup="@FilterInGroup" />
 
@@ -84,7 +78,7 @@ OnCoderAdded="AddCoderHandler" /> *@
     private async Task Logout()
     {
         //Borrar almacenamiento del historial siguiendo el orden del login para externo
-        
+
 
         // Redirigimos al login del externo para loguearse de nuevo si es necesario
         Navigation.NavigateTo("/LoginClient/{groupId}");

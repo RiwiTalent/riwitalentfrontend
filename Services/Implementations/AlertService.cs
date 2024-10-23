@@ -12,10 +12,6 @@ namespace riwitalentfrontend.Services.Implementations
         {
             _swal = swal;
         }
-
-        
-        
-        
         
         public async Task DeleteRegister(){
             var result = await _swal.FireAsync(new SweetAlertOptions

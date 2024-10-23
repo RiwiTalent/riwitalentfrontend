@@ -1,0 +1,74 @@
+@namespace riwitalentfrontend.Layout
+@inject ThemeService ThemeService
+
+@using riwitalentfrontend.Components.Footer
+@inject NavigationManager Navigation
+@inherits LayoutComponentBase
+@* Requerido  *@
+<MudThemeProvider Theme="@_currentTheme" IsDarkMode="_isDarkMode" />
+
+@* Necesario para dialogs *@
+<MudDialogProvider />
+
+@* Necesario para snackbars *@
+<MudSnackbarProvider />
+
+<MudPopoverProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1" Class="rounded-b-lg">
+        <NavLink Icon="@Icons.Material.Rounded.Menu" href="/coders" Match="NavLinkMatch.All">
+            <MudImage ObjectFit="ObjectFit.ScaleDown" Width="100" Fluid="true" Src="@(DarkLightModeImgLogo)"></MudImage>
+        </NavLink>
+        <MudSpacer/>
+        <MudStack Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center" Spacing="2">
+            <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Primary" OnClick="@DarkModeToggle"/>
+            <MudIconButton Icon="@Icons.Material.Rounded.Logout" Color="Color.Primary" OnClick="@Logout"/>
+        </MudStack>
+    </MudAppBar>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+    @* Footer *@
+    <FooterComponent  />
+</MudLayout>
+
+<CascadingBlazoredModal></CascadingBlazoredModal>
+
+@code {
+    private bool _isDarkMode; 
+    private MudTheme? _currentTheme;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Cargar el estado del modo oscuro desde el servicio
+        _isDarkMode = await ThemeService.GetDarkModeAsync();
+        
+        // Obtener el tema basado en el modo oscuro
+        _currentTheme = await ThemeService.GetThemeAsync();
+    }
+
+    private async Task DarkModeToggle()
+    {
+        _isDarkMode = !_isDarkMode;
+        await ThemeService.SetDarkModeAsync(_isDarkMode);
+        _currentTheme = await ThemeService.GetThemeAsync();
+    }
+    
+    public string DarkLightModeButtonIcon => _isDarkMode 
+        ? Icons.Material.Outlined.DarkMode 
+        : Icons.Material.Outlined.WbSunny;
+    
+    private string DarkLightModeImgLogo => _isDarkMode 
+        ? "/images/IsologoRiwiDark.png" 
+        : "/images/IsologoRiwiLight.png";
+
+        private async Task Logout()
+    {
+        //Borrar almacenamiento del historial siguiendo el orden del login para externo
+
+
+        // Redirigimos al login del externo para loguearse de nuevo si es necesario
+        Navigation.NavigateTo("/LoginClient/{groupId}");
+    }
+}
