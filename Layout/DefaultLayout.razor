@@ -36,14 +36,17 @@
 <CascadingBlazoredModal></CascadingBlazoredModal>
 
 @code {
-    private bool _isDarkMode; 
+    
+    @* [Parameter]
+    public string? groupId { get; set; } *@
+    private bool _isDarkMode;
     private MudTheme? _currentTheme;
 
     protected override async Task OnInitializedAsync()
     {
         // Cargar el estado del modo oscuro desde el servicio
         _isDarkMode = await ThemeService.GetDarkModeAsync();
-        
+
         // Obtener el tema basado en el modo oscuro
         _currentTheme = await ThemeService.GetThemeAsync();
     }
@@ -54,21 +57,20 @@
         await ThemeService.SetDarkModeAsync(_isDarkMode);
         _currentTheme = await ThemeService.GetThemeAsync();
     }
-    
-    public string DarkLightModeButtonIcon => _isDarkMode 
-        ? Icons.Material.Outlined.DarkMode 
+
+    public string DarkLightModeButtonIcon => _isDarkMode
+        ? Icons.Material.Outlined.DarkMode
         : Icons.Material.Outlined.WbSunny;
-    
-    private string DarkLightModeImgLogo => _isDarkMode 
-        ? "/images/IsologoRiwiDark.png" 
+
+    private string DarkLightModeImgLogo => _isDarkMode
+        ? "/images/IsologoRiwiDark.png"
         : "/images/IsologoRiwiLight.png";
-    
     private async Task Logout()
     {
         //Borrar almacenamiento del historial siguiendo el orden del login para externo
         await JSRuntime.InvokeVoidAsync("deleteTokenFromCookies");
 
-        // Redirigimos al login del externo para loguearse de nuevo si es necesario
-        NavigationManager.NavigateTo("/external-access/{groupId}");
+        // Redirigimos al login del externo para loguearse de nuevo si es necesario 
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 }
