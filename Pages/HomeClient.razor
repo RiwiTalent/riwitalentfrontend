@@ -1,4 +1,4 @@
-@page "/HomeClient/{groupId}"
+@page "/external-access/{groupId}"
 @inject ICoderService coderService
 @inject IEmailService emailService
 
@@ -8,7 +8,7 @@
 <PageTitle>RiwiTalent: Software de gestión talento Riwi</PageTitle>
 
 
-<MudMainContent />
+<!-- <MudMainContent /> -->
 <BannerCodersComponent />
 
 <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true" Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded-t ma-2 py-5 px-2">

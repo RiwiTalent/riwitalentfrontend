@@ -1,6 +1,7 @@
 @page "/NotAuthorized"
 @layout DefaultLayout
 @inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Página no autorizada</PageTitle>
 
@@ -13,12 +14,22 @@
 </MudGrid>
 
 @code {
+    [CascadingParameter]
+    public bool homeRender { get; set; } = false;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
+    { // Espera 2 segundos
             await Task.Delay(2000);
-            NavManager.NavigateTo("/");
+
+            // Redirigir según el valor de homeRender
+            if (!homeRender)
+            {
+                NavManager.NavigateTo("/", true); // Redirige a la página principal
+            }
+            else
+            {
+                NavManager.NavigateTo("/coders", true); // Redirige a la página de coders
+            }
         }
     }
 }

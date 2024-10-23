@@ -70,6 +70,30 @@ namespace riwitalentfrontend.Services.Implementations
 
         }
 
+       public async Task<List<Coder>?> GetCodersByLanguage(List<string> languageLevels)
+        {
+            // Verifica si la lista de niveles de idioma no está vacía
+            if (languageLevels == null || !languageLevels.Any())
+            {
+                return new List<Coder>();
+            }
+
+            // Construcción del queryString
+            var queryString = string.Join("&", languageLevels.Select(level => $"levels={Uri.EscapeDataString(level)}"));
+            
+            // Construcción de la URL final con el queryString
+            var url = $"http://localhost:5113/coders/languages?{queryString}&language=English";
+
+            Console.WriteLine($"Request URL: {url}");
+            
+            // Realiza la petición HTTP
+            return await _httpClient.GetFromJsonAsync<List<Coder>>(url);
+        }
+
+
+            //    http://localhost:5113/coders/languages?&language=English
+
+
         public Task<bool> UploadPhoto(string coderId, Stream stream, string fileName)
         {
             throw new NotImplementedException();
@@ -156,6 +180,7 @@ namespace riwitalentfrontend.Services.Implementations
             content.Add(fileContent, "file", fileName);
 
             var response = await _httpClient.PostAsync($"http://localhost:5113/coder/photo/{coderId}", content);
+            
 
             if (response.IsSuccessStatusCode)
             {

@@ -20,38 +20,13 @@
             <MudTextField Placeholder="Buscar aquí..." @bind-Value="searchText" Immediate="true" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Rounded.Search" AdornmentColor="Color.Primary">
             </MudTextField>
 
-            <MudSelect T="string" Label="Tecnología" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" MultiSelection="true" @bind-Value="skills"  @onchange="CleanFilterSkill" @bind-SelectedValues="tecnologies">
+            <MudSelect T="string" Label="Filtrar" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" MultiSelection="true" @bind-Value="skills"  @onchange="CleanFilterSkill" @bind-SelectedValues="tecnologies">
                 @foreach (var technology in technologies)
                 {
                     <MudSelectItem T="string" Value="@technology.Name">@technology.Name</MudSelectItem>
                 }
             </MudSelect>
 
-            <!-- <MudSelect T="string" Label="Estado" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
-                <MudSelectItem Value="\"JavaScript\"">JavaScript</MudSelectItem>
-                <MudSelectItem Value="\"CSharp\"">CSharp</MudSelectItem>
-            </MudSelect> -->
-
-            <!-- <MudSelect T="string" Label="Tecnología" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" @bind-Value="skills" Class="search-container" @onchange="CleanFilterSkill">
-                <MudSelectItem Value="\"JavaScript\"">JavaScript</MudSelectItem>
-                <MudSelectItem Value="\"CSharp\"">CSharp</MudSelectItem>
-                <MudSelectItem Value="\"Python\"">Python</MudSelectItem>
-                <MudSelectItem Value="\"Java\"">Java</MudSelectItem>
-                <MudSelectItem Value="\"Ruby\"">Ruby</MudSelectItem>
-                <MudSelectItem Value="\"PHP\"">PHP</MudSelectItem>
-                <MudSelectItem Value="\"React\"">React</MudSelectItem>
-                <MudSelectItem Value="\"clear\"">Limpiar Filtro</MudSelectItem>
-            </MudSelect> -->
-
-            <!-- <MudSelect T="string" Label="Nivel inglés" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" @bind-Value="Language_Level" Class="search-container" @onchange="CleanFilterEnglishLevel">
-                <MudSelectItem Value="\"A1\"">A1</MudSelectItem>
-                <MudSelectItem Value="\"A2\"">A2</MudSelectItem>
-                <MudSelectItem Value="\"B1\"">B1</MudSelectItem>
-                <MudSelectItem Value="\"B2\"">B2</MudSelectItem>
-                <MudSelectItem Value="\"C1\"">C1</MudSelectItem>
-                <MudSelectItem Value="\"C2\"">C2</MudSelectItem>
-                <MudSelectItem Value="\"clear\"">Limpiar Filtro</MudSelectItem>
-            </MudSelect> -->    
 
            
             <MudButton OnClick="CleanFilters" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Medium" StartIcon="@Icons.Material.Outlined.FilterAltOff">Limpiar Filtros</MudButton>

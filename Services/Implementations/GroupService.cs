@@ -106,7 +106,7 @@ namespace riwitalentfrontend.Services.Implementations
             content.Add(new StreamContent(stream), "file", fileName);
             
             var response = await _httpClient.PostAsync($"http://localhost:5113/group/photo/{groupId}", content);
-
+            
             if(response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Se subió de manera correcta la foto");

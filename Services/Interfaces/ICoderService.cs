@@ -12,6 +12,7 @@ namespace riwitalentfrontend.Services.Interfaces
         Task<bool> CoderSelectedAsync(DataDto data);
         Task<bool> DeleteCodersAsync(string Id);
         Task<List<Coder>> FilterCodersBySkillsAsync(List<string> skills);
+        Task<List<Coder>> GetCodersByLanguage(List<string> languageLevels);
         Task<bool> UploadCoderPhoto(string coderId, Stream stream, string fileName);
         Task<bool> UploadCvCoder(string coderId, Stream stream, string fileName);
         Task<string> DownloadCv(string coderId);

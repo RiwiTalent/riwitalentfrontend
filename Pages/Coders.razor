@@ -1,7 +1,11 @@
-@page "/Coders"
+@page "/coders"
+@using System.Linq
+@using riwitalentfrontend.Models
 @layout MainLayout
 
 @attribute [Authorize]
+@using Microsoft.AspNetCore.Components.Authorization
+
 @inject ICoderService CoderService
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
@@ -27,15 +31,15 @@
             else
             {
                 <!-- Drawer para filtro -->
-                <MudDrawer @bind-Open="_drawerOpen" 
-                           Anchor="Anchor.Right" 
-                           Overlay="true" 
-                           OverlayAutoClose="true" 
-                           Variant="DrawerVariant.Temporary" 
-                           ClipMode="DrawerClipMode.Never" 
-                           Elevation="1" 
-                           Class="rounded ma-2">
-                    <CoderFilterComponent OnFiltered="UpdateCoders" />
+                <MudDrawer @bind-Open="_drawerOpen"
+                        Anchor="Anchor.Right"
+                        Overlay="true"
+                        OverlayAutoClose="true"
+                        Variant="DrawerVariant.Temporary"
+                        ClipMode="DrawerClipMode.Never"
+                        Elevation="1"
+                        Class="rounded ma-2">
+                    <CoderFilterComponent OnFiltered="UpdateCoders" _drawerOpen="@_drawerOpen"  />
                 </MudDrawer>
 
                 @if (_coders != null && _coders.Any())
@@ -84,18 +88,20 @@
                                                       AdornmentColor="Color.Primary"
                                                       Margin="Margin.Dense">
                                         </MudTextField>
-                                    </MudItem>
-                                    <MudItem xs="6" sm="6" Class="d-flex gap-2 justify-end">
+                                    </MudItem>        
+
+                                    <MudItem xs="3" sm="3" Class="d-flex gap-2 justify-end">
                                         <MudButton Color="Color.Primary"
-                                                   Variant="Variant.Outlined"
-                                                   OnClick="DrawerToggle"
-                                                   Size="Size.Small"
-                                                   StartIcon="@Icons.Material.Rounded.Tune">
-                                            Tecnologías
+                                                Variant="Variant.Outlined"
+                                                OnClick="DrawerToggle"
+                                                Size="Size.Small"
+                                                StartIcon="@Icons.Material.Rounded.Tune">
+                                            Filtrar
                                         </MudButton>
                                     </MudItem>
                                 </MudGrid>
                             </ToolBarContent>
+
 
                             <!-- Columnas de datos -->
                             <Columns>
@@ -171,8 +177,17 @@
 </AuthorizeView>
 
 @code {
+    // Lista de niveles de inglés para el select
+    private string Language_Level { get; set; } = "A2"; // Valor por defecto o inicial
+    private string selectedLanguageLevel;
+    private List<Coder> AllCoders = new List<Coder>(); // Lista original de coders
+    private List<Coder> FilteredCoders = new List<Coder>(); // Lista filtrada
+
+    private List<string> LanguageLevels = new List<string> { "A1", "A2", "B1", "B2", "C1", "C2", "Nativo" };
+
     // Variables privadas para el manejo de los coders
     private List<Coder> _coders;
+     private List<Coder> _filteredCoders; // Lista de coders filtrados
     private string? _searchString;
     private bool _loading = true;
     private string _errorMessage;
@@ -180,14 +195,31 @@
     private string _infoFormat = "{first_item}-{last_item} de {all_items}";
     private bool _drawerOpen = false;
 
+
+    public List<LanguageSkill> LanguageSkills { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+
         await LoadCodersAsync();
     }
+
+    private void OnLanguageLevelChanged(string value)
+    {
+        selectedLanguageLevel = value;
+        FilterCoders(); // Actualiza la lista filtrada en tiempo real
+    }
+
+    private void FilterCoders()
+    {
+        FilteredCoders = AllCoders.Where(coder => MatchesSearchCriteria(coder)).ToList();
+    }
+    
 
 // Método para cargar los coders
     private async Task LoadCodersAsync()
     {
+
         _loading = true;
         _errorMessage = string.Empty; // Limpiar el mensaje de error al comenzar
 
@@ -220,11 +252,13 @@
     }
 
 
-    // Alternar estado del drawer
     private void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+
     }
+
+
 
     // Método para loguear errores
     private void LogError(Exception ex)
@@ -258,12 +292,21 @@
     // Verifica si el coder coincide con los criterios de búsqueda
     private bool MatchesSearchCriteria(Coder coder)
     {
-        return (coder.FirstName != null && coder.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.SecondName != null && coder.SecondName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.SecondLastName != null && coder.SecondLastName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.Status != null && coder.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
-               (coder.DateCreation != null && coder.DateCreation.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+        // Filtro de búsqueda por nombre
+        bool matchesSearchString = (coder.FirstName != null && coder.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+                                    (coder.SecondName != null && coder.SecondName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+                                    (coder.SecondLastName != null && coder.SecondLastName.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+                                    (coder.Status != null && coder.Status.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) ||
+                                    (coder.DateCreation != null && coder.DateCreation.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+ // Filtro por nivel de inglés
+         bool matchesLanguageLevel = string.IsNullOrEmpty(selectedLanguageLevel) || 
+                                (coder.LanguageSkills != null && 
+                                 coder.LanguageSkills.Language_Level == selectedLanguageLevel);
+
+
+        return matchesSearchString && matchesLanguageLevel;
     }
+
 
     private async Task DeleteCoderAsync(string Id)
     {
