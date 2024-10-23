@@ -1,74 +1,63 @@
 @namespace riwitalentfrontend.Layout
+@inject ThemeService ThemeService
 
+@using riwitalentfrontend.Components.Footer
 @inherits LayoutComponentBase
+@* Requerido  *@
+<MudThemeProvider Theme="@_currentTheme" IsDarkMode="_isDarkMode" />
 
-@* Required *@
-<MudThemeProvider />
-<!-- <MudPopoverProvider /> -->
-
-@* Needed for dialogs *@
+@* Necesario para dialogs *@
 <MudDialogProvider />
 
-@* Needed for snackbars *@
+@* Necesario para snackbars *@
 <MudSnackbarProvider />
 
+<MudPopoverProvider />
 
-<MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"></MudThemeProvider>
-<MudLayout class="z-10">
-    
-    <MudAppBar Elevation="1">
-        <NavLink Icon="@Icons.Material.Rounded.Menu" Match="NavLinkMatch.All">
+<MudLayout>
+    <MudAppBar Elevation="1" Class="rounded-b-lg">
+        <NavLink Icon="@Icons.Material.Rounded.Menu" href="/coders" Match="NavLinkMatch.All">
             <MudImage ObjectFit="ObjectFit.ScaleDown" Width="100" Fluid="true" Src="@(DarkLightModeImgLogo)"></MudImage>
         </NavLink>
         <MudSpacer/>
-        <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
+        <MudStack Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center" Spacing="2">
+            <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Primary" OnClick="@DarkModeToggle"/>
+        </MudStack>
     </MudAppBar>
-    <MudMainContent Style="height: 100vh" Class="d-flex justify-center align-center">
+    <MudMainContent>
         @Body
     </MudMainContent>
+    @* Footer *@
+    <FooterComponent  />
 </MudLayout>
 
 <CascadingBlazoredModal></CascadingBlazoredModal>
 
 @code {
-    private bool _drawerOpen = true;
-    private bool _isDarkMode = false;
-    private MudTheme _theme;
-    
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
+    private bool _isDarkMode; 
+    private MudTheme? _currentTheme;
 
-        _theme = new()
-        {
-            PaletteLight = CustomMudTheme.PaletteLight,
-            PaletteDark = CustomMudTheme.PaletteDark,
-            LayoutProperties = new LayoutProperties()
-            {
-                DefaultBorderRadius = "30px"
-            }
-        };
+    protected override async Task OnInitializedAsync()
+    {
+        // Cargar el estado del modo oscuro desde el servicio
+        _isDarkMode = await ThemeService.GetDarkModeAsync();
+        
+        // Obtener el tema basado en el modo oscuro
+        _currentTheme = await ThemeService.GetThemeAsync();
     }
 
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-
-    private void DarkModeToggle()
+    private async Task DarkModeToggle()
     {
         _isDarkMode = !_isDarkMode;
+        await ThemeService.SetDarkModeAsync(_isDarkMode);
+        _currentTheme = await ThemeService.GetThemeAsync();
     }
     
-    public string DarkLightModeButtonIcon => _isDarkMode switch
-    {
-        false => @Icons.Material.Outlined.WbSunny,
-        true => Icons.Material.Outlined.DarkMode,
-    };
+    public string DarkLightModeButtonIcon => _isDarkMode 
+        ? Icons.Material.Outlined.DarkMode 
+        : Icons.Material.Outlined.WbSunny;
     
-    private string DarkLightModeImgLogo => _isDarkMode switch
-    {
-        false => "/images/IsologoRiwiLight.png",
-        true => "/images/IsologoRiwiDark.png",
-    };
+    private string DarkLightModeImgLogo => _isDarkMode 
+        ? "/images/IsologoRiwiDark.png" 
+        : "/images/IsologoRiwiLight.png";
 }
