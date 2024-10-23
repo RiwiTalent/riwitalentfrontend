@@ -6,6 +6,7 @@
 @inject ISessionStorageService SessionStorage
 @inject NavigationManager NavigationManager;
 @inject SweetAlertService Swal;
+@inject IJSRuntime JSRuntime;
 @inject AlertService AlertService;
 @inject IModalService ModalService
 @using Blazored.SessionStorage
@@ -135,6 +136,7 @@
             }
             else
             {
+                await JSRuntime.InvokeVoidAsync("setCookieExternal");
                 NavigationManager.NavigateTo($"/HomeClient/{groupId}");
             }
 

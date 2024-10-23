@@ -1,7 +1,8 @@
 @page "/HomeClient/{groupId}"
 @inject ICoderService coderService
 @inject IEmailService emailService
-
+@inject IJSRuntime JSRuntime;
+@inject NavigationManager NavigationManager;
 @layout DefaultLayout
 
 
@@ -38,6 +39,15 @@
     public bool? FilterInGroup { get; set; } = true;
 
     private List<Coder> _selectedCoders = new List<Coder>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var getCookieExternal = await JSRuntime.InvokeAsync<string>("GetCookieExternal");
+        if (getCookieExternal == null || getCookieExternal == "")
+        {
+            NavigationManager.NavigateTo($"/external-access/{groupId}");
+        }
+    }
 
     private void AddCoderHandler(Coder coder)
     {
