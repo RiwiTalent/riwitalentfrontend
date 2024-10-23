@@ -5,12 +5,14 @@ namespace riwitalentfrontend.Services
 {
     public static class TechnologiesService
     {
-        private static HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClient _httpClient = new HttpClient();
 
         public static async Task<List<Technology>> GetTechnologiesAsync()
         {
-            var technologies = await _httpClient.GetFromJsonAsync<List<Technology>>("http://localhost:5113/technologies");
+            // Usar la URL global desde GlobalConfig
+            var technologies = await _httpClient.GetFromJsonAsync<List<Technology>>($"{GlobalConfig.ApiUrl}technologies");
             return technologies ?? new List<Technology>();
         }
     }
 }
+

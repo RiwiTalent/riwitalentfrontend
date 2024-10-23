@@ -8,6 +8,7 @@ namespace riwitalentfrontend.Services
     {
         private readonly HttpClient _client;
         private readonly NavigationManager _navigation;
+
         public TermsAndConditionsService(HttpClient client, NavigationManager navigation)
         {
             _client = client;
@@ -17,7 +18,8 @@ namespace riwitalentfrontend.Services
         // Método para aceptar los términos y crear el registro en la base de datos
         public async Task<bool> AcceptTermsAsync(TermAndCondition newTerms)
         {
-            var response = await _client.PostAsJsonAsync($"http://localhost:5113/terms?10IsActive={newTerms.IsActive}&Accepted={newTerms.Accepted}&Version=1&GroupId={newTerms.GroupId}&AcceptedEmail={newTerms.AcceptedEmail}&CreatorEmail={newTerms.CreatorEmail}", newTerms);
+            // Usar la URL global desde GlobalConfig
+            var response = await _client.PostAsJsonAsync($"{GlobalConfig.ApiUrl}terms?10IsActive={newTerms.IsActive}&Accepted={newTerms.Accepted}&Version=1&GroupId={newTerms.GroupId}&AcceptedEmail={newTerms.AcceptedEmail}&CreatorEmail={newTerms.CreatorEmail}", newTerms);
 
             if (response.IsSuccessStatusCode)
             {
@@ -29,6 +31,5 @@ namespace riwitalentfrontend.Services
                 return false; // Retorna false si falló
             }
         }
-
     }
 }
