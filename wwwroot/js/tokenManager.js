@@ -15,4 +15,5 @@ window.getCookie = function(name){
 // Función para borrar el token de las cookies
 function deleteTokenFromCookies() {
     document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "Auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }

@@ -1,5 +1,6 @@
 @namespace riwitalentfrontend.Layout
 @inject ThemeService ThemeService
+@inject IJSRuntime _jsRuntime
 
 @using riwitalentfrontend.Components.Footer
 @inject NavigationManager Navigation
@@ -63,10 +64,10 @@
         ? "/images/IsologoRiwiDark.png" 
         : "/images/IsologoRiwiLight.png";
 
-        private async Task Logout()
+    private async Task Logout()
     {
         //Borrar almacenamiento del historial siguiendo el orden del login para externo
-
+        await _jsRuntime.InvokeVoidAsync("deleteTokenFromCookies");
 
         // Redirigimos al login del externo para loguearse de nuevo si es necesario
         Navigation.NavigateTo("/LoginClient/{groupId}");

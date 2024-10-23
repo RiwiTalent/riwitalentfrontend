@@ -2,6 +2,7 @@
 @inject ICoderService coderService
 @inject IEmailService emailService
 @inject NavigationManager Navigation
+@inject IJSRuntime _jsRuntime
 
 @layout ClientLayout
 
@@ -78,7 +79,7 @@
     private async Task Logout()
     {
         //Borrar almacenamiento del historial siguiendo el orden del login para externo
-
+        await _jsRuntime.InvokeVoidAsync("deleteTokenFromCookies");
 
         // Redirigimos al login del externo para loguearse de nuevo si es necesario
         Navigation.NavigateTo("/LoginClient/{groupId}");
