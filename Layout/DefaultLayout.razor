@@ -69,6 +69,6 @@
         await JSRuntime.InvokeVoidAsync("deleteTokenFromCookies");
 
         // Redirigimos al login del externo para loguearse de nuevo si es necesario
-        NavigationManager.NavigateTo("/external-access/{groupId}");
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 }
