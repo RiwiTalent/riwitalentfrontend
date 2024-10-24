@@ -83,7 +83,7 @@ namespace riwitalentfrontend.Services.Implementations
         }
 
         private async Task LoginBack(string tokenFirebase){
-            string url = $"http://localhost:5113/login/{tokenFirebase}";
+            string url = $"{GlobalConfig.ApiUrl}login/{tokenFirebase}";
 
             HttpResponseMessage response = await _httpClient.PostAsync(url, null);
 
@@ -98,7 +98,7 @@ namespace riwitalentfrontend.Services.Implementations
         {
             try
             {
-                var loginExternalResponse = await _httpClient.PostAsJsonAsync("http://localhost:5113/company/validate-external", login);
+                var loginExternalResponse = await _httpClient.PostAsJsonAsync($"{GlobalConfig.ApiUrl}company/validate-external", login);
 
                 if (loginExternalResponse.IsSuccessStatusCode)
                 {

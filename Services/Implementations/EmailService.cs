@@ -1,8 +1,6 @@
 using riwitalentfrontend.Models;
 using riwitalentfrontend.Services.Interfaces;
 
-
-
 namespace riwitalentfrontend.Services.Implementations
 {
     public class EmailService : IEmailService
@@ -16,7 +14,7 @@ namespace riwitalentfrontend.Services.Implementations
 
         public async Task<bool> SendEmailCompany(string groupId)
         {
-            var response = await _httpClient.PostAsync($"http://localhost:5113/email/company-process?id={groupId}", null);
+            var response = await _httpClient.PostAsync($"{GlobalConfig.ApiUrl}email/company-process?id={groupId}", null);
             response.EnsureSuccessStatusCode();
 
             return response.IsSuccessStatusCode;
@@ -26,7 +24,7 @@ namespace riwitalentfrontend.Services.Implementations
         {
             try
             {
-                var response = await _httpClient.PostAsync($"http://localhost:5113/email/accept-terms?Id={groupId}", null);
+                var response = await _httpClient.PostAsync($"{GlobalConfig.ApiUrl}email/accept-terms?Id={groupId}", null);
                 response.EnsureSuccessStatusCode(); // Lanza una excepción si no es exitoso
 
                 return response.IsSuccessStatusCode;
@@ -38,6 +36,4 @@ namespace riwitalentfrontend.Services.Implementations
             }
         }
     }
-
-    
 }
