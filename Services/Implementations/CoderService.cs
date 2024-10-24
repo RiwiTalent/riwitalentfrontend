@@ -87,7 +87,7 @@ namespace riwitalentfrontend.Services.Implementations
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"{GlobalConfig.ApiUrl}coders/{coderId}");
+                var response = await _httpClient.DeleteAsync($"{GlobalConfig.ApiUrl}coders?id={coderId}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
