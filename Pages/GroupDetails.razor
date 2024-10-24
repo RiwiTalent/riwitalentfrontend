@@ -63,8 +63,8 @@
                                     FirstName="@_group.Name"
                                     Style="height:150px; width:150px; font-size:2rem;"/>
                                 
-                                <MudText Typo="Typo.h6" Color="Color.Primary">@_group.Name</MudText>
-                                
+                                <MudText Typo="Typo.h4" Color="Color.Primary"><b>@_group.Name</b></MudText>
+
                                 <!-- Componente de status del grupo -->
                                 <StatusChipComponent Status="@_group.Status"/>
                                 
@@ -115,6 +115,22 @@
                                             </MudTextField>
                                         </MudItem>
 
+                                        <!-- Nombre del Grupo -->
+                                        <MudItem xs="12" sm="6">
+                                            <MudText Typo="Typo.subtitle2"><b>Email Asociado</b></MudText>
+                                            <MudTextField T="string"
+                                                          @bind-Value="@_group.AssociateEmail"
+                                                          Placeholder="Ingresa el correo que tendra acceso al grupo"
+                                                          Variant="Variant.Outlined"
+                                                          FullWidth="true"
+                                                          Margin="Margin.Dense"
+                                                          AdornmentIcon="@Icons.Material.Rounded.AlternateEmail"
+                                                          Adornment="Adornment.Start"
+                                                          AdornmentColor="Color.Primary"
+                                                          ReadOnly="!isEditing">
+                                            </MudTextField>
+                                        </MudItem>
+                                        
                                         <!-- Descripción del Grupo -->
                                         <MudItem xs="12">
                                             <MudText Typo="Typo.subtitle2"><b>Descripción</b></MudText>
@@ -147,7 +163,7 @@
                                                               AdornmentIcon="@Icons.Material.Rounded.InsertLink"
                                                               Adornment="Adornment.Start"
                                                               AdornmentColor="Color.Primary"
-                                                              ReadOnly="!isEditing">
+                                                              ReadOnly="true">
                                                 </MudTextField>
                                             </MudItem>
                                         </MudItem>
@@ -163,7 +179,8 @@
                                                                   Variant="Variant.Outlined" 
                                                                   InputType="@_passwordInput" 
                                                                   IconSize="Size.Small" 
-                                                                  Adornment="Adornment.End" 
+                                                                  Adornment="Adornment.End"
+                                                                  AdornmentColor="Color.Primary"
                                                                   AdornmentIcon="@_passwordInputIcon" 
                                                                   OnAdornmentClick="ButtonTestclick" 
                                                                   AdornmentAriaLabel="Ver Contraseña"
@@ -180,7 +197,7 @@
                 </MudContainer>
 
                 <!-- Total coders en el grupo -->
-                <ListCodersGroupComponent GroupId="@groupId"/>
+                <ListCodersGroupComponent GroupId="@groupId" />
             }
     </Authorized>
 </AuthorizeView>

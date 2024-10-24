@@ -7,11 +7,11 @@
            Elevation="2">
     @if (!string.IsNullOrEmpty(AvatarUrl))
     {
-    <MudImage Src="@AvatarUrl" />
+        <MudImage Src="@AvatarUrl" />
     }
     else if (!string.IsNullOrEmpty(Inicial))
     {
-    @Inicial.ToUpper()
+        @Inicial.ToUpper()
     }
     else
     {

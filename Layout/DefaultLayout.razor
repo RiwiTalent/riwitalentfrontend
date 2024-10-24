@@ -17,7 +17,7 @@
 
 <!-- <MudPopoverProvider /> -->
 
-<MudLayout>
+<MudLayout Class="d-flex flex-column w-full" Style="height: 100vh">
     <MudAppBar Elevation="1" Class="rounded-b-lg">
         <NavLink Icon="@Icons.Material.Rounded.Menu" href="/coders" Match="NavLinkMatch.All">
             <MudImage ObjectFit="ObjectFit.ScaleDown" Width="100" Fluid="true" Src="@(DarkLightModeImgLogo)"></MudImage>
@@ -28,7 +28,7 @@
             <MudIconButton Icon="@Icons.Material.Rounded.Logout" Color="Color.Primary" OnClick="@Logout"/>
         </MudStack>
     </MudAppBar>
-    <MudMainContent>
+    <MudMainContent Class="flex-grow-1 d-flex align-center justify-center">
         @Body
     </MudMainContent>
     @* Footer *@

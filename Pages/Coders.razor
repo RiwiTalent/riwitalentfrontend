@@ -88,16 +88,18 @@
                                                       AdornmentColor="Color.Primary"
                                                       Margin="Margin.Dense">
                                         </MudTextField>
-                                    </MudItem>        
-
-                                    <MudItem xs="3" sm="3" Class="d-flex gap-2 justify-end">
-                                        <MudButton Color="Color.Primary"
-                                                Variant="Variant.Outlined"
-                                                OnClick="DrawerToggle"
-                                                Size="Size.Small"
-                                                StartIcon="@Icons.Material.Rounded.Tune">
-                                            Filtrar
-                                        </MudButton>
+                                    </MudItem>
+                                    <MudItem xs="6" sm="6" Class="d-flex gap-2 justify-end">
+                                        <MudTooltip Text="Filtra por tecnologias">
+                                            <MudButton Color="Color.Primary"
+                                                       Variant="Variant.Outlined"
+                                                       OnClick="DrawerToggle"
+                                                       Size="Size.Large"
+                                                       StartIcon="@Icons.Material.Rounded.Tune">
+                                                Tecnologías
+                                            </MudButton>
+                                        </MudTooltip>
+        
                                     </MudItem>
                                 </MudGrid>
                             </ToolBarContent>
@@ -108,9 +110,6 @@
                                 <PropertyColumn Property="x => x.FirstName" Title="Nombre">
                                     <CellTemplate Context="coder">
                                         <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
-
-
-
                                             <AvatarComponent
                                                 AvatarUrl="@coder.Item.Photo"
                                                 FirstName="@coder.Item.FirstName"
@@ -141,17 +140,23 @@
                                 <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
                                     <CellTemplate Context="coder">
                                         <MudStack Row="true">
-                                            <MudIconButton Href="@($"/CoderDetails/{coder.Item.Id}")"
-                                                           Variant="Variant.Outlined"
-                                                           Icon="@Icons.Material.Outlined.RemoveRedEye"
-                                                           Color="Color.Warning" Size="Size.Small"
-                                                           Class="border-solid border-2 mud-border-warning pa-2">
-                                            </MudIconButton>
-                                            <MudIconButton OnClick="@(() => DeleteCoderAsync(coder.Item.Id))" Variant="Variant.Outlined"
-                                                           Icon="@Icons.Material.Rounded.DeleteOutline"
-                                                           Color="Color.Error" Size="Size.Small"
-                                                           Class="border-solid border-2 mud-border-error pa-2">
-                                            </MudIconButton>
+                                            <MudTooltip Text="Ver detalles">
+                                                <MudIconButton Href="@($"/CoderDetails/{coder.Item.Id}")"
+                                                               Variant="Variant.Outlined"
+                                                               Icon="@Icons.Material.Outlined.RemoveRedEye"
+                                                               Color="Color.Warning" Size="Size.Small"
+                                                               Class="border-solid border-2 mud-border-warning pa-2">
+                                                </MudIconButton>
+                                            </MudTooltip>
+                                            
+                                            <MudTooltip Text="Eliminar">
+                                                <MudIconButton OnClick="@(() => DeleteCoderAsync(coder.Item.Id))" Variant="Variant.Outlined"
+                                                               Icon="@Icons.Material.Rounded.DeleteOutline"
+                                                               Color="Color.Error" Size="Size.Small"
+                                                               Class="border-solid border-2 mud-border-error pa-2">
+                                                </MudIconButton>
+                                            </MudTooltip>
+         
                                         </MudStack>
                                     </CellTemplate>
                                 </PropertyColumn>
