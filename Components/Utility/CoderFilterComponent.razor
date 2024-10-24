@@ -24,6 +24,7 @@
     private List<Coder> _coders;
     private List<string> _availableSkills = new List<string>();
     private IReadOnlyCollection<string> _selectedSkills = new List<string>();
+        public bool? FilterInGroup { get; set; }
     
     [Parameter] public EventCallback<bool> OnDrawerToggle { get; set; }
     [Parameter] public EventCallback<List<Coder>> OnFiltered { get; set; }
@@ -39,6 +40,7 @@
         if (_selectedSkills != null && _selectedSkills.Any())
         {
             _coders = await CoderService.FilterCodersBySkillsAsync(_selectedSkills.ToList());
+           
         }
         else
         {
@@ -46,6 +48,8 @@
         }
         
         await OnFiltered.InvokeAsync(_coders);
+        
+        
     }
 
     private async Task OnSelectedValuesChanged(IReadOnlyCollection<string>? newValues)
