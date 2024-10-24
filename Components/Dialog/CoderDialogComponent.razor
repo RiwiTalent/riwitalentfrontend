@@ -1,30 +1,170 @@
 @using Blazored.SessionStorage
 @namespace riwitalentfrontend.Components
 @inject ISessionStorageService SessionStorageService
-
-@inject GroupService GroupService
+@using Microsoft.AspNetCore.Components.Forms
+@inject CoderService CoderService
 @inject ISnackbar Snackbar
+@using MudBlazor
 
     <MudForm @ref="_form">
-        <MudDialog Class="pa-2">
+        <MudDialog Style="width: 50%;" Class="pa-2">
             <DialogContent>
-                <!-- Nombre del Grupo -->
-                <MudStack Spacing="1" Class="mb-2">
-                    <MudTextField T="string"
-                                  Label="Nombre del grupo"
-                                  Required="true"
-                                  RequiredError="El nombre del grupo es obligatorio"
-                                  HelperText="Ingresa un nombre para identificar el grupo"
-                                  HelperTextOnFocus="true"
-                                  @bind-Value="GroupName"
-                                  Placeholder="Ej: Equipo de Desarrollo"
-                                  Variant="Variant.Outlined"
-                                  FullWidth="true"
-                                  Margin="Margin.Dense"
-                                  AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
-                                  Adornment="Adornment.Start"
-                                  AdornmentColor="Color.Primary"/>
-                </MudStack>
+                   <MudGrid Spacing="2" Justify="Justify.Center">
+                    <!-- Primer nombre y Segundo nombre -->
+                        <MudItem xs="12" md="6">
+                            <MudTextField T="string"
+                                        Label="Nombre del coder"
+                                        Required="true"
+                                        RequiredError="El nombre del coder es obligatorio"
+                                        HelperText="Ingresa un nombre para identificar el coder"
+                                        HelperTextOnFocus="true"
+                                        @bind-Value="FirstName"
+                                        Placeholder="Ej: Juan"
+                                        Variant="Variant.Outlined"
+                                        FullWidth="true"
+                                        Margin="Margin.Dense"
+                                        AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
+                                        Adornment="Adornment.Start"
+                                        AdornmentColor="Color.Primary"/>
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+
+                            <!-- Primer apellido del coder -->
+                            <MudTextField T="string"
+                                Label="Segundo nombre del coder"
+                                @bind-Value="SecondName"
+                                Placeholder="Ej: Carlos"
+                                Variant="Variant.Outlined"
+                                Margin="Margin.Dense"
+                                FullWidth="true"
+                                AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
+                                Adornment="Adornment.Start"
+                                AdornmentColor="Color.Primary"/>
+
+                        </MudItem>
+
+                        <!-- Primer apellido y Segundo apellido -->
+                        <MudItem xs="12" md="6">
+                            <MudTextField T="string"
+                                        Label="Primer apellido del coder"
+                                        Required="true"
+                                        RequiredError="El primer apellido es obligatorio"
+                                        @bind-Value="FirstLastName"
+                                        Placeholder="Ej: Pérez"
+                                        Variant="Variant.Outlined"
+                                        FullWidth="true"
+                                        Margin="Margin.Dense"
+                                        AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
+                                        Adornment="Adornment.Start"
+                                        AdornmentColor="Color.Primary"/>
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudTextField T="string"
+                                        Label="Segundo apellido del coder"
+                                        @bind-Value="SecondLastName"
+                                        Placeholder="Ej: García"
+                                        Variant="Variant.Outlined"
+                                        Margin="Margin.Dense"
+                                        FullWidth="true"
+                                        AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
+                                        Adornment="Adornment.Start"
+                                        AdornmentColor="Color.Primary"/>
+                        </MudItem>
+                        
+                        <!-- Agrega el correo a un coder -->
+                        <MudItem xs="12" md="12" >
+                            <MudTextField T="string"
+                                        Label="Correo del coder"
+                                        Required="true"
+                                        RequiredError="El correo del coder es obligatorio"
+                                        HelperText="Ingresa un correo para identificar el coder"
+                                        HelperTextOnFocus="true"
+                                        @bind-Value="Email"
+                                        Placeholder="Ej: Juanperez@gmail.com"
+                                        Variant="Variant.Outlined"
+                                        FullWidth="true"
+                                        Margin="Margin.Dense"
+                                        AdornmentIcon=@Icons.Material.Rounded.Email
+                                        Adornment="Adornment.Start"
+                                        AdornmentColor="Color.Primary"/>
+                        </MudItem>
+
+                        <MudItem xs="12" md="6">
+                            <MudTextField T="string"
+                                        Label="Numero telefonico del coder"
+                                        Required="true"
+                                        RequiredError="El numero de el coder es obligatorio"
+                                        @bind-Value="Phone"
+                                        Placeholder="Ej: 3124421216"
+                                        Variant="Variant.Outlined"
+                                        FullWidth="true"
+                                        Margin="Margin.Dense"
+                                        AdornmentIcon="@Icons.Material.Rounded.Smartphone"
+                                        Adornment="Adornment.Start"
+                                        AdornmentColor="Color.Primary"/>
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudTextField T="int"
+                                        Label="Puntaje de empleabilidad"
+                                        @bind-Value="AssessmentScore"
+                                        Placeholder="Ej: 85"
+                                        Variant="Variant.Outlined"
+                                        Margin="Margin.Dense"
+                                        FullWidth="true"
+                                        AdornmentIcon="@Icons.Material.Rounded.AssignmentTurnedIn"
+                                        Adornment="Adornment.Start"
+                                        AdornmentColor="Color.Primary"/>
+                        </MudItem>
+
+                        <MudItem xs="12" md="6">
+                            <MudTextField T="int"
+                                        Label="Edad de el coder"
+                                        Required="true"
+                                        RequiredError="La edad del coder es obligatoria"
+                                        HelperText="Ingresa la edad para identificar el coder"
+                                        @bind-Value="Age"
+                                        Placeholder="Ej: 19"
+                                        Variant="Variant.Outlined"
+                                        Margin="Margin.Dense"
+                                        FullWidth="true"
+                                        AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
+                                        Adornment="Adornment.Start"
+                                        AdornmentColor="Color.Primary"/>
+                        </MudItem>
+
+                        <MudItem xs="12" sm="6">
+                            <MudSelect T="string" @bind-Value="Stack"
+                                        Label="Stack"
+                                        AnchorOrigin="Origin.CenterCenter"
+                                        TransformOrigin="Origin.CenterCenter"
+                                        Placeholder="Selecciona su Stack"
+                                        Variant="Variant.Outlined"
+                                        FullWidth="true"
+                                        Margin="Margin.Dense"
+                                        Required="true">
+                                @foreach (var role in developmentRoles)
+                                {
+                                    <MudSelectItem Value="@role">@role</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+
+                        <MudItem xs="12" md="12" >
+                            <MudTextField T="string"
+                                        Label="Descripción profesional de el coder"
+                                        HelperText="Ingresa la descripcion de el coder"
+                                        @bind-Value="ProfessionalDescription"
+                                        Placeholder="Ej: Frontend developer enfocado en la experiencia del usuario"
+                                        Variant="Variant.Outlined"  
+                                        Margin="Margin.Dense"
+                                        Lines="4"
+                                        FullWidth="true"
+                                        AdornmentIcon="@Icons.Material.Rounded.PeopleOutline"
+                                        Adornment="Adornment.Start"
+                                        AdornmentColor="Color.Primary"/>
+                        </MudItem>
+    
+                    </MudGrid>
             </DialogContent>
             <DialogActions>
                 <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@Cancel">Cancelar</MudButton>
@@ -39,21 +179,34 @@
     private MudForm? _form;
 
     // Propiedades para los datos del grupo
-    private string GroupName { get; set; } = String.Empty;
-    private string GroupDescription { get; set; } = String.Empty;
-    private string AssociateEmail { get; set; } = String.Empty;
-    private string CreatedBy { get; set; } = String.Empty;
 
-    [Parameter] // Parámetro para la página que invoque el modal
-    public EventCallback<GroupAddDto> OnGroupCreated { get; set; }
+    private string FirstName { get; set; } = string.Empty;
+    private string SecondName { get; set; } = string.Empty;
+    private string FirstLastName { get; set; } = string.Empty;
+    private string SecondLastName { get; set; } = string.Empty;
+    private string Email { get; set; } = string.Empty;
+    private string? Stack { get; set; }
+    private int Age { get; set; }
+    private string ProfessionalDescription { get; set; } = String.Empty;
+    private string Phone { get; set; } = String.Empty;
+    private int AssessmentScore { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    private List<string> developmentRoles;
+
+    protected override void OnInitialized()
     {
-        // Obtener el valor del session storage
-        var createdBy = await SessionStorageService.GetItemAsync<string>("userEmail");
-        CreatedBy = createdBy ?? "Desconocido";
+        developmentRoles = new List<string>
+        {
+            "Frontend",
+            "Backend",
+            "FullStack",
+            "DevOps",
+            "Mobile",
+            "Data Science",
+            "UI/UX",
+        };
     }
-    
+
     // Método para manejar la creación del grupo
     private async Task Submit()
     {
@@ -61,28 +214,32 @@
         await _form.Validate();
         if (_form.IsValid)
         {
-            var groupAddDto = new GroupAddDto
+            var coderAddDto = new CoderAddDto
             {
-                Name = GroupName,
-                AssociateEmail = AssociateEmail,
-                Description = GroupDescription,
-                CreatedBy = CreatedBy
+                FirstName = FirstName,
+                SecondName = SecondName,
+                FirstLastName = FirstName,
+                SecondLastName = SecondLastName,
+                Email = Email,
+                Stack = Stack,
+                Age = Age,
+                AssessmentScore = AssessmentScore,
+                Phone = Phone,
+                ProfessionalDescription = ProfessionalDescription
             };
-            Console.WriteLine($"Creado por: {groupAddDto.CreatedBy}");
             
-            var success = await GroupService.AddGroupAsync(groupAddDto);
+            var success = await CoderService.AddCoderAsync(coderAddDto);
 
             if (success)
             {
-                Snackbar.Add("Grupo creado exitosamente", Severity.Success);
+                Snackbar.Add("Coder creado exitosamente", Severity.Success);
                 
-                await OnGroupCreated.InvokeAsync(groupAddDto);
                 MudDialog?.Close();
             }
             else
             {
-                Snackbar.Add("Error al crear el grupo. Inténtalo de nuevo", Severity.Error);
-            }
+                Snackbar.Add("Error al crear el coder. Inténtalo de nuevo", Severity.Error);
+            } 
         }
     }
     

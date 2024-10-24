@@ -34,6 +34,14 @@ namespace riwitalentfrontend.Services.Implementations
             return response.IsSuccessStatusCode;
         }
 
+        // Lógica para crear un coder desde la base de datos o API
+        public async Task<bool> AddCoderAsync(CoderAddDto coderAddDto)
+        {
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/coders", coderAddDto);
+            return response.IsSuccessStatusCode;
+        }
+
+// Método privado para construir el enlace
         // Método privado para construir el enlace
         private string BuildCoderLink(Coder coder)
         {
@@ -46,6 +54,7 @@ namespace riwitalentfrontend.Services.Implementations
                    $"Age={coder.Age}&" +
                    $"Email={Uri.EscapeDataString(coder.Email)}&" +
                    $"Age={coder.Age}&" +
+                   $"Photo={coder.Photo}&" +
                    $"Photo={coder.Photo}&" +
                    $"Phone={Uri.EscapeDataString(coder.Phone)}&" +
                    $"AssessmentScore={coder.AssessmentScore}&" +

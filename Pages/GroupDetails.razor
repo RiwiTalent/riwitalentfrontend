@@ -11,6 +11,11 @@
 
 <PageTitle>RiwiTalent: Detalles del Grupo</PageTitle>
 
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <!-- Muestra alerta si se produce un error -->
+    <MudAlert Severity="Severity.Error">@_errorMessage</MudAlert>
+}
 <AuthorizeView>
     <Authorized>
             @if (_loading)
@@ -350,29 +355,7 @@
                (group.Status?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false) ||
                (group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
-
-    public GroupCoders GetGroupCoders(string? name, string? status)
-    {
-        bool statusBool;
-
-        if (status == "Activo")
-        {
-            statusBool = true;
-        }
-        else
-        {
-            statusBool = false;
-        }
-
-        GroupCoders groupCoders = new GroupCoders()
-        {
-            Name = name,
-            IsActive = statusBool
-        };
-
-        return groupCoders;
-    }
-
+    
     bool _isShow;
     InputType _passwordInput = InputType.Password;
     string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;

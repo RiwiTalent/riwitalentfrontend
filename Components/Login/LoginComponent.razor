@@ -115,7 +115,7 @@
             // Guardar el correo en SessionStorage
             await SessionStorage.SetItemAsync("userEmail", _email);
 
-            NavigationManager.NavigateTo("/coders");
+            NavigationManager.NavigateTo("/coders", true);
             await Swal.FireAsync(new SweetAlertOptions
             {   
                 Title = "¡Bienvenido",
