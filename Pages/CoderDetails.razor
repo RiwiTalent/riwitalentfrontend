@@ -2,9 +2,10 @@
 @using riwitalentfrontend.Components.GroupCoder
 @layout MainLayout
 @inject ICoderService CoderService
+@inject IJSRuntime JSRuntime;
 @inject SweetAlertService Swal;
 @inject AlertService AlertService;
-@inject NavigationManager NavigationManager
+@inject NavigationManager NavigationManager;
 
 @attribute [Authorize]
 
@@ -45,8 +46,9 @@
                             </MudButton>
                         </MudTooltip>
                     </MudContainer>
-
-                    <MudGrid Justify="Justify.SpaceBetween" Spacing="3">
+                
+                
+                <MudGrid Justify="Justify.SpaceBetween" Spacing="3">
                         <!-- Card con Avatar y Nombre del Coder -->
                         <MudItem xs="12" sm="4" md="4">
                             <MudCard Class="d-flex flex-column align-center justify-center mud-width-full pa-4 gap-2">
@@ -60,18 +62,35 @@
                                     Style="height:150px; width:150px; font-size:2rem;"/>
                                 
                                 <!-- Standar Riwi del Coder-->
-                                <MudText Color="Color.Primary" Typo="Typo.h4"><b>@_coder.Stack</b></MudText>
+                                <MudText Typo="Typo.h4" Color="Color.Primary"><b>@_coder.Stack</b></MudText>
 
                                 <!-- Chip de estado del Coder -->
                                 <StatusChipComponent Status="@_coder.StandarRiwi.Standar"/>
 
                                 <!-- Botón Descargar y Cargar Cv -->
-                                <MudTooltip Text="@(isEditing ? "Cargar Cv" : "Descargar Cv")">
-                                    <MudButton Variant="Variant.Filled" Color="@((isEditing ? Color.Success : Color.Primary))"
-                                               StartIcon="@(isEditing ? @Icons.Material.Rounded.UploadFile : Icons.Material.Rounded.SimCardDownload)">
-                                        @(isEditing ? "Cargar Cv" : "Descargar Cv")
-                                    </MudButton>
-                                </MudTooltip>
+                                @if(isEditing == true)
+                                {
+                                    <MudFileUpload T="IBrowserFile" Accept=".pdf" FilesChanged="UploadCv" @bind-Value="_files" MaximumFileCount="2000000">
+                                        <ActivatorContent>
+                                        <MudTooltip Text="Cargar Cv">
+                                            <MudButton Variant="Variant.Filled" Color="Color.Success"
+                                                    StartIcon="@Icons.Material.Rounded.UploadFile">
+                                                    Cargar Cv
+                                            </MudButton>
+                                        </MudTooltip>
+                                        </ActivatorContent>
+                                    </MudFileUpload>
+                                }
+
+                                @if(isEditing == false)
+                                {
+                                    <MudTooltip Text="Descargar Cv">
+                                        <MudButton OnClick="DownloadCoderCV" Variant="Variant.Filled" Color="Color.Primary"
+                                                StartIcon="@Icons.Material.Rounded.SimCardDownload">
+                                                Descargar Cv
+                                        </MudButton>
+                                    </MudTooltip>
+                                }
 
                                 <!-- Componente de subida de archivos, sobrepuesto al avatar -->
                                 <MudItem Class="d-flex mt-3">
@@ -89,7 +108,31 @@
                                 </MudItem>
                                 
                             </MudCard>
-                        </MudItem>
+                            
+                            <!-- Título: Información del los procesos -->
+                            <MudCard Class="d-flex pa-4 my-2">
+                                <MudCardContent Class="FullWidth">
+                                    <MudItem xs="12">
+                                        <MudText Typo="Typo.h5"><b>Procesos iniciados</b></MudText>
+                                    </MudItem>
+                                    <MudItem xs="12">
+                                        <MudPaper>
+                                            <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                                <AvatarComponent
+                                                    AvatarUrl="@_coder.Photo"
+                                                    FirstName="@_coder.Stack"
+                                                    TypeAvatar="Group"/>
+                                                <MudContainer>
+                                                    <MudText><b>@_coder.Stack</b></MudText>
+                                                    <MudText Color="Color.Primary" Typo="Typo.subtitle2">@_coder.Stack</MudText>
+                                                </MudContainer>
+                                            </MudStack>
+
+                                        </MudPaper>
+                                    </MudItem>
+                                </MudCardContent>
+                            </MudCard>
+                            </MudItem>
 
                         <!-- Card con Información del Coder -->
                         <MudItem xs="12" sm="8" md="8">
@@ -324,6 +367,42 @@
 
     }
 
+    private async Task UploadCv(IBrowserFile file)
+    {
+
+        if(!string.IsNullOrEmpty(coderId))
+        {
+            if(file != null)
+            {
+                var stream = file.OpenReadStream(2 * 1024 * 1024);
+
+                await CoderService.UploadCvCoder(coderId, stream, file.Name);
+                await LoadCoderDetailsAsync();
+            }
+            else
+            {
+                Console.WriteLine("No file selected");
+            }
+        }
+
+    }
+
+    //download cv
+    private async Task DownloadCoderCV()
+    {
+        var coderCv = await CoderService.DownloadCv(coderId);
+
+        if (coderCv != null && coderCv.Length > 0)
+        {
+            Console.WriteLine($"Tamaño del CV: {coderCv.Length} bytes");
+            await JSRuntime.InvokeVoidAsync("Blazor.downloadFile", "cv", "application/pdf", coderCv);
+        }
+        else
+        {
+            Console.WriteLine("La descarga falló o el archivo está vacío.");
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
         await LoadCoderDetailsAsync();
@@ -521,8 +600,6 @@
         "Mobile",
         "Data Science",
         "UI/UX",
-        "Game Development",
-        "Embedded Systems"
     };
 }
 }

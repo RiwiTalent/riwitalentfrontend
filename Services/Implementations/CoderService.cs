@@ -37,6 +37,13 @@ namespace riwitalentfrontend.Services.Implementations
             return response.IsSuccessStatusCode;
         }
 
+        // Lógica para crear un coder desde la base de datos o API
+        public async Task<bool> AddCoderAsync(CoderAddDto coderAddDto)
+        {
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/coders", coderAddDto);
+            return response.IsSuccessStatusCode;
+        }
+
 // Método privado para construir el enlace
         private string BuildCoderLink(Coder coder)
         {
@@ -49,13 +56,12 @@ namespace riwitalentfrontend.Services.Implementations
                    $"Age={coder.Age}&" +
                    $"Email={Uri.EscapeDataString(coder.Email)}&" +
                    $"Age={coder.Age}&" +
-                   $"Photo={Uri.EscapeDataString(coder.Photo)}&" +
+                   $"Photo={coder.Photo}&" +
                    $"Phone={Uri.EscapeDataString(coder.Phone)}&" +
                    $"AssessmentScore={coder.AssessmentScore}&" +
                    $"Cv={Uri.EscapeDataString(coder.Cv)}&" +
                    $"Status={Uri.EscapeDataString(coder.Status)}&" +
                    $"Stack={Uri.EscapeDataString(coder.Stack)}";
-                   // $"GroupId={Uri.EscapeDataString(coder.GroupId.ToString())}";
                    // $"StandarRiwi={Uri.EscapeDataString(coder.StandarRiwi.ToString())}&" + // Agrega el estándar
                    // $"Skills={Uri.EscapeDataString(())} &" + // Agrega habilidades
                    // $"LanguageSkills={Uri.EscapeDataString(coder.LanguageSkills.Language)}"; // Agrega habilidades lingüísticas
@@ -157,7 +163,6 @@ namespace riwitalentfrontend.Services.Implementations
             content.Add(fileContent, "file", fileName);
 
             var response = await _httpClient.PostAsync($"http://localhost:5113/coder/photo/{coderId}", content);
-            
 
             if (response.IsSuccessStatusCode)
             {
@@ -172,5 +177,51 @@ namespace riwitalentfrontend.Services.Implementations
                 throw new Exception($"Error al cargar la foto: {response.StatusCode}, Detalle: {errorMessage}");
             }
         }
+        public async Task<bool> UploadCvCoder(string coderId, Stream stream, string fileName)
+        {
+            if (stream == null || stream.Length == 0)
+            {
+                throw new ArgumentException("No file uploaded", nameof(stream));
+            }
+
+            using var content = new MultipartFormDataContent();
+
+            var fileContent = new StreamContent(stream);
+            content.Add(fileContent, "file", fileName);
+
+            var response = await _httpClient.PostAsync($"http://localhost:5113/upload-pdf/{coderId}", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Se subió de manera correcta la Cv");
+                return true;
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(coderId);
+
+                throw new Exception($"Error al cargar Cv: {response.StatusCode}, Detalle: {errorMessage}");
+            }
+        }
+
+        public async Task<byte[]> DownloadCv(string coderId)
+        {
+            var response = await _httpClient.GetAsync($"http://localhost:5113/{coderId}/cv");
+
+            if(response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsByteArrayAsync();
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(coderId);
+
+                throw new Exception($"Error al cargar Cv: {response.StatusCode}, Detalle: {errorMessage}");
+            }
+
+        }
     }
 }
+
