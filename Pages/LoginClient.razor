@@ -1,4 +1,4 @@
-@page "/LoginClient/{groupId}"
+@page "/external-access/{groupId}"
 @layout DefaultLayout
 
 <PageTitle>Riwi: Portal de Acceso para Empresas</PageTitle>
@@ -6,13 +6,6 @@
 
 <!-- Componente login -->
 <LoginClientComponent groupId="@groupId"/>
-
-
-<style>
-    body{
-        overflow: hidden;
-    }
-</style>
 
 @code {
     [Parameter]

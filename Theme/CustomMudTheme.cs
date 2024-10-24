@@ -74,7 +74,10 @@ namespace riwitalentfrontend.Theme;
 
             // Drawer (Panel Lateral)
             DrawerBackground = RiwiPalette.Primary800,
-
+            
+            // Surface
+            Surface = RiwiPalette.Primary800,
+            
             // Background (Fondo)
             Background = RiwiPalette.NeutralBlack,
 

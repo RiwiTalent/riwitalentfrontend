@@ -1,5 +1,10 @@
-@page "/CoderSelectedClient/{groupId}"
-@layout DefaultLayout
+@page "/CoderSelected/{groupId}"
+@using riwitalentfrontend.Components.GroupCoder
+
+@inject ICoderService coderService
+@inject IEmailService emailService
+
+@layout MainLayout
 @inject IGroupService GroupService
 @inject SweetAlertService Swal;
 @inject AlertService AlertService;
@@ -9,103 +14,61 @@
 
 <PageTitle>RiwiTalent: Elige el mejor talento Riwi</PageTitle>
 
+@attribute [Authorize]
+
+
+<PageTitle>RiwiTalent: Detalles del Grupo</PageTitle>
+
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+<!-- Muestra alerta si se produce un error -->
+    <MudAlert Severity="Severity.Error">@_errorMessage</MudAlert>
+}
+
+
+
 <AuthorizeView>
     <Authorized>
-            @if (_loading)
-            {
-                <ProgressComponent />
-            }
-            else
-            {
-                <!-- Drawer para filtro -->
-                <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true"
-                    Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded ma-2">
-                    <CoderFilterComponent OnFiltered="UpdateCoders" />
-                </MudDrawer>
+        @if (_loading)
+        {
+        <ProgressComponent />
+        }
+        else
+        {
+        <!-- Drawer para filtro -->
+        <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true"
+                   Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded ma-2">
+            <CoderFilterComponent OnFiltered="UpdateCoders" />
+        </MudDrawer>
 
-                <!-- Detalles del grupo  -->
-                <MudContainer Class="ma-3 d-flex flex-column flex-grow-1 justify-center align-content-start">
-                    
-                    <MudGrid Justify="Justify.SpaceBetween" Spacing="3">
-                        <!-- Card con Avatar y Nombre del Grupo -->
-                        <MudItem xs="12" sm="4" md="4">
+        <MudContainer Class="ma-3 d-flex flex-column flex-grow-1 justify-center align-content-start">
+            <MudContainer Class="d-flex justify-space-between flex-grow-1 gap-4 py-3 px-0">
+                
+                <!-- Botón Regresar -->
+                <MudTooltip Text="Regresar">
+                    <MudIconButton Href="@($"/GroupDetails/{groupId}")" Variant="Variant.Outlined"
+                                   Icon="@Icons.Material.Rounded.ArrowBackIos" Color="Color.Primary" Size="Size.Small"
+                                   Class="border-solid border-2 mud-border-primary pa-2">
+                    </MudIconButton>
+                </MudTooltip>
+            </MudContainer>
 
-                            <MudCard Class="d-flex flex-column align-center justify-center mud-width-full pa-4">
+            <MudGrid Justify="Justify.Center" Spacing="3">
+                <!-- Cards de grupos -->
+                <MudItem xs="12" sm="4" md="4">
+                    <CardComponent SelectedCoders="@_selectedCoders" OnCoderAdded="AddCoderHandler" groupId="@groupId" FilterInGroup = "@FilterInGroup"/>
+                </MudItem>
 
-                                <AvatarComponent
-                                    AvatarUrl="@_group.Photo"
-                                    TypeAvatar="Group"
-                                    FirstName="@_group.Name"
-                                    Style="height:150px; width:150px; font-size:2rem;"/>
-                                
-                                <MudText Typo="Typo.h4" Color="Color.Primary"><b>@_group.Name</b></MudText>
-
-                                <!-- Componente de status del grupo -->
-                                <StatusChipComponent Status="@_group.Status"/>
-                                
-                                <MudItem Class="d-flex mt-3">
-                                    
-                                    <!-- Componente de subida de archivo -->
-                                    @if(isEditing == true)
-                                    {
-                                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" @bind-Value="_files" MaximumFileCount="2000000">
-                                        <ActivatorContent>
-                                            <MudTooltip Text="Sube una imagen">
-                                                <MudFab Color="Color.Success" Size="Size.Medium"
-                                                        StartIcon="@Icons.Material.Filled.AddPhotoAlternate"/>
-                                            </MudTooltip>
-                                        </ActivatorContent>
-                                    </MudFileUpload>
-                                    }
-                                </MudItem>
-                            </MudCard>
-                        </MudItem>
-
-                    <!-- Card con Información del Grupo y Credenciales -->
-                    <MudItem xs="12" sm="8" md="8">
-                        <MudCard Class="d-flex pa-4">
-                            <MudCardContent Class="FullWidth">
-                                <MudForm Spacing="2">
-
-                                    <!-- Título: Información del Grupo -->
-                                    <MudGrid>
-                                        <MudItem xs="12">
-                                            <MudText Align="Align.Start" Typo="Typo.h5"><b>Selección de coders</b></MudText>
-                                        </MudItem>
-
-
-                                        <!-- Link Público -->
-                                        <MudItem xs="12" sm="12" md="6">
-                                            <MudText Typo="Typo.subtitle2"><b>Enlace público</b></MudText>
-                                            <MudItem>
-                                                <MudTextField T="string"
-                                                              @bind-Value="_group.ExternalKeys[0].Url"
-                                                              Placeholder="Ingresa el enlace público del grupo"
-                                                              Variant="Variant.Outlined"
-                                                              Margin="Margin.Dense"
-                                                              FullWidth="true"
-                                                              AdornmentIcon="@Icons.Material.Rounded.InsertLink"
-                                                              Adornment="Adornment.Start"
-                                                              AdornmentColor="Color.Primary"
-                                                              ReadOnly="!isEditing">
-                                                </MudTextField>
-                                            </MudItem>
-                                        </MudItem>
-
-                                    </MudGrid>
-                                </MudForm>
-                            </MudCardContent>
-                        </MudCard>
-                    </MudItem>
-                </MudGrid>
-                </MudContainer>
-            }
+                <!-- Total coders en el grupo -->
+                <ListCodersGroupComponent GroupId="@groupId" />
+            </MudGrid>
+        </MudContainer>
+        }
     </Authorized>
 </AuthorizeView>
 
-@code {
-    [Parameter] public string? groupId { get; set; }
 
+@code {
     private IBrowserFile _files;
     private Group _group;
     private List<Coder> _coders;
@@ -116,7 +79,54 @@
     private string _infoFormat = "{first_item}-{last_item} de {all_items}";
     private bool isEditing = false;
     private bool _drawerOpen = false;
+    
+    [Parameter]
+    public bool ButtonText { get; set; } = true;
 
+    [Parameter]
+    public string? groupId { get; set; }
+
+    [Parameter]
+    public bool? FilterInGroup { get; set; } = true;
+
+    private List<Coder> _selectedCoders = new List<Coder>();
+
+    private void AddCoderHandler(Coder coder)
+    {
+        Console.WriteLine($"Coder agregado: {coder.FirstName} {coder.FirstLastName}");
+       
+    }
+    
+    private async Task AddCodersToGroupAsync()
+    {
+        if (string.IsNullOrEmpty(groupId) || _selectedCoders.Count == 0)
+        {
+            Console.WriteLine("Debes ingresar un ID de grupo y seleccionar coders.");
+            return;
+        }
+
+        var coderIds = _selectedCoders.Select(c => c.Id).ToList();
+        Console.WriteLine($"Enviando {coderIds.Count} coders al grupo {groupId}: {string.Join(", ", coderIds)}");
+
+        DataDto data = new DataDto
+        {
+            GroupId = groupId,
+            CoderList = coderIds
+        };
+
+        await coderService.CoderSelectedAsync(data);
+        await emailService.SendEmailCompany(groupId);
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     // Logica para la carga de la foto del grupo
     private async Task UploadPhoto(IBrowserFile file)
@@ -274,37 +284,5 @@
                (group.Created_At.ToString("dd-MM-yyyy").Contains(_searchString, StringComparison.OrdinalIgnoreCase));
     }
     
-    bool _isShow;
-    InputType _passwordInput = InputType.Password;
-    string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
-
-    void ButtonTestclick()
-    {
-        if (_isShow)
-        {
-            _isShow = false;
-            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
-            _passwordInput = InputType.Password;
-        }
-        else
-        {
-            _isShow = true;
-            _passwordInputIcon = Icons.Material.Filled.Visibility;
-            _passwordInput = InputType.Text;
-        }
-    }
-
-    private async Task OnTokenRegenerated(bool isRegenerated)
-    {
-        if (isRegenerated)
-        {
-            await LoadGroupDetailsAsync(); // Cargar nuevamente los detalles del grupo
-        }
-        else
-        {
-            // Aquí podrías mostrar un mensaje de error al usuario
-            Console.WriteLine("No se pudo regenerar el token.");
-        }
-    }
 }
 }

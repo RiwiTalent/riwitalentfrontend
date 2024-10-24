@@ -1,10 +1,12 @@
 @namespace riwitalentfrontend.Components
 
-<MudImage ObjectFit="ObjectFit.ScaleDown" Width="100" Fluid="true" Src="@LogoSrc"/>
+<MudImage ObjectFit="ObjectFit.Fill" Width="200" Fluid="true" Src="@DarkLightModeImgLogo" />
 
 @code {
     [Parameter]
     public bool IsDarkMode { get; set; }
-    private string LogoSrc => IsDarkMode? "/images/IsologoRiwiDark.png" : "/images/IsologoRiwiLight.png";
-    
+
+    private string DarkLightModeImgLogo => IsDarkMode 
+        ? "/images/IsologoRiwiDark.png"  // Logo para modo oscuro
+        : "/images/IsologoRiwiLight.png"; // Logo para modo claro
 }

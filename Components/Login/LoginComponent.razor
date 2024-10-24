@@ -8,41 +8,63 @@
 @inject HttpClient HttpClient;
 @inject SweetAlertService Swal;
 @inject AlertService AlertService;
+@inject ThemeService ThemeService;
 
-<MudGrid Class="pa-0 ma-0">
-    <MudContainer Class="d-flex justify-center align-center pa-2 flex-grow-1">
-        <MudCard Class="pa-6 d-flex justify-center align-center">
-            <MudCardHeader>
-                <MudItem Class="d-flex justify-center align-center">
-                    <LogoComponent IsDarkMode="@IsDarkMode" />
-                </MudItem>
-            </MudCardHeader>
-            <MudItem>
-                <MudText Align="Align.Center" Typo="Typo.h5"><b>¡Bienvenido/a de nuevo!</b></MudText>
-                <MudText Align="Align.Center" Typo="Typo.subtitle1">Ingresa con tu cuenta para continuar</MudText>
-            </MudItem>
-            <MudCardContent Class="FullWidth" Style="width: 100%;">
-                <MudForm Spacing="2">
-                    <MudTextField T="string" Label="Correo" @bind-value="_email" Variant="Variant.Outlined" InputType="InputType.Email"/>
-                    <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@_passwordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
-                </MudForm>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="Login" Class="rounded">Continuar</MudButton>
-            </MudCardActions>
-        </MudCard>
-    </MudContainer>
+<MudGrid Justify="Justify.Center" Class="d-flex align-center">
+    <MudItem md="6" Style="z-index: 1">
+        <MudContainer Fixed="true" Class="d-flex justify-center" Style="z-index: 1">
+            <MudPaper Class="pa-6 ma-3 d-flex align-center justify-center" Width="400px" Height="500px">
+                <MudStack Spacing="2" StretchItems="StretchItems.All" Justify="Justify.FlexEnd" AlignItems="AlignItems.Stretch">
+                    <MudItem Class="d-flex align-center justify-center">
+                        <LogoComponent IsDarkMode="@_isDarkMode" />
+                    </MudItem>
+                    <MudItem>
+                        <MudText Align="Align.Center" Typo="Typo.h4" Color="Color.Primary"><b>¡Bienvenido/a de nuevo!</b></MudText>
+                        <MudText Align="Align.Center" Typo="Typo.subtitle1">Ingresa con tu cuenta para continuar</MudText>
+                    </MudItem>
+                    <MudForm Spacing="3">
+                        <MudTextField T="string" Label="Correo" @bind-value="_email" Variant="Variant.Outlined" InputType="InputType.Email"/>
+                        <MudTextField T="string" Label="Contraseña" @bind-Value="_password" Variant="Variant.Outlined" InputType="@_passwordInput" IconSize="Size.Small" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Ver Contraseña"/>
+                        <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" OnClick="Login">Continuar</MudButton>
+                    </MudForm>
+                </MudStack>
+            </MudPaper>
+        </MudContainer>
+    </MudItem>
+    <MudHidden Breakpoint="Breakpoint.SmAndDown" >
+        <MudItem md="6">
+            <MudContainer Class="pa-0 ma-0" Fixed="true">
+                <MudImage ObjectPosition="ObjectPosition.Center" ObjectFit="ObjectFit.ScaleDown" Fluid="true" Src="/images/Image-login-2.png"/>
+            </MudContainer>
+        </MudItem>
+    </MudHidden>
+    <MudHidden Breakpoint="Breakpoint.MdAndUp" >
+        <MudContainer Class="pa-0 ma-0" Style="z-index: 0; position: absolute; width: 50%; height: auto; right: -50px; top: 50px" >
+            <MudImage ObjectPosition="ObjectPosition.RightBottom" ObjectFit="ObjectFit.ScaleDown" Fluid="true" Class="absolute" Src="/images/Forms.png"/>
+        </MudContainer>
+    </MudHidden>
 </MudGrid>
+
 
 @code {
     private string? _email;
     private string? _password;
-    private bool IsDarkMode { get; set; }
+    private bool _isDarkMode;
+    private MudTheme? _currentTheme;
 
+    protected override async Task OnInitializedAsync()
+    {
+        // Cargar el estado del modo oscuro desde el ThemeService
+        _isDarkMode = await ThemeService.GetDarkModeAsync();
+        
+        // Obtener el tema basado en el modo oscuro
+        _currentTheme = await ThemeService.GetThemeAsync();
+    }
+    
     bool _isShow;
     InputType _passwordInput = InputType.Password;
     string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
-
+    
     void ButtonTestclick()
     {
         @if (_isShow)
@@ -89,4 +111,7 @@
             });
         }
     }
+    private string DarkLightModeImgLogo => _isDarkMode 
+        ? "/images/IsologoRiwiDark.png" 
+        : "/images/IsologoRiwiLight.png";
 }

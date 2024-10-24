@@ -4,6 +4,8 @@ using riwitalentfrontend.Theme;
 
 public class ThemeService
 {
+    public event Action OnThemeChanged;
+    
     private readonly IJSRuntime _jsRuntime;
 
     private readonly MudTheme _lightTheme = new MudTheme()

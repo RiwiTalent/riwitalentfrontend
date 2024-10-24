@@ -325,7 +325,7 @@
         bool success = await _termsAndConditionsService.AcceptTermsAsync(newTerms);
         if (success)
         {
-            NavigationManager.NavigateTo($"LoginClient/{groupId}");
+            NavigationManager.NavigateTo($"external-access/{groupId}");
         }
         else
         {

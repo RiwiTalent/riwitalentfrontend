@@ -104,23 +104,26 @@
                                 <PropertyColumn Property="x => x.Status" Title="Opciones" Sortable="false">
                                     <CellTemplate Context="group">
                                         <MudStack Row="true">
-                                            <MudIconButton 
-                                                Href="@($"/GroupDetails/{group.Item.Id}")"
-                                                Variant="Variant.Outlined"
-                                                Icon="@Icons.Material.Outlined.RemoveRedEye"
-                                                Color="Color.Warning" 
-                                                Size="Size.Small"
-                                                Class="border-solid border-2 mud-border-warning pa-2">
-                                            </MudIconButton>
-                                            
-                                            <MudIconButton 
-                                                OnClick="@(() => DeleteGroupAsync(group.Item.Id))"
-                                                Variant="Variant.Outlined"
-                                                Icon="@Icons.Material.Rounded.DeleteOutline"
-                                                Color="Color.Error" 
-                                                Size="Size.Small"
-                                                Class="border-solid border-2 mud-border-error pa-2">
-                                            </MudIconButton>
+                                            <MudTooltip Text="Eliminar">
+                                                <MudIconButton
+                                                    Href="@($"/GroupDetails/{group.Item.Id}")"
+                                                    Variant="Variant.Outlined"
+                                                    Icon="@Icons.Material.Outlined.RemoveRedEye"
+                                                    Color="Color.Warning"
+                                                    Size="Size.Small"
+                                                    Class="border-solid border-2 mud-border-warning pa-2">
+                                                </MudIconButton>
+                                            </MudTooltip>
+                                            <MudTooltip Text="Ver detalles">
+                                                <MudIconButton
+                                                    OnClick="@(() => DeleteGroupAsync(group.Item.Id))"
+                                                    Variant="Variant.Outlined"
+                                                    Icon="@Icons.Material.Rounded.DeleteOutline"
+                                                    Color="Color.Error"
+                                                    Size="Size.Small"
+                                                    Class="border-solid border-2 mud-border-error pa-2">
+                                                </MudIconButton>
+                                            </MudTooltip>
                                         </MudStack>
                                     </CellTemplate>
                                 </PropertyColumn>
