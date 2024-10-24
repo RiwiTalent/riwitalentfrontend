@@ -1,5 +1,8 @@
 @namespace riwitalentfrontend.Layout
 @inject ThemeService ThemeService
+@inject IJSRuntime JSRuntime
+@using riwitalentfrontend.Components.Footer
+@inject NavigationManager NavigationManager
 
 @using riwitalentfrontend.Components.Footer
 @inherits LayoutComponentBase
@@ -22,6 +25,7 @@
         <MudSpacer/>
         <MudStack Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center" Spacing="2">
             <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Primary" OnClick="@DarkModeToggle"/>
+            <MudIconButton Icon="@Icons.Material.Rounded.Logout" Color="Color.Primary" OnClick="@Logout"/>
         </MudStack>
     </MudAppBar>
     <MudMainContent>
@@ -60,4 +64,13 @@
     private string DarkLightModeImgLogo => _isDarkMode 
         ? "/images/IsologoRiwiDark.png" 
         : "/images/IsologoRiwiLight.png";
+    
+    private async Task Logout()
+    {
+        //Borrar almacenamiento del historial siguiendo el orden del login para externo
+        await JSRuntime.InvokeVoidAsync("deleteTokenFromCookies");
+
+        // Redirigimos al login del externo para loguearse de nuevo si es necesario
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
 }

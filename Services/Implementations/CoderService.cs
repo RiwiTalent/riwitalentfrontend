@@ -3,8 +3,6 @@ using riwitalentfrontend.Services.Interfaces;
 using riwitalentfrontend.Models;
 using riwitalentfrontend.Models.DTOs;
 
-
-
 namespace riwitalentfrontend.Services.Implementations
 {
     // Servicio para interactuar con la API de coders
@@ -22,11 +20,10 @@ namespace riwitalentfrontend.Services.Implementations
         public async Task<List<Coder>> GetCodersAsync()
         {
             return await _httpClient.GetFromJsonAsync<List<Coder>>(
-                "https://backend-riwitalent-9pv2.onrender.com/coders");
+                $"{GlobalConfig.ApiUrl}coders");
         }
 
-        
-        // Metodo para actualizar un Coder :C pendiente de refactorizar 
+        // Método para actualizar un Coder: pendiente de refactorizar 
         public async Task<bool> UpdateCoderAsync(Coder coder)
         {
             // Construir la URL utilizando el método BuildCoderLink
@@ -45,9 +42,10 @@ namespace riwitalentfrontend.Services.Implementations
         }
 
 // Método privado para construir el enlace
+        // Método privado para construir el enlace
         private string BuildCoderLink(Coder coder)
         {
-            return $"https://backend-riwitalent-9pv2.onrender.com/coders?" +
+            return $"{GlobalConfig.ApiUrl}coders?" +
                    $"Id={Uri.EscapeDataString(coder.Id)}&" +
                    $"FirstName={Uri.EscapeDataString(coder.FirstName)}&" +
                    $"SecondName={Uri.EscapeDataString(coder.SecondName)}&" +
@@ -57,37 +55,48 @@ namespace riwitalentfrontend.Services.Implementations
                    $"Email={Uri.EscapeDataString(coder.Email)}&" +
                    $"Age={coder.Age}&" +
                    $"Photo={coder.Photo}&" +
+                   $"Photo={coder.Photo}&" +
                    $"Phone={Uri.EscapeDataString(coder.Phone)}&" +
                    $"AssessmentScore={coder.AssessmentScore}&" +
                    $"Cv={Uri.EscapeDataString(coder.Cv)}&" +
                    $"Status={Uri.EscapeDataString(coder.Status)}&" +
                    $"Stack={Uri.EscapeDataString(coder.Stack)}";
-                   // $"StandarRiwi={Uri.EscapeDataString(coder.StandarRiwi.ToString())}&" + // Agrega el estándar
-                   // $"Skills={Uri.EscapeDataString(())} &" + // Agrega habilidades
-                   // $"LanguageSkills={Uri.EscapeDataString(coder.LanguageSkills.Language)}"; // Agrega habilidades lingüísticas
+                   // Agregar más campos si es necesario
         }
-
 
         public async Task<List<Coder>?> FilterCodersBySkillsAsync(List<string> skills)
         {
             var queryString = string.Join("&", skills.Select(skill => $"skills={Uri.EscapeDataString(skill)}"));
-            var url = $"http://localhost:5113/coders?{queryString}";
+            var url = $"{GlobalConfig.ApiUrl}coders?{queryString}";
             Console.WriteLine($"Request URL: {url}");
             return await _httpClient.GetFromJsonAsync<List<Coder>>(url);
-
         }
 
-        public Task<bool> UploadPhoto(string coderId, Stream stream, string fileName)
+        public async Task<List<Coder>?> GetCodersByLanguage(List<string> languageLevels)
         {
-            throw new NotImplementedException();
+            // Verifica si la lista de niveles de idioma no está vacía
+            if (languageLevels == null || !languageLevels.Any())
+            {
+                return new List<Coder>();
+            }
+
+            // Construcción del queryString
+            var queryString = string.Join("&", languageLevels.Select(level => $"levels={Uri.EscapeDataString(level)}"));
+            
+            // Construcción de la URL final con el queryString
+            var url = $"{GlobalConfig.ApiUrl}coders/languages?{queryString}&language=English";
+
+            Console.WriteLine($"Request URL: {url}");
+            
+            // Realiza la petición HTTP
+            return await _httpClient.GetFromJsonAsync<List<Coder>>(url);
         }
 
         public async Task<bool> DeleteCodersAsync(string coderId)
         {
-
             try
             {
-                var response = await _httpClient.DeleteAsync($"http://localhost:5113/coders/{coderId}");
+                var response = await _httpClient.DeleteAsync($"{GlobalConfig.ApiUrl}coders/{coderId}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -101,7 +110,7 @@ namespace riwitalentfrontend.Services.Implementations
         {
             // Realiza la solicitud GET para obtener los detalles del coder
             Console.WriteLine("entra a get coder BY id");
-            var response = await _httpClient.GetFromJsonAsync<Coder>($"http://localhost:5113/coder/{coderId}");
+            var response = await _httpClient.GetFromJsonAsync<Coder>($"{GlobalConfig.ApiUrl}coder/{coderId}");
 
             if (response != null)
             {
@@ -119,8 +128,7 @@ namespace riwitalentfrontend.Services.Implementations
 
         public async Task<bool> CodersGroupedAsync(DataDto data)
         {
-
-            var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/coders/grouped", data);
+            var response = await _httpClient.PostAsJsonAsync($"{GlobalConfig.ApiUrl}coders/grouped", data);
 
             if (response.IsSuccessStatusCode)
             {
@@ -136,7 +144,7 @@ namespace riwitalentfrontend.Services.Implementations
 
         public async Task<bool> CoderSelectedAsync(DataDto data)
         {
-            var response = await _httpClient.PostAsJsonAsync("http://localhost:5113/coders/selected", data);
+            var response = await _httpClient.PostAsJsonAsync($"{GlobalConfig.ApiUrl}coders/selected", data);
 
             if (response.IsSuccessStatusCode)
             {
@@ -162,8 +170,8 @@ namespace riwitalentfrontend.Services.Implementations
             var fileContent = new StreamContent(stream);
             content.Add(fileContent, "file", fileName);
 
-            var response = await _httpClient.PostAsync($"http://localhost:5113/coder/photo/{coderId}", content);
-
+            var response = await _httpClient.PostAsync($"{GlobalConfig.ApiUrl}coder/photo/{coderId}", content);
+            
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Se subió de manera correcta la foto");
@@ -173,10 +181,10 @@ namespace riwitalentfrontend.Services.Implementations
             {
                 var errorMessage = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(coderId);
-
                 throw new Exception($"Error al cargar la foto: {response.StatusCode}, Detalle: {errorMessage}");
             }
         }
+
         public async Task<bool> UploadCvCoder(string coderId, Stream stream, string fileName)
         {
             if (stream == null || stream.Length == 0)
@@ -189,7 +197,7 @@ namespace riwitalentfrontend.Services.Implementations
             var fileContent = new StreamContent(stream);
             content.Add(fileContent, "file", fileName);
 
-            var response = await _httpClient.PostAsync($"http://localhost:5113/upload-pdf/{coderId}", content);
+            var response = await _httpClient.PostAsync($"{GlobalConfig.ApiUrl}upload-pdf/{coderId}", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -200,27 +208,24 @@ namespace riwitalentfrontend.Services.Implementations
             {
                 var errorMessage = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(coderId);
-
                 throw new Exception($"Error al cargar Cv: {response.StatusCode}, Detalle: {errorMessage}");
             }
         }
 
-        public async Task<byte[]> DownloadCv(string coderId)
+        public async Task<string> DownloadCv(string coderId)
         {
-            var response = await _httpClient.GetAsync($"http://localhost:5113/{coderId}/cv");
+            var response = await _httpClient.GetAsync($"{GlobalConfig.ApiUrl}{coderId}/cv");
 
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadAsByteArrayAsync();
+                return await response.Content.ReadAsStringAsync();
             }
             else
             {
                 var errorMessage = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(coderId);
-
                 throw new Exception($"Error al cargar Cv: {response.StatusCode}, Detalle: {errorMessage}");
             }
-
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using riwitalentfrontend.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using riwitalentfrontend.Services.Interfaces;
 using System.Net.Http.Headers;
@@ -18,14 +19,16 @@ namespace riwitalentfrontend.Services.Implementations
         private readonly IJSRuntime _jsRuntime;
         private AuthenticationStateProvider _authenticationStateProvider;
         private readonly ISessionStorageService _sessionStorage;
+        private readonly NavigationManager _navigationManager;
 
         // Constructor corregido sin la coma final
-        public AuthService(HttpClient httpClient, IJSRuntime jsRuntime, AuthenticationStateProvider authenticationStateProvider, ISessionStorageService sessionStorage)
+        public AuthService(HttpClient httpClient, IJSRuntime jsRuntime, AuthenticationStateProvider authenticationStateProvider, ISessionStorageService sessionStorage, NavigationManager navigationManager)
         {
             _httpClient = httpClient;
             _jsRuntime = jsRuntime;
             _authenticationStateProvider = authenticationStateProvider;
             _sessionStorage = sessionStorage;
+            _navigationManager = navigationManager;
         }
 
         // Obtiene el endpoint y recibe los parametros enviados desde el login verificandolos
@@ -40,6 +43,7 @@ namespace riwitalentfrontend.Services.Implementations
                 Console.WriteLine(token);
 
                 await LoginBack(token);
+                _navigationManager.NavigateTo($"/coders");
 
                 return true;
             }
@@ -79,7 +83,7 @@ namespace riwitalentfrontend.Services.Implementations
         }
 
         private async Task LoginBack(string tokenFirebase){
-            string url = $"http://localhost:5113/login/{tokenFirebase}";
+            string url = $"{GlobalConfig.ApiUrl}login/{tokenFirebase}";
 
             HttpResponseMessage response = await _httpClient.PostAsync(url, null);
 
@@ -94,7 +98,7 @@ namespace riwitalentfrontend.Services.Implementations
         {
             try
             {
-                var loginExternalResponse = await _httpClient.PostAsJsonAsync("http://localhost:5113/company/validate-external", login);
+                var loginExternalResponse = await _httpClient.PostAsJsonAsync($"{GlobalConfig.ApiUrl}company/validate-external", login);
 
                 if (loginExternalResponse.IsSuccessStatusCode)
                 {

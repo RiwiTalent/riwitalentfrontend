@@ -1,29 +1,48 @@
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @using riwitalentfrontend.Pages
+<MudPopoverProvider />
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(DefaultLayout)">
+                <Authorizing>
+                    <LayoutView Layout="@typeof(DefaultLayout)">
+                        <MudText Typo="Typo.h4" Align="Align.Center">Cargando...</MudText>
+                    </LayoutView>
+                </Authorizing>
+                <NotAuthorized>
+                    <LayoutView Layout="@typeof(DefaultLayout)">
+                        <NotAuthorized />
+                    </LayoutView>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
 
-<MudPopoverProvide/>
-    <CascadingAuthenticationState>
-        <Router AppAssembly="@typeof(App).Assembly">
-            <Found Context="routeData">
-                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(DefaultLayout)">
-                    <Authorizing>
-                        <LayoutView Layout="@typeof(DefaultLayout)">
-                            <MudText Typo="Typo.h4" Align="Align.Center">Cargando...</MudText>
-                        </LayoutView>
-                    </Authorizing>
-                    <NotAuthorized>
-                        <LayoutView Layout="@typeof(DefaultLayout)">
-                            <NotAuthorized />
-                        </LayoutView>
-                    </NotAuthorized>
-                </AuthorizeRouteView>
-                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-            </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(DefaultLayout)">
+                <NotFound />
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
 
-            <NotFound>
-                <LayoutView Layout="@typeof(DefaultLayout)">
-                    <NotFound />
-                </LayoutView>
-            </NotFound>
-        </Router>
-    </CascadingAuthenticationState>
+@code {
+    [Parameter]
+    public bool homeRender { get; set; } = false;
 
+    private ClaimsPrincipal user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
+        // Aquí puedes manejar la lógica de autenticación si es necesario
+        if (!user.Identity.IsAuthenticated)
+        {
+            // Aquí puedes hacer algo si el usuario no está autenticado
+        }
+    }
+}

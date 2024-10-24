@@ -1,14 +1,15 @@
-@page "/external-access/{groupId}"
+@page "/HomeClient/{groupId}"
 @inject ICoderService coderService
 @inject IEmailService emailService
-
+@inject IJSRuntime JSRuntime;
+@inject NavigationManager NavigationManager;
 @layout DefaultLayout
 
 
 <PageTitle>RiwiTalent: Software de gestión talento Riwi</PageTitle>
 
 
-<MudMainContent />
+<!-- <MudMainContent /> -->
 <BannerCodersComponent />
 
 <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Right" Overlay="true" OverlayAutoClose="true" Variant="DrawerVariant.Temporary" ClipMode="DrawerClipMode.Never" Elevation="1" Class="rounded-t ma-2 py-5 px-2">
@@ -38,6 +39,15 @@
     public bool? FilterInGroup { get; set; } = true;
 
     private List<Coder> _selectedCoders = new List<Coder>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var getCookieExternal = await JSRuntime.InvokeAsync<string>("GetCookieExternal");
+        if (getCookieExternal == null || getCookieExternal == "")
+        {
+            NavigationManager.NavigateTo($"/external-access/{groupId}");
+        }
+    }
 
     private void AddCoderHandler(Coder coder)
     {
@@ -70,7 +80,5 @@
     {
         _drawerOpen = !_drawerOpen;
     }
-
-    
 
 }
